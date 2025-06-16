@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff; /* Latar belakang putih polos */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 70px; /* Tambahkan padding agar konten tidak tertutup top-box */
+      opacity: 0; /* Awalnya sembunyikan body */
+      transition: opacity 0.5s ease-in-out; /* Tambahkan transisi untuk fade-in/out */
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan agar efek blur terlihat */
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out; /* Transisi untuk blur dan warna */
+      -webkit-backdrop-filter: blur(0px); /* Default tidak blur untuk Safari */
+      backdrop-filter: blur(0px); /* Default tidak blur */
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      background-color: rgba(255, 255, 255, 0.7); /* Lebih transparan saat blur */
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+    
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    .content-box {
+      padding: 20px;
+      max-width: 800px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .content-box h2 {
+      margin-bottom: 5px;
+    }
+
+    .content-box hr {
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .page-divider {
+      width: 90%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin: 60px auto 40px auto;
+      opacity: 0.7;
+    }
+
+    /* Styles for the new indentation */
+    .content-box p.point {
+      margin-left: 20px;
+      /* Indent for points */
+      margin-bottom: 5px;
+    }
+
+    .content-box ul li {
+      margin-left: 40px;
+      /* Indent for sub-points */
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+  </style>
+</head>
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+  </div>
+  <div class="page-divider"></div>
+<div class="content-box">
+  <h2>Apa Itu Mining Bitcoin?</h2>
+  <hr>
+  <p class="point"><strong>Mining Bitcoin</strong> adalah proses komputasi di mana perangkat keras khusus (atau komputer) memecahkan teka-teki matematika kompleks untuk memverifikasi transaksi di jaringan Bitcoin dan mendapatkan hadiah berupa Bitcoin baru serta biaya transaksi. Ini adalah tulang punggung sistem Bitcoin yang menjaga keamanan, desentralisasi, dan penciptaan Bitcoin baru. Bayangkan seperti "menambang emas" di dunia digital, tapi alih-alih cangkul, Anda menggunakan komputer super cepat untuk menyelesaikan puzzle kriptografi.</p>
+  <p class="point">Mining melibatkan <strong>Proof of Work (PoW)</strong> sebagai mekanisme konsensus, <strong>hash rate</strong> sebagai ukuran kecepatan komputasi, dan berbagai aspek teknis seperti algoritma <strong>SHA-256</strong>, kesulitan jaringan, dan struktur blockchain.</p>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Konsep Dasar Mining Bitcoin</h2>
+  <hr>
+  <p class="point">Bitcoin adalah mata uang digital yang berjalan di <strong>blockchain</strong>, sebuah buku besar digital yang mencatat semua transaksi secara transparan dan tidak bisa diubah. Karena Bitcoin tidak diatur oleh bank atau pemerintah, transaksi harus diverifikasi oleh jaringan komputer global yang disebut <strong>node</strong>.</p>
+  <p class="point"><strong>Miner</strong> adalah peserta jaringan yang menggunakan perangkat keras untuk:</p>
+  <p class="point">1. <strong>Memverifikasi transaksi</strong></p>
+  <ul>
+    <li>Memastikan transaksi valid (misalnya, memeriksa bahwa pengirim punya cukup saldo).</li>
+  </ul>
+  <p class="point">2. <strong>Membuat blok baru</strong></p>
+  <ul>
+    <li>Mengelompokkan transaksi ke dalam "blok" untuk ditambahkan ke blockchain.</li>
+  </ul>
+  <p class="point">3. <strong>Mendapatkan hadiah</strong></p>
+  <ul>
+    <li>Miner yang berhasil menyelesaikan teka-teki matematika pertama kali mendapatkan <strong>block reward</strong> (Bitcoin baru) dan biaya transaksi dari pengguna.</li>
+  </ul>
+  <p class="point"><strong>Analogi Sederhana:</strong></p>
+  <p class="point">Bayangkan Anda sedang ikut lomba memecahkan teka-teki puzzle raksasa dengan ribuan peserta. Setiap 10 menit, ada satu pemenang yang dapat hadiah besar. Puzzle ini sangat sulit, sehingga butuh komputer canggih untuk menyelesaikannya. Di Bitcoin, puzzle ini adalah teka-teki kriptografi, dan hadiahnya adalah Bitcoin.</p>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Mekanisme Inti Mining Bitcoin</h2>
+  <hr>
+  <p class="point">Sebelum masuk ke langkah-langkah, kita perlu paham beberapa konsep kunci:</p>
+  
+  <p class="point">a. <strong>Proof of Work (PoW)</strong></p>
+  <ul>
+    <li>PoW adalah algoritma konsensus yang digunakan Bitcoin untuk memastikan miner benar-benar bekerja keras (menggunakan daya komputasi) untuk memvalidasi transaksi.</li>
+    <li><strong>Apa itu PoW?</strong> Miner harus menyelesaikan teka-teki matematika yang sulit untuk menemukan hash yang valid. Hanya miner yang menemukan hash yang memenuhi syarat yang boleh menambahkan blok baru ke blockchain.</li>
+    <li><strong>Kenapa PoW penting?</strong> PoW membuat jaringan aman. Untuk menipu sistem (misalnya, mengubah transaksi), penyerang harus menguasai lebih dari 50% total hash rate jaringan, yang sangat mahal dan hampir tidak mungkin.</li>
+    <li><strong>Analogi PoW:</strong> Bayangkan Anda harus menemukan kunci yang tepat untuk membuka brankas dari jutaan kunci. Anda mencoba satu per satu sampai ketemu. PoW mirip, tapi kuncinya adalah angka acak (nonce) yang menghasilkan hash tertentu.</li>
+  </ul>
+
+  <p class="point">b. <strong>Hash Rate</strong></p>
+  <ul>
+    <li>Hash rate adalah ukuran seberapa cepat perangkat mining bisa mencoba memecahkan teka-teki PoW. Satuannya adalah hash per detik (H/s), dengan skala besar seperti TH/s (terahash) atau EH/s (exahash).</li>
+    <li><strong>Apa itu hash?</strong> Hash adalah hasil dari fungsi matematika SHA-256 yang mengubah data (seperti header blok) menjadi string acak sepanjang 256 bit. Miner harus menemukan hash yang dimulai dengan sejumlah nol tertentu (sesuai tingkat kesulitan).</li>
+    <li><strong>Contoh hash rate:</strong> Jika perangkat Anda bisa mencoba 100 triliun hash per detik, hash rate-nya adalah 100 TH/s. Semakin tinggi hash rate, semakin besar peluang Anda memenangkan hadiah.</li>
+    <li><strong>Hash rate jaringan:</strong> Total hash rate semua miner di jaringan Bitcoin menunjukkan kekuatan dan keamanan jaringan. Pada Juni 2025, hash rate global diperkirakan mencapai 500-600 EH/s.</li>
+  </ul>
+
+  <p class="point">c. <strong>Kesulitan (Difficulty)</strong></p>
+  <ul>
+    <li>Jaringan Bitcoin secara otomatis menyesuaikan tingkat kesulitan teka-teki setiap 2.016 blok (sekitar 2 minggu) agar waktu pembuatan blok tetap sekitar 10 menit. Jika banyak miner bergabung, kesulitan naik. Jika miner berkurang, kesulitan turun.</li>
+    <li><strong>Contoh:</strong> Pada 2025, kesulitan jaringan mungkin mencapai 80 triliun (80T), artinya hash yang valid harus sangat spesifik (misalnya, dimulai dengan 20 nol).</li>
+  </ul>
+
+  <p class="point">d. <strong>Block Reward dan Biaya Transaksi</strong></p>
+  <ul>
+    <li><strong>Block Reward:</strong> Hadiah untuk miner yang berhasil menambahkan blok. Pada 2025 (pasca-halving 2024), block reward adalah 3.125 BTC per blok.</li>
+    <li><strong>Biaya Transaksi:</strong> Pengguna membayar biaya kecil untuk setiap transaksi. Total biaya dalam satu blok (misalnya, 0.5 BTC) juga diberikan ke miner.</li>
+    <li><strong>Halving:</strong> Setiap 4 tahun, block reward dipotong setengah untuk membatasi pasokan Bitcoin (maksimal 21 juta BTC).</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Jenis-Jenis Miner Bitcoin</h2>
+  <hr>
+  <p class="point">Miner Bitcoin dapat diklasifikasikan berdasarkan cara mereka menjalankan operasi mining, apakah secara individu, kelompok, atau melalui layanan pihak ketiga. Berikut adalah jenis-jenis miner yang umum:</p>
+
+  <p class="point">1. <strong>Solo Miner</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Solo miner adalah individu atau entitas yang melakukan mining Bitcoin secara mandiri tanpa bergabung dengan kelompok lain. Mereka menggunakan perangkat keras sendiri dan menanggung semua risiko serta hadiah.</li>
+    <li><strong>Karakteristik:</strong>
+      <ul>
+        <li>• Kontrol penuh: Solo miner mengatur sendiri perangkat keras, software, dan strategi mining.</li>
+        <li>• Hadiah besar, peluang kecil: Jika berhasil menemukan blok, solo miner mendapatkan seluruh block reward (3.125 BTC pada 2025) plus biaya transaksi. Namun, peluang menang sangat kecil karena harus bersaing dengan hash rate jaringan yang sangat besar (misalnya, 500 EH/s).</li>
+        <li>• Cocok untuk: Miner dengan hash rate sangat besar (misalnya, peternakan ASIC dengan puluhan PH/s) atau mereka yang bersedia mengambil risiko tinggi.</li>
+      </ul>
+    </li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Tidak perlu membagi hadiah dengan orang lain.</li>
+        <li>• Tidak ada biaya pool (biasanya 1-2% di mining pool).</li>
+      </ul>
+    </li>
+    <li><strong>Kekurangan:</strong>
+      <ul>
+        <li>• Peluang menemukan blok sangat rendah. Misalnya, dengan 1 PH/s, peluang menang adalah 1 ÷ 500.000 = 0.0002% per blok.</li>
+        <li>• Pendapatan tidak konsisten; bisa berbulan-bulan tanpa hadiah.</li>
+        <li>• Butuh investasi besar untuk hardware dan listrik.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh:</strong>
+      <ul>
+        <li>Seorang solo miner dengan 10 Antminer S21 (2 PH/s) menjalankan operasi di lokasi dengan listrik murah ($0.03/kWh). Mereka mungkin menemukan 1 blok setiap beberapa bulan, tapi jika berhasil, hadiahnya ~3.625 BTC (setara Rp 54 miliar jika 1 BTC = Rp 1.5 miliar).</li>
+      </ul>
+    </li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Solo miner menjalankan node Bitcoin penuh (full node) untuk memvalidasi transaksi dan membuat kandidat blok sendiri.</li>
+        <li>• Software seperti CGMiner atau BFGMiner diatur untuk mode solo, terhubung langsung ke jaringan Bitcoin tanpa perantara pool.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">2. <strong>Pool Miner</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Pool miner adalah miner yang bergabung dengan mining pool, yaitu kelompok miner yang menggabungkan hash rate mereka untuk meningkatkan peluang menemukan blok. Hadiah dibagi sesuai kontribusi hash rate masing-masing.</li>
+    <li><strong>Karakteristik:</strong>
+      <ul>
+        <li>• Kerja sama: Miner menyumbangkan hash rate ke pool, dan pool mengelola proses mining serta distribusi hadiah.</li>
+        <li>• Pendapatan lebih stabil: Meski hadiah per individu lebih kecil, pool miner mendapat pembayaran rutin (harian/mingguan) berdasarkan kontribusi mereka.</li>
+        <li>• Cocok untuk: Miner kecil atau menengah dengan hash rate terbatas (misalnya, 100 TH/s hingga beberapa PH/s).</li>
+      </ul>
+    </li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Peluang menemukan blok lebih tinggi karena hash rate gabungan pool sangat besar.</li>
+        <li>• Pembayaran lebih konsisten, cocok untuk menutup biaya operasional seperti listrik.</li>
+        <li>• Mudah untuk pemula; pool menyediakan software dan panduan.</li>
+      </ul>
+    </li>
+    <li><strong>Kekurangan:</strong>
+      <ul>
+        <li>• Hadiah dibagi, sehingga keuntungan per miner lebih kecil.</li>
+        <li>• Biaya pool (biasanya 1-2% dari pendapatan).</li>
+        <li>• Ketergantungan pada keandalan pool; beberapa pool bisa bermasalah (misalnya, penundaan pembayaran).</li>
+      </ul>
+    </li>
+    <li><strong>Contoh:</strong>
+      <ul>
+        <li>Kamu punya 1 Antminer S21 (200 TH/s) dan gabung F2Pool. Pool ini punya 100 EH/s (20% dari hash rate jaringan). Jika pool menemukan 28.8 blok/hari (20% dari 144 blok), hadiah per blok (3.625 BTC) dibagi. Kontribusimu (200 TH/s ÷ 100 EH/s = 0.0002%) menghasilkan ~0.000208 BTC/hari (setara Rp 312.000 jika 1 BTC = Rp 1.5 miliar).</li>
+      </ul>
+    </li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Pool menggunakan sistem pembayaran seperti PPS (Pay Per Share), di mana miner dibayar per hash yang dikirim, atau PPLNS (Pay Per Last N Shares), di mana pembayaran berdasarkan kontribusi saat blok ditemukan.</li>
+        <li>• Miner terhubung ke server pool via protokol seperti Stratum, mengirimkan "shares" (hash yang mendekati target kesulitan pool).</li>
+        <li>• Contoh pool besar: F2Pool, AntPool, ViaBTC.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">3. <strong>Cloud Miner</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Cloud miner adalah pengguna yang menyewa hash rate dari penyedia layanan cloud mining tanpa memiliki atau mengelola perangkat keras sendiri. Mereka membayar biaya langganan untuk mendapatkan bagian dari hasil mining.</li>
+    <li><strong>Karakteristik:</strong>
+      <ul>
+        <li>• Tanpa hardware: Penyedia cloud mining memiliki peternakan ASIC dan menyewakan hash rate-nya.</li>
+        <li>• Akses mudah: Cocok untuk pemula yang tidak ingin repot mengatur perangkat keras atau listrik.</li>
+        <li>• Cocok untuk: Investor pasif atau mereka yang tidak punya akses ke listrik murah/hardware.</li>
+      </ul>
+    </li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Tidak perlu beli atau maintenance ASIC.</li>
+        <li>• Tidak perlu khawatir tentang listrik atau pendingin.</li>
+        <li>• Mulai dengan investasi kecil (misalnya, $100 untuk 1 TH/s selama 1 tahun).</li>
+      </ul>
+    </li>
+    <li><strong>Kekurangan:</strong>
+      <ul>
+        <li>• Risiko penipuan tinggi; banyak penyedia cloud mining adalah scam.</li>
+        <li>• Biaya langganan sering kali lebih tinggi dari keuntungan.</li>
+        <li>• Kurangnya transparansi; kamu tidak tahu apakah hash rate benar-benar dialokasikan.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh:</strong>
+      <ul>
+        <li>Kamu menyewa 10 TH/s dari platform seperti Genesis Mining seharga $500/tahun. Penyedia mengklaim keuntungan 0.00001 BTC/hari, tapi setelah biaya operasional dan maintenance (katakanlah 50%), kamu hanya dapat 0.000005 BTC/hari (Rp 7.500/hari). Dalam setahun, pendapatanmu mungkin tidak menutup biaya sewa.</li>
+      </ul>
+    </li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Kontrak cloud mining biasanya berdurasi 6 bulan hingga 2 tahun, dengan hash rate tetap (misalnya, 10 TH/s).</li>
+        <li>• Penyedia mengelola ASIC di lokasi strategis (misalnya, Islandia dengan energi geothermal).</li>
+        <li>• Pengguna hanya menerima pembayaran via wallet tanpa akses ke perangkat keras atau data mining.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">4. <strong>Corporate Miner</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Corporate miner adalah perusahaan besar yang menjalankan operasi mining skala industri dengan ribuan atau puluhan ribu ASIC, sering disebut mining farm.</li>
+    <li><strong>Karakteristik:</strong>
+      <ul>
+        <li>• Skala besar: Punya hash rate hingga EH/s, mendominasi jaringan Bitcoin.</li>
+        <li>• Efisiensi tinggi: Beroperasi di lokasi dengan listrik sangat murah (misalnya, $0.02/kWh) dan infrastruktur canggih.</li>
+        <li>• Cocok untuk: Perusahaan dengan modal besar, seperti Marathon Digital atau Riot Blockchain.</li>
+      </ul>
+    </li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Ekonomi skala; biaya per TH/s lebih rendah karena pembelian ASIC massal dan listrik murah.</li>
+        <li>• Kemampuan menahan volatilitas harga BTC.</li>
+        <li>• Sering punya kontrak energi jangka panjang atau akses ke energi terbarukan.</li>
+      </ul>
+    </li>
+    <li><strong>Kekurangan:</strong>
+      <ul>
+        <li>• Investasi awal sangat besar (miliaran dolar untuk ribuan ASIC).</li>
+        <li>• Regulasi ketat di beberapa negara (misalnya, larangan mining di Tiongkok).</li>
+        <li>• Dampak lingkungan sering dikritik.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh:</strong>
+      <ul>
+        <li>Marathon Digital punya mining farm di Texas dengan 200.000 ASIC (total ~40 EH/s). Dengan listrik $0.03/kWh, mereka menghasilkan ratusan BTC per bulan, bahkan setelah biaya operasional.</li>
+      </ul>
+    </li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Corporate miner sering mengembangkan ASIC sendiri atau bekerja sama dengan produsen seperti Bitmain.</li>
+        <li>• Menggunakan sistem manajemen energi canggih untuk mengoptimalkan konsumsi daya.</li>
+        <li>• Bisa menjalankan kombinasi solo mining (untuk hash rate besar) dan pool mining (untuk diversifikasi).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">5. <strong>Proxy Miner (NiceHash dan Sejenisnya)</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Proxy miner adalah individu atau entitas yang menyewakan hash rate mereka melalui platform seperti NiceHash, bukan mining Bitcoin langsung. Platform ini mengarahkan hash rate ke pool atau pembeli lain.</li>
+    <li><strong>Karakteristik:</strong>
+      <ul>
+        <li>• Fleksibel: Miner tidak perlu gabung pool atau jalankan node; platform mengelola semuanya.</li>
+        <li>• Pembayaran dalam BTC: Meski hash rate mungkin digunakan untuk mining altcoin, miner dibayar dalam Bitcoin.</li>
+        <li>• Cocok untuk: Miner yang ingin pendapatan tanpa repot mengatur pool atau algoritma.</li>
+      </ul>
+    </li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Mudah digunakan; cukup instal software NiceHash dan mulai mining.</li>
+        <li>• Otomatis memilih algoritma/koin paling menguntungkan berdasarkan pasar.</li>
+        <li>• Tidak perlu pengetahuan mendalam tentang mining.</li>
+      </ul>
+    </li>
+    <li><strong>Kekurangan:</strong>
+      <ul>
+        <li>• Biaya platform (misalnya, 2-5% dari pendapatan).</li>
+        <li>• Kurangnya kontrol; miner tidak tahu ke mana hash rate dialokasikan.</li>
+        <li>• Risiko ketergantungan pada platform pihak ketiga.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh:</strong>
+      <ul>
+        <li>Kamu punya 5 Antminer S19 (500 TH/s) dan gunakan NiceHash. Platform mengarahkan hash rate-mu ke pool Bitcoin atau altcoin, membayarmu ~0.0005 BTC/hari setelah biaya (setara Rp 750.000 jika 1 BTC = Rp 1.5 miliar).</li>
+      </ul>
+    </li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• NiceHash menggunakan pasar hash rate, di mana "pembeli" (pool atau miner lain) membayar untuk hash rate.</li>
+        <li>• Software NiceHash otomatis mengalihkan hash rate ke algoritma seperti SHA-256 (Bitcoin) atau Scrypt (Litecoin).</li>
+        <li>• Pembayaran dilakukan via wallet internal NiceHash, dengan penarikan minimal (misalnya, 0.0001 BTC).</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Step-by-Step Proses Mining Bitcoin</h2>
+  <hr>
+  <p class="point">Berikut adalah langkah-langkah ultra lengkap tentang bagaimana mining Bitcoin berlangsung, dari awal hingga akhir, dengan penjelasan untuk pemula dan detail teknis untuk yang paham teknologi.</p>
+
+  <p class="point"><strong>Langkah 1: Kumpulkan Transaksi dari Mempool</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Miner mengambil transaksi yang belum dikonfirmasi dari mempool, yaitu antrean transaksi yang menunggu verifikasi.</li>
+    <li><strong>Detail untuk pemula:</strong> Bayangkan mempool seperti daftar pesanan di restoran. Miner pilih "pesanan" (transaksi) mana yang mau dimasukkan ke blok.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Mempool adalah kumpulan transaksi yang dikirim pengguna ke jaringan Bitcoin tapi belum masuk blockchain.</li>
+        <li>• Miner biasanya memilih transaksi dengan biaya transaksi tertinggi (sat/byte) untuk memaksimalkan pendapatan.</li>
+        <li>• Contoh: Transaksi A membayar 100 sat/byte, sedangkan B hanya 10 sat/byte. Miner akan prioritaskan A.</li>
+        <li>• Setiap transaksi berisi input (dari mana Bitcoin berasal) dan output (ke mana Bitcoin dikirim).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Langkah 2: Membuat Kandidat Blok</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Miner mengelompokkan transaksi yang dipilih (biasanya 2.000-3.000 transaksi) ke dalam sebuah kandidat blok dan menambahkan header blok.</li>
+    <li><strong>Detail untuk pemula:</strong> Ini seperti mengumpulkan banyak dokumen ke dalam satu map, lalu menambahkan sampul (header) yang berisi informasi penting tentang map itu.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Header blok berisi:
+          <ul>
+            <li>- Version: Versi perangkat lunak Bitcoin (4 byte).</li>
+            <li>- Previous Block Hash: Hash dari blok sebelumnya (32 byte), menghubungkan blockchain.</li>
+            <li>- Merkle Root: Ringkasan semua transaksi dalam blok (32 byte), dihitung dengan struktur pohon Merkle.</li>
+            <li>- Timestamp: Waktu pembuatan blok (4 byte).</li>
+            <li>- Target Difficulty: Nilai target kesulitan dalam format tertentu (4 byte).</li>
+            <li>- Nonce: Angka acak yang diubah-ubah untuk mencari hash valid (4 byte).</li>
+          </ul>
+        </li>
+        <li>• Miner juga menyertakan transaksi khusus (coinbase transaction) untuk mengklaim block reward.</li>
+        <li>• Ukuran blok dibatasi hingga 1 MB (dengan SegWit, bisa lebih besar secara efektif).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Langkah 3: Mencari Nonce yang Menghasilkan Hash Valid</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Miner menggunakan perangkat keras (ASIC) untuk mencoba berbagai nilai nonce hingga menemukan hash yang memenuhi syarat kesulitan (biasanya dimulai dengan banyak nol).</li>
+    <li><strong>Detail untuk pemula:</strong> Ini seperti mencoba kunci acak untuk membuka gembok. Kamu terus mencoba sampai ketemu kunci yang pas. Di mining, kuncinya adalah nonce, dan gemboknya adalah hash dengan pola tertentu.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Miner menghitung hash dari header blok menggunakan algoritma SHA-256 (double SHA-256, yaitu hash di-hash lagi).</li>
+        <li>• Hash yang valid harus lebih kecil dari atau sama dengan target (angka yang ditentukan oleh kesulitan jaringan).</li>
+        <li>• Contoh hash valid: 0000000000000000000789abcdef... (harus punya sejumlah nol di depan, misalnya 20 nol).</li>
+        <li>• Proses ini bersifat brute force: Miner mencoba miliaran atau triliunan nonce per detik.</li>
+        <li>• Extra nonce: Jika semua nonce (0 hingga 2^32) tidak menghasilkan hash valid, miner mengubah coinbase transaction atau timestamp untuk mendapatkan header baru.</li>
+        <li>• Hash rate: Perangkat seperti Antminer S21 (200 TH/s) bisa mencoba 200 triliun kombinasi hash per detik.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Langkah 4: Verifikasi oleh Jaringan</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Jika miner menemukan hash valid, blok dikirim ke jaringan Bitcoin. Node lain memverifikasi apakah blok dan transaksi di dalamnya valid.</li>
+    <li><strong>Detail untuk pemula:</strong> Ini seperti mengirimkan jawaban lomba puzzle ke panitia untuk diperiksa. Jika benar, semua setuju puzzle itu selesai.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Node memeriksa:
+          <ul>
+            <li>- Apakah hash blok memenuhi target kesulitan.</li>
+            <li>- Apakah transaksi dalam blok valid (tidak ada double-spending, tanda tangan digital benar, dll.).</li>
+            <li>- Apakah previous block hash sesuai dengan blockchain.</li>
+          </ul>
+        </li>
+        <li>• Jika valid, node menambahkan blok ke salinan blockchain mereka dan menyebarkannya ke node lain.</li>
+        <li>• Jika ada konflik (misalnya, dua miner menemukan blok bersamaan), jaringan memilih rantai dengan total PoW terbesar (longest chain rule).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Langkah 5: Mendapatkan Hadiah</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Miner yang berhasil menerima block reward (3.125 BTC pada 2025) ditambah biaya transaksi dari semua transaksi dalam blok.</li>
+    <li><strong>Detail untuk pemula:</strong> Ini seperti menerima hadiah lomba setelah jawabanmu diterima. Hadiahnya adalah Bitcoin baru plus "tip" dari pengguna.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Block reward dikirim melalui coinbase transaction, yang tidak punya input (karena Bitcoin-nya baru diciptakan).</li>
+        <li>• Biaya transaksi dihitung sebagai selisih antara total input dan output semua transaksi dalam blok.</li>
+        <li>• Contoh: Jika blok berisi 2.000 transaksi dengan total biaya 0.5 BTC, miner dapat 3.125 BTC (reward) + 0.5 BTC (biaya) = 3.625 BTC.</li>
+        <li>• Hadiah dikirim ke alamat wallet yang ditentukan miner dalam coinbase transaction.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Langkah 6: Mulai Ulang Proses</strong></p>
+  <ul>
+    <li><strong>Apa yang terjadi?</strong> Setelah blok diterima, miner langsung mulai mengerjakan blok berikutnya, mengulang proses dari Langkah 1.</li>
+    <li><strong>Detail untuk pemula:</strong> Setelah menang satu ronde lomba, kamu langsung ikut ronde berikutnya dengan puzzle baru.</li>
+    <li><strong>Detail teknis:</strong>
+      <ul>
+        <li>• Mempool diperbarui dengan transaksi baru.</li>
+        <li>• Previous block hash kini merujuk ke blok yang baru saja ditambahkan.</li>
+        <li>• Kesulitan mungkin berubah setiap 2.016 blok (sekitar 2 minggu) berdasarkan total hash rate jaringan.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Contoh Nyata Mining Bitcoin</h2>
+  <hr>
+  
+  <p class="point"><strong>Contoh untuk Pemula</strong></p>
+  <ul>
+    <li>Bayangkan kamu punya <strong>Antminer S21 (200 TH/s)</strong> dan ingin mining di rumah:</li>
+      <ul>
+        <li>• Kamu gabung dengan mining pool seperti <strong>F2Pool</strong>.</li>
+        <li>• Kamu nyalakan mesin 24 jam, konsumsi listrik <strong>~4.5 kW</strong>.</li>
+        <li>• Pool-mu menemukan blok, dan kamu dapat bagian kecil dari hadiah (misalnya, <strong>0.0001 BTC per hari</strong>) sesuai hash rate-mu.</li>
+        <li>• Jika listrikmu <strong>Rp 2.500/kWh</strong>, biaya harian = 4.5 kW × 24 jam × Rp 2.500 = <strong>Rp 270.000</strong>.</li>
+        <li>• Jika 0.0001 BTC = <strong>Rp 1.500.000</strong> (misalnya, 1 BTC = Rp 1.5 miliar), kamu untung <strong>Rp 1.230.000/hari</strong>.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point"><strong>Contoh Teknis</strong></p>
+  <ul>
+    <li><strong>Setup:</strong> 10 unit Antminer S21 (total <strong>2 PH/s</strong>), konsumsi listrik <strong>45 kW</strong>.</li>
+    <li><strong>Biaya listrik:</strong> $0.10/kWh (~Rp 2.500/kWh).</li>
+    <li><strong>Hash rate jaringan:</strong> 500 EH/s (500.000 PH/s).</li>
+    <li><strong>Kontribusi:</strong> Hash rate-mu adalah 2 PH/s ÷ 500.000 PH/s = <strong>0.0004%</strong> dari jaringan.</li>
+    <li><strong>Pendapatan:</strong> Jika jaringan menghasilkan <strong>144 blok/hari</strong> (1 blok tiap 10 menit), dan setiap blok beri <strong>3.625 BTC</strong> (reward + biaya), total hadiah harian = 144 × 3.625 = <strong>522 BTC</strong>. Bagianmu = 0.0004% × 522 BTC = <strong>~0.0021 BTC/hari</strong>.</li>
+    <li><strong>Keuntungan:</strong>
+      <ul>
+        <li>• Pendapatan: 0.0021 BTC × Rp 1.5 miliar = <strong>Rp 3.150.000/hari</strong>.</li>
+        <li>• Biaya listrik: 45 kW × 24 jam × Rp 2.500 = <strong>Rp 2.700.000/hari</strong>.</li>
+        <li>• Profit: Rp 3.150.000 - Rp 2.700.000 = <strong>Rp 450.000/hari</strong>.</li>
+      </ul>
+    </li>
+    <li><strong>Catatan:</strong> Keuntungan bergantung pada harga BTC, kesulitan, dan biaya listrik.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Alat dan Persiapan untuk Mining</h2>
+  <hr>
+  
+  <p class="point">a. <strong>Hardware</strong></p>
+  <ul>
+    <li><strong>CPU/GPU:</strong> Dulu (2009-2012), mining bisa pakai CPU atau GPU. Sekarang tidak efisien karena kesulitan terlalu tinggi.</li>
+    <li><strong>ASIC:</strong> Perangkat khusus seperti <strong>Antminer S21</strong> (200 TH/s, 3.5 kW) atau <strong>Whatsminer M50</strong> (114 TH/s, 3.3 kW).</li>
+    <li><strong>Efisiensi:</strong> Pilih ASIC dengan J/TH rendah (misalnya, <strong>17.5 J/TH</strong> untuk S21).</li>
+  </ul>
+
+  <p class="point">b. <strong>Software</strong></p>
+  <ul>
+    <li><strong>CGMiner/BFGMiner:</strong> Untuk mengontrol ASIC dan mengatur parameter mining.</li>
+    <li><strong>Mining Pool Software:</strong> Pool seperti F2Pool menyediakan software atau API untuk terhubung.</li>
+    <li><strong>NiceHash:</strong> Alternatif untuk menyewakan hash rate tanpa gabung pool.</li>
+  </ul>
+
+  <p class="point">c. <strong>Infrastruktur</strong></p>
+  <ul>
+    <li><strong>Listrik:</strong> Butuh pasokan stabil dan murah (idealnya <strong><$0.05/kWh</strong>).</li>
+    <li><strong>Pendingin:</strong> ASIC panas, butuh AC atau ventilasi kuat.</li>
+    <li><strong>Internet:</strong> Koneksi stabil untuk komunikasi dengan pool/jaringan.</li>
+  </ul>
+
+  <p class="point">d. <strong>Mining Pool vs Solo Mining</strong></p>
+  <ul>
+    <li><strong>Mining Pool:</strong> Gabungkan hash rate dengan miner lain. Hadiah dibagi sesuai kontribusi (misalnya, PPS atau PPLNS). Cocok untuk miner kecil.</li>
+    <li><strong>Solo Mining:</strong> Mining sendiri. Peluang menang kecil (misalnya, 2 PH/s vs 500 EH/s = peluang <strong>0.0004%</strong>), tapi hadiah penuh jika menang.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Tantangan dan Risiko</h2>
+  <hr>
+  
+  <p class="point">1. <strong>Biaya Listrik</strong></p>
+  <ul>
+    <li>Mining boros energi. Di Indonesia (listrik <strong>~Rp 2.500/kWh</strong>), sulit untung kecuali punya akses listrik murah.</li>
+  </ul>
+
+  <p class="point">2. <strong>Kesulitan Meningkat</strong></p>
+  <ul>
+    <li>Setiap <strong>2 minggu</strong>, kesulitan naik seiring bertambahnya miner.</li>
+  </ul>
+
+  <p class="point">3. <strong>Harga Bitcoin</strong></p>
+  <ul>
+    <li>Jika BTC jatuh (misalnya, dari <strong>$100.000</strong> ke <strong>$50.000</strong>), mining bisa rugi.</li>
+  </ul>
+
+  <p class="point">4. <strong>Persaingan</strong></p>
+  <ul>
+    <li>Didominasi perusahaan besar dengan farm ASIC di lokasi listrik murah.</li>
+  </ul>
+
+  <p class="point">5. <strong>Regulasi</strong></p>
+  <ul>
+    <li>Beberapa negara (misalnya, <strong>Tiongkok</strong>) pernah larang mining.</li>
+  </ul>
+
+  <p class="point">6. <strong>Perawatan Hardware</strong></p>
+  <ul>
+    <li>ASIC bisa rusak karena panas atau penggunaan terus-menerus.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Fakta Menarik</h2>
+  <hr>
+  
+  <p class="point">1. <strong>Halving</strong></p>
+  <ul>
+    <li>Terjadi setiap <strong>4 tahun</strong>. Pada <strong>2028</strong>, block reward turun ke <strong>1.5625 BTC</strong>.</li>
+  </ul>
+
+  <p class="point">2. <strong>Dominasi Pool</strong></p>
+  <ul>
+    <li>Pada <strong>2025</strong>, <strong>>90% hash rate</strong> dikuasai pool besar (<strong>AntPool, F2Pool, ViaBTC</strong>).</li>
+  </ul>
+
+  <p class="point">3. <strong>Lokasi Strategis</strong></p>
+  <ul>
+    <li>Miner pilih lokasi seperti <strong>Islandia</strong> (geothermal) atau <strong>Kazakhstan</strong> (batu bara murah).</li>
+  </ul>
+
+  <p class="point">4. <strong>Masa Depan</strong></p>
+  <ul>
+    <li>Pada <strong>~2140</strong>, block reward habis. Miner akan bergantung pada <strong>biaya transaksi</strong>.</li>
+  </ul>
+</div>
+<div class="quote-box">
+  <p class="quote-text">
+    "As long as a majority of CPU power is controlled by honest nodes, the network will remain secure."
+  </p>
+  <p class="quote-source">
+    — Satoshi nakamoto
+  </p>
+</div>
+
+<style>
+  .quote-box {
+    background: linear-gradient(270deg, #000000, #444444, #000000);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+    padding: 30px;
+    max-width: 700px;
+    margin: 15px auto;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .quote-text {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+  }
+
+  .quote-source {
+    font-size: 14px;
+    color: white;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    margin: 0;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+
+  <div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+
+
+  <script>
+    const clickSound = new Audio('sfx.mp3'); // Pastikan path sfx.mp3 benar
+
+    function playClickSound() {
+      clickSound.currentTime = 0; // Mengatur ulang waktu ke awal agar bisa diputar ulang dengan cepat
+      clickSound.play().catch(e => console.error("Error playing sound:", e)); // Tambahkan error handling
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500); // Sesuaikan dengan durasi transisi CSS (0.5s)
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fade in the body when the page loads
+      document.body.classList.add('fade-in');
+
+      // Add click sound to all clickable elements
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      // Update the back button to use the new fadeOutAndRedirect function
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault(); // Prevent default link behavior
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      // Handle scroll for top-box blur effect
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) { // Jika halaman discroll ke bawah
+          topBox.classList.add('scrolled');
+        } else { // Jika kembali ke paling atas
+          topBox.classList.remove('scrolled');
+        }
+      });
+
+    });
+
+    // Fallback untuk gambar profil
+    document.querySelector('.profile-pic img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    // Fallback untuk tombol back
+    document.querySelector('.back-button img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 70px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    .content-box {
+      padding: 20px;
+      max-width: 800px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .content-box h2 {
+      margin-bottom: 5px;
+    }
+
+    .content-box hr {
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .page-divider {
+      width: 90%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin: 60px auto 40px auto;
+      opacity: 0.7;
+    }
+
+    /* Styles for the new indentation */
+    .content-box p.point {
+      margin-left: 20px;
+      /* Indent for points */
+      margin-bottom: 5px;
+    }
+
+    .content-box ul li {
+      margin-left: 40px;
+      /* Indent for sub-points */
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+
+  </div>
+  <div class="page-divider"></div>
+<div class="content-box">
+	<h2>Apa itu kriptografi? </h2>
+	<hr>
+  <p><strong>Kriptografi</strong> adalah ilmu dan seni untuk menjaga <strong>kerahasiaan</strong>, <strong>integritas</strong>, dan <strong>otentisitas</strong> informasi melalui teknik pengkodean atau penyandian data sehingga hanya pihak yang berwenang yang dapat mengakses atau memahaminya. <strong>Kriptografi</strong> berasal dari kata Yunani <strong>kryptos</strong> (tersembunyi) dan <strong>graphein</strong> (menulis), yang secara harfiah berarti "penulisan tersembunyi".</p>
+</div>
+ <div class="page-divider"></div>
+<div class="content-box">
+  <h2>Sejarah Kriptografi</h2>
+  <hr>
+  <p class="point">Kriptografi telah digunakan selama ribuan tahun untuk melindungi informasi sensitif. Berikut adalah rangkuman sejarahnya:</p>
+
+  <p class="point"><strong>Zaman Kuno:</strong></p>
+  <ul>
+    <li>• <strong>Mesir Kuno (1900 SM):</strong> Hieroglif non-standar digunakan untuk menyembunyikan makna tulisan, meskipun lebih bersifat simbolis daripada kriptografi modern.</li>
+    <li>• <strong>Yunani Kuno:</strong> Spartans menggunakan scytale, alat berupa tongkat untuk membungkus dan membaca pesan rahasia dengan cara transposisi (mengubah urutan huruf).</li>
+    <li>• <strong>Caesar Cipher (100 SM):</strong> Julius Caesar menggunakan teknik substitusi sederhana, menggeser huruf dalam alfabet (misalnya, A menjadi D jika digeser tiga posisi).</li>
+  </ul>
+
+  <p class="point"><strong>Abad Pertengahan:</strong></p>
+  <ul>
+    <li>• <strong>Kriptografi Arab:</strong> Pada abad ke-9, Al-Kindi, seorang polymath Arab, memperkenalkan analisis frekuensi untuk memecahkan kode substitusi, menandai awal kriptanalisis.</li>
+    <li>• <strong>Eropa Abad Pertengahan:</strong> Biarawan dan diplomat menggunakan kode sederhana untuk komunikasi rahasia.</li>
+  </ul>
+
+  <p class="point"><strong>Renaissance dan Awal Modern:</strong></p>
+  <ul>
+    <li>• <strong>Vigenère Cipher (Abad ke-16):</strong> Blaise de Vigenère mengembangkan cipher polialfabetik yang lebih kompleks, menggunakan kunci untuk mengenkripsi teks.</li>
+    <li>• <strong>Diplomasi Eropa:</strong> Kriptografi menjadi alat penting dalam komunikasi politik dan militer.</li>
+  </ul>
+
+  <p class="point"><strong>Era Modern (Abad ke-19 dan ke-20):</strong></p>
+  <ul>
+    <li>• <strong>Mesin Enigma (Perang Dunia II):</strong> Jerman menggunakan mesin Enigma untuk mengenkripsi komunikasi militer. Sekutu, dipimpin oleh Alan Turing, berhasil memecahkannya, mempercepat kemenangan Perang Dunia II.</li>
+    <li>• <strong>Kriptografi Komputer:</strong> Dengan munculnya komputer, kriptografi berpindah ke ranah digital, menggunakan algoritma matematis kompleks.</li>
+  </ul>
+
+  <p class="point"><strong>Era Digital (Akhir Abad ke-20 - Sekarang):</strong></p>
+  <ul>
+    <li>• <strong>Kriptografi Kunci Publik (1970-an):</strong> Penemuan oleh Whitfield Diffie dan Martin Hellman memperkenalkan konsep kunci publik dan kunci privat, diikuti oleh algoritma RSA oleh Rivest, Shamir, dan Adleman.</li>
+    <li>• <strong>Standar Modern:</strong> Algoritma seperti AES (Advanced Encryption Standard) dan SHA (Secure Hash Algorithm) menjadi standar untuk keamanan digital.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Contoh Kegunaan Kriptografi</h2>
+  <hr>
+  <p class="point">Kriptografi memiliki aplikasi luas dalam berbagai bidang:</p>
+
+  <ul>
+    <li>• <strong>Keamanan Komunikasi:</strong> Melindungi data yang dikirim melalui internet, seperti pesan email, obrolan WhatsApp, atau panggilan VoIP.</li>
+    <li>• <strong>Perlindungan Data:</strong> Mengenkripsi data sensitif di perangkat (misalnya, laptop atau ponsel) untuk mencegah akses tidak sah.</li>
+    <li>• <strong>Otentikasi:</strong> Memverifikasi identitas pengguna melalui tanda tangan digital atau sertifikat SSL/TLS di situs web (misalnya, HTTPS).</li>
+    <li>• <strong>Integritas Data:</strong> Memastikan data tidak diubah selama transmisi, misalnya dengan menggunakan fungsi hash.</li>
+    <li>• <strong>Keamanan Finansial:</strong> Melindungi transaksi perbankan online, seperti transfer dana atau pembayaran kartu kredit.</li>
+    <li>• <strong>Militer dan Intelijen:</strong> Mengamankan komunikasi strategis dan data rahasia pemerintah.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Jenis-Jenis Kriptografi</h2>
+  <hr>
+  <p class="point">Kriptografi modern dapat diklasifikasikan berdasarkan metode dan tekniknya. Berikut adalah jenis-jenis utama:</p>
+
+  <p class="point"><strong>Kriptografi Simetris:</strong></p>
+  <ul>
+    <li>• Menggunakan kunci yang sama untuk enkripsi dan dekripsi.</li>
+    <li>• <strong>Contoh:</strong>
+      <ul>
+        <li>- <strong>AES</strong> (Advanced Encryption Standard): Digunakan untuk mengenkripsi data di perangkat penyimpanan atau VPN.</li>
+        <li>- <strong>DES</strong> (Data Encryption Standard): Standar lama yang kini dianggap kurang aman.</li>
+      </ul>
+    </li>
+    <li>• <strong>Kelebihan:</strong> Cepat dan efisien untuk data besar.</li>
+    <li>• <strong>Kekurangan:</strong> Distribusi kunci yang aman menjadi tantangan.</li>
+  </ul>
+
+  <p class="point"><strong>Kriptografi Asimetris:</strong></p>
+  <ul>
+    <li>• Menggunakan dua kunci: kunci publik (public key) untuk enkripsi dan kunci privat ( private key ) untuk dekripsi.</li>
+    <li>• <strong>Contoh:</strong>
+      <ul>
+        <li>- <strong>RSA:</strong> Digunakan untuk pertukaran kunci aman dan tanda tangan digital.</li>
+        <li>- <strong>Elliptic Curve Cryptography (ECC):</strong> Lebih efisien untuk perangkat dengan sumber daya terbatas.</li>
+      </ul>
+    </li>
+    <li>• <strong>Kelebihan:</strong> Tidak perlu berbagi kunci rahasia.</li>
+    <li>• <strong>Kekurangan:</strong> Lebih lambat dibandingkan kriptografi simetris.</li>
+  </ul>
+
+  <p class="point"><strong>Fungsi Hash:</strong></p>
+  <ul>
+    <li>• Mengubah data menjadi nilai hash dengan panjang tetap, tidak dapat dibalikkan.</li>
+    <li>• <strong>Contoh:</strong>
+      <ul>
+        <li>- <strong>SHA-256:</strong> Digunakan untuk memverifikasi integritas data.</li>
+        <li>- <strong>MD5:</strong> Kini dianggap rentan, tetapi masih digunakan di beberapa aplikasi non-keamanan.</li>
+      </ul>
+    </li>
+    <li>• <strong>Kegunaan:</strong> Memastikan integritas data dan menyimpan kata sandi dengan aman.</li>
+  </ul>
+
+  <p class="point"><strong>Kriptografi Kuantum:</strong></p>
+  <ul>
+    <li>• Berbasis prinsip mekanika kuantum untuk keamanan yang sangat tinggi.</li>
+    <li>• Masih dalam tahap pengembangan, dengan potensi untuk mengatasi ancaman komputer kuantum terhadap algoritma tradisional seperti RSA.</li>
+  </ul>
+
+  <p class="point"><strong>Kode dan Cipher Lain:</strong></p>
+  <ul>
+    <li>• <strong>Cipher Substitusi dan Transposisi:</strong> Teknik klasik seperti Caesar Cipher atau Vigenère Cipher.</li>
+    <li>• <strong>Steganografi:</strong> Menyembunyikan pesan dalam media lain (misalnya, gambar atau audio), meskipun bukan kriptografi murni.</li>
+  </ul>
+</div>
+
+<div class="content-box">
+	<div class="page-divider"></div>
+	<h1>Behind the 3 Cryptographic System</h1>
+	<hr>
+    <h2>1. SHA-256 (Secure Hash Algorithm 256-bit)</h2>
+    <hr>
+    <p><strong>SHA-256</strong> adalah fungsi hash kriptografis dari keluarga SHA-2 yang menghasilkan hash berukuran 256-bit (32 byte) dari input apa pun, tidak peduli seberapa besar atau kecil inputnya. Fungsi ini bersifat <strong>one-way</strong> (tidak dapat dibalik) dan dirancang untuk keamanan tinggi.</p>
+
+    <h3>• Cara Kerja SHA-256</h3>
+    <h4>Padding Input:</h4>
+    <div style="margin-left: 20px;">
+        <p>Data input (pesan) dipecah menjadi blok-blok berukuran 512-bit.</p>
+        <p>Jika panjang pesan tidak kelipatan 512-bit, dilakukan padding:</p>
+        <ul>
+            <li>Tambahkan bit <strong>1</strong> di akhir pesan.</li>
+            <li>Tambahkan bit <strong>0</strong> hingga panjangnya 448-bit (modulo 512).</li>
+            <li>Tambahkan 64-bit terakhir yang menyatakan panjang pesan asli dalam bit.</li>
+        </ul>
+        <p>Contoh: Pesan "abc" (24-bit) akan dipad hingga menjadi kelipatan 512-bit.</p>
+    </div>
+
+    <h4>Inisialisasi Buffer:</h4>
+    <div style="margin-left: 20px;">
+        <p>SHA-256 menggunakan 8 register (A, B, C, D, E, F, G, H) yang diinisialisasi dengan nilai konstanta 32-bit tertentu (berdasarkan akar kuadrat dari 8 bilangan prima pertama).</p>
+        <p>Nilai awal ini disebut <strong>initial hash values</strong>.</p>
+    </div>
+
+    <h4>Pemrosesan Blok:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setiap blok 512-bit dibagi menjadi 16 kata 32-bit (total 512 ÷ 32 = 16).</p>
+        <p>Kata-kata ini diperluas menjadi 64 kata 32-bit menggunakan operasi logika seperti rotasi bit dan XOR.</p>
+        <p>Untuk setiap kata ke-17 hingga ke-64, rumusnya:</p>
+        <p>W[i] = W[i-2] + σ<sub>1</sub>(W[i-7]) + W[i-15] + σ<sub>0</sub>(W[i-16])</p>
+        <p>Di mana σ<sub>0</sub> dan σ<sub>1</sub> adalah fungsi transformasi bit (rotasi dan pergeseran).</p>
+    </div>
+
+    <h4>Putaran Kompresi:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setiap blok diproses dalam 64 putaran.</p>
+        <p>Dalam setiap putaran, nilai register (A-H) diperbarui menggunakan:</p>
+        <ul>
+            <li>Fungsi logika seperti <strong>Ch</strong> (Choose), <strong>Maj</strong> (Majority), Σ<sub>0</sub>, dan Σ<sub>1</sub>.</li>
+            <li>Penambahan modulo 2³² dengan konstanta putaran (berdasarkan akar kubik bilangan prima).</li>
+        </ul>
+        <p>Rumus utama untuk memperbarui register:</p>
+        <p>T<sub>1</sub> = H + Σ<sub>1</sub>(E) + Ch(E,F,G) + K[i] + W[i]</p>
+        <p>T<sub>2</sub> = Σ<sub>0</sub>(A) + Maj(A,B,C)</p>
+        <p>H = G, G = F, F = E, E = D + T<sub>1</sub>, D = C, C = B, B = A, A = T<sub>1</sub> + T<sub>2</sub></p>
+        <p>Di mana K[i] adalah konstanta putaran ke-i.</p>
+    </div>
+
+    <h4>Pembaruan Hash:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setelah 64 putaran, nilai register (A-H) ditambahkan ke nilai hash sementara dari blok sebelumnya (modulo 2³²).</p>
+        <p>Proses ini diulang untuk setiap blok hingga semua blok diproses.</p>
+    </div>
+
+    <h4>Output:</h4>
+    <div style="margin-left: 20px;">
+        <p>Hasil akhir adalah konkatenasi nilai register A-H (8 x 32-bit = 256-bit), ditampilkan dalam format heksadesimal (64 karakter).</p>
+    </div>
+
+    <h3>• Sifat-Sifat SHA-256</h3>
+    <ul>
+        <li><strong>Deterministik</strong>: Input yang sama selalu menghasilkan hash yang sama.</li>
+        <li><strong>Resistensi Kolisi</strong>: Sulit menemukan dua input berbeda dengan hash yang sama.</li>
+        <li><strong>Avalanche Effect</strong>: Perubahan kecil pada input menghasilkan hash yang sangat berbeda.</li>
+        <li><strong>One-Way</strong>: Tidak mungkin merekonstruksi input dari hash.</li>
+    </ul>
+
+    <h3>• Contoh Penggunaan</h3>
+    <p>Dalam Bitcoin, SHA-256 digunakan untuk:</p>
+    <ul>
+        <li>Membuat hash transaksi (Merkle Tree).</li>
+        <li>Proses penambangan (mining) untuk menemukan nonce yang menghasilkan hash blok dengan kesulitan tertentu.</li>
+    </ul>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="content-box">
+    <h2>2. ECDSA (Elliptic Curve Digital Signature Algorithm)</h2>
+    <hr>
+    <p><strong>ECDSA</strong> adalah algoritma tanda tangan digital berbasis kriptografi kurva eliptik. ECDSA digunakan untuk memverifikasi keaslian dan integritas pesan tanpa mengungkap kunci privat. Dalam Bitcoin, ECDSA digunakan untuk menandatangani transaksi.</p>
+
+    <h3>• Dasar Matematika ECDSA</h3>
+    <p>ECDSA mengandalkan sifat matematis kurva eliptik di atas bidang hingga (finite field). Kurva eliptik umumnya berbentuk:</p>
+    <p>y² = x³ + ax + b (mod p)</p>
+    <p>Di mana p adalah bilangan prima besar, dan a, b adalah parameter kurva. Bitcoin menggunakan kurva <strong>secp256k1</strong>.</p>
+
+    <div style="margin-left: 20px;">
+        <p><strong>Titik pada Kurva:</strong> Solusi (x, y) yang memenuhi persamaan kurva, ditambah titik tak hingga (O).</p>
+        <p><strong>Operasi Penjumlahan Titik:</strong> Dua titik pada kurva dapat dijumlahkan untuk menghasilkan titik lain pada kurva.</p>
+        <p><strong>Perkalian Skalar:</strong> Titik G (generator) dapat dikalikan dengan bilangan k untuk menghasilkan kG. Operasi ini mudah, tetapi sulit untuk dibalik (menemukan k dari kG).</p>
+    </div>
+
+    <h3>• Komponen ECDSA</h3>
+    <h4>Parameter Domain:</h4>
+    <div style="margin-left: 20px;">
+        <p>p: Modulus bidang hingga.</p>
+        <p>a, b: Parameter kurva.</p>
+        <p>G: Titik generator.</p>
+        <p>n: Orde besar.</p>
+    </div>
+
+    <h4>Kunci:</h4>
+    <div style="margin-left: 20px;">
+        <p><strong>Kunci Privat:</strong> Bilangan acak d (1 ≤ d < n).</p>
+        <p><strong>Kunci Publik:</strong> Titik Q = d × G.</p>
+    </div>
+
+    <h4>Pesan:</h4>
+    <div style="margin-left: 20px;">
+        <p>Biasanya hash dari data (misalnya, hash SHA-256 dari transaksi Bitcoin).</p>
+    </div>
+
+    <h3>• Proses Penandatanganan</h3>
+    <p>Untuk menandatangani pesan m:</p>
+    <ol>
+        <li><strong>Hitung Hash Pesan:</strong><br>
+            Ambil z = H(m) (hash pesan, misalnya SHA-256).<br>
+            Ambil z sebagai bilangan integer (biasanya bit paling signifikan dari hash).</li>
+        <li><strong>Pilih Nonce Acak:</strong><br>
+            Pilih bilangan acak k (1 ≤ k < n).<br>
+            Nonce ini harus unik dan rahasia untuk setiap tanda tangan.</li>
+        <li><strong>Hitung Titik Kurva:</strong><br>
+            Hitung titik (x₁, y₁) = k × G.<br>
+            Ambil r = x₁ mod n. Jika r = 0, ulang dari langkah 2.</li>
+        <li><strong>Hitung Tanda Tangan:</strong><br>
+            Hitung s = k⁻¹ (z + r × d) mod n, di mana k⁻¹ adalah inversi modulatif dari k terhadap n, dan d adalah kunci privat.<br>
+            Jika s = 0, ulang dari langkah 2.<br>
+            Tanda tangan adalah pasangan (r, s).</li>
+    </ol>
+
+    <h3>• Proses Verifikasi</h3>
+    <p>Untuk memverifikasi tanda tangan (r, s) pada pesan m dengan kunci publik Q:</p>
+    <ol>
+        <li><strong>Hitung Hash Pesan:</strong><br>
+            Hitung z = H(m) seperti pada penandatanganan.</li>
+        <li><strong>Hitung Inversi:</strong><br>
+            Hitung w = s⁻¹ mod n.</li>
+        <li><strong>Hitung Titik Kurva:</strong><br>
+            Hitung u₁ = z × w mod n dan u₂ = r × w mod n.<br>
+            Hitung titik (x₁, y₁) = u₁ × G + u₂ × Q.</li>
+        <li><strong>Verifikasi:</strong><br>
+            Tanda tangan valid jika x₁ mod n = r.</li>
+    </ol>
+
+    <h3>• Mengapa ECDSA Aman?</h3>
+    <p>Keamanan ECDSA bergantung pada <strong>Elliptic Curve Discrete Logarithm Problem (ECDLP)</strong>: Sulit menemukan d dari Q = d × G.</p>
+    <p>Nonce k harus acak dan rahasia. Jika k bocor atau digunakan ulang, kunci privat dapat dihitung.</p>
+
+    <h3>• Contoh Penggunaan</h3>
+    <p>Dalam Bitcoin, ECDSA digunakan untuk menandatangani transaksi, memastikan bahwa hanya pemilik kunci privat yang dapat menghabiskan dana.</p>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="content-box">
+    <h2>3. RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit)</h2>
+    <hr>
+    <p><strong>RIPEMD-160</strong> adalah fungsi hash kriptografis yang menghasilkan hash berukuran 160-bit (20 byte). Algoritma ini dirancang sebagai alternatif untuk MD5 dan SHA-1 dengan fokus pada keamanan dan efisiensi.</p>
+
+    <h3>• Cara Kerja RIPEMD-160</h3>
+    <h4>Padding Input:</h4>
+    <div style="margin-left: 20px;">
+        <p>Mirip dengan SHA-256, input dipad hingga kelipatan 512-bit:</p>
+        <ul>
+            <li>Tambahkan bit 1.</li>
+            <li>Tambahkan bit 0 hingga panjangnya 448-bit (modulo 512).</li>
+            <li>Tambahkan panjang pesan asli (64-bit) di akhir.</li>
+        </ul>
+    </div>
+
+    <h4>Inisialisasi Buffer:</h4>
+    <div style="margin-left: 20px;">
+        <p>RIPEMD-160 menggunakan 5 register 32-bit (A, B, C, D, E) yang diinisialisasi dengan nilai tetap:</p>
+        <p>H<sub>0</sub> = 0x67452301, H<sub>1</sub> = 0xEFCDAB89, H<sub>2</sub> = 0x98BADCFE, H<sub>3</sub> = 0x10325476, H<sub>4</sub> = 0xC3D2E1F0</p>
+    </div>
+
+    <h4>Pemrosesan Blok:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setiap blok 512-bit dibagi menjadi 16 kata 32-bit.</p>
+        <p>RIPEMD-160 menggunakan dua rantai paralel (kiri dan kanan) yang masing-masing memproses blok yang sama dengan urutan dan fungsi berbeda.</p>
+    </div>
+
+    <h4>Putaran Kompresi:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setiap rantai memiliki 5 putaran, masing-masing terdiri dari 16 langkah (total 80 langkah per rantai).</p>
+        <p>Dalam setiap langkah, register diperbarui menggunakan:</p>
+        <ul>
+            <li>Fungsi logika non-linear (berbeda untuk setiap putaran).</li>
+            <li>Operasi rotasi bit.</li>
+            <li>Penambahan modulo 2³² dengan konstanta dan kata input.</li>
+        </ul>
+        <p>Rantai kiri dan kanan menggunakan permutasi kata yang berbeda untuk meningkatkan keamanan.</p>
+    </div>
+
+    <h4>Kombinasi Hasil:</h4>
+    <div style="margin-left: 20px;">
+        <p>Setelah kedua rantai selesai, nilai register dari kedua rantai ditambahkan ke nilai hash sementara (modulo 2³²).</p>
+        <p>Proses ini diulang untuk setiap blok.</p>
+    </div>
+
+    <h4>Output:</h4>
+    <div style="margin-left: 20px;">
+        <p>Hasil akhir adalah konkatenasi dari 5 register (5 x 32-bit = 160-bit), biasanya ditampilkan dalam format heksadesimal (40 karakter).</p>
+    </div>
+
+    <h3>• Sifat-Sifat RIPEMD-160</h3>
+    <ul>
+        <li><strong>Resistensi Kolisi</strong>: Lebih aman dari MD5, meskipun ukurannya lebih kecil dari SHA-256.</li>
+        <li><strong>Efisiensi</strong>: Dirancang untuk kinerja baik pada prosesor 32-bit.</li>
+        <li><strong>One-Way</strong>: Tidak dapat dibalik.</li>
+    </ul>
+
+    <h3>• Contoh Penggunaan</h3>
+    <p>Dalam Bitcoin, RIPEMD-160 digunakan untuk menghasilkan alamat Bitcoin:</p>
+    <ul>
+        <li>Kunci publik dihash dengan SHA-256, lalu hasilnya dihash dengan RIPEMD-160.</li>
+        <li>Hasilnya (160-bit) digunakan sebagai bagian dari alamat untuk mengurangi ukuran.</li>
+    </ul>
+</div>
+
+
+<div class="quote-box">
+  <p class="quote-text">
+"Instead of relying on trust, it works based on cryptographic proof."
+  </p>
+  <p class="quote-source">
+    — Satoshi Nakamoto
+  </p>
+</div>
+
+<style>
+  .quote-box {
+    background: linear-gradient(270deg, #000000, #444444, #000000);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+    padding: 30px;
+    max-width: 700px;
+    margin: 15px auto;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .quote-text {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+  }
+
+  .quote-source {
+    font-size: 14px;
+    color: white;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    margin: 0;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+<div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+
+
+
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Jenis Kriptografi yang Digunakan Bitcoin ( OPTIONAL TO READ )</h2>
+  <hr>
+  <p class="point">Bitcoin menggunakan beberapa jenis kriptografi untuk menjaga keamanan, integritas, dan privasi sistemnya. Berikut adalah daftar kriptografi yang digunakan dalam Bitcoin beserta penjelasan teknis tentang cara kerjanya.</p>
+
+  <p class="point">Bitcoin mengandalkan tiga komponen utama kriptografi:</p>
+  <ul>
+    <li>• <strong>Elliptic Curve Digital Signature Algorithm (ECDSA):</strong> Untuk tanda tangan digital dan pembuatan kunci publik-privat.</li>
+    <li>• <strong>SHA-256 (Secure Hash Algorithm 256-bit):</strong> Untuk fungsi hash dalam penambangan, pembuatan alamat, dan integritas data.</li>
+    <li>• <strong>RIPEMD-160:</strong> Untuk menghasilkan alamat Bitcoin yang lebih pendek dari hash SHA-256.</li>
+  </ul>
+
+  <p class="point">Selain itu, ada teknik kriptografi tambahan seperti <strong>Schnorr Signatures</strong> (diperkenalkan melalui upgrade Taproot) yang mulai digunakan untuk meningkatkan efisiensi dan privasi. Berikut penjelasan teknis masing-masing.</
+
+  
+  <p class="point"><strong></strong></p>
+  <h3>1. Elliptic Curve Digital Signature Algorithm (ECDSA)</h3>
+  <p class="point">ECDSA adalah algoritma kriptografi asimetris berbasis kurva eliptik yang digunakan Bitcoin untuk:</p>
+  <ul>
+    <li>• Membuat pasangan kunci publik dan privat.</li>
+    <li>• Menandatangani transaksi secara digital untuk membuktikan kepemilikan dana.</li>
+    <li>• Memverifikasi transaksi tanpa mengungkap kunci privat.</li>
+  </ul>
+  <p class="point">Bitcoin menggunakan kurva eliptik spesifik bernama <strong>secp256k1</strong>, yang dipilih karena keamanannya yang tinggi dan efisiensi komputasinya.</p>
+
+  <p class="point"><strong>Cara Kerja ECDSA di Bitcoin</strong></p>
+  <p class="point">Pembuatan Kunci:</p>
+  <ul>
+    <li>• <strong>Kunci Privat:</strong> Angka acak besar (256-bit) yang dihasilkan secara kriptografis aman menggunakan generator angka acak.</li>
+    <li>• <strong>Kunci Publik:</strong> Dihitung dari kunci privat menggunakan operasi matematika pada kurva eliptik secp256k1. Secara sederhana, kunci publik adalah hasil dari perkalian titik pada kurva eliptik dengan kunci privat:
+      <p>K<sub>pub</sub> = k<sub>priv</sub> · G</p>
+      Di mana ( G ) adalah titik dasar (generator point) pada kurva.</li>
+  </ul>
+  <p class="point">Kunci publik ini kemudian di-hash (menggunakan SHA-256 dan RIPEMD-160) untuk menghasilkan alamat Bitcoin.</p>
+
+  <p class="point">Tanda Tangan Digital:</p>
+  <p class="point">Ketika pengguna ingin mengirim Bitcoin, mereka membuat transaksi dan menandatanganinya dengan kunci privat.</p>
+  <p class="point">Proses tanda tangan:</p>
+  <ul>
+    <li>• Transaksi di-hash menggunakan SHA-256 untuk menghasilkan pesan hash ( z ).</li>
+    <li>• Algoritma ECDSA menghasilkan tanda tangan berupa pasangan angka ( r, s ) berdasarkan kunci privat dan pesan hash.</li>
+    <li>• Rumus sederhana untuk tanda tangan:
+      <p>r = (k · G)<sub>x</sub> mod n</p>
+<p>s = k<sup>-1</sup> · (z + r · k<sub>priv</sub>) mod n</p>
+<p>Di mana <i>k</i> ...</p>
+      Di mana ( k ) adalah angka acak sementara (nonce), dan ( n ) adalah urutan kurva.</li>
+    <li>• Tanda tangan ( r, s ) dilampirkan pada transaksi.</li>
+  </ul>
+
+  <p class="point">Verifikasi Tanda Tangan:</p>
+  <p class="point">Node Bitcoin memverifikasi tanda tangan menggunakan kunci publik pengirim.</p>
+  <p class="point">Verifikasi memastikan bahwa:</p>
+  <ul>
+    <li>• Tanda tangan dibuat oleh pemilik kunci privat yang sesuai.</li>
+    <li>• Transaksi belum diubah sejak ditandatangani.</li>
+  </ul>
+  <p class="point">Proses verifikasi melibatkan perhitungan matematis untuk memeriksa apakah:
+    <p>
+s<sup>-1</sup> · z · G + s<sup>-1</sup> · r · K<sub>pub</sub> = (r, y)
+</p>
+    Jika hasilnya cocok, tanda tangan valid.</p>
+
+  <p class="point">Keamanan:</p>
+  <ul>
+    <li>• Keamanan ECDSA bergantung pada kesulitan <strong>Elliptic Curve Discrete Logarithm Problem (ECDLP)</strong>, yang berarti sulit untuk menghitung kunci privat dari kunci publik.</li>
+    <li>• <strong>Nonce ( k )</strong> harus benar-benar acak; jika bocor atau digunakan ulang, kunci privat dapat dihitung.</li>
+  </ul>
+
+  <p class="point"><strong>Peran di Bitcoin</strong></p>
+  <ul>
+    <li>• <strong>Kepemilikan:</strong> Kunci privat membuktikan hak untuk membelanjakan Bitcoin.</li>
+    <li>• <strong>Otentikasi:</strong> Tanda tangan digital memastikan transaksi sah.</li>
+    <li>• <strong>Privasi:</strong> Kunci publik (atau alamat) tidak mengungkap identitas pengguna secara langsung.</li>
+  </ul>
+
+  <h3>2. SHA-256 (Secure Hash Algorithm 256-bit)</h3>
+  <p class="point"><strong>Apa itu SHA-256?</strong></p>
+  <p class="point">SHA-256 adalah fungsi hash kriptografis yang mengubah input data (berapa pun panjangnya) menjadi output 256-bit (32-byte) dengan sifat:</p>
+  <ul>
+    <li>• <strong>Deterministik:</strong> Input yang sama selalu menghasilkan hash yang sama.</li>
+    <li>• <strong>Satu arah:</strong> Tidak mungkin merekonstruksi input dari hash.</li>
+    <li>• <strong>Tahan kolisi:</strong> Sulit menemukan dua input berbeda yang menghasilkan hash yang sama.</li>
+  </ul>
+  <p class="point">Bitcoin menggunakan SHA-256 secara ekstensif untuk berbagai tujuan.</p>
+
+  <p class="point"><strong>Cara Kerja SHA-256 di Bitcoin</strong></p>
+  <p class="point">Penambangan (Proof-of-Work):</p>
+  <p class="point">Penambang bersaing untuk menemukan hash blok yang memenuhi syarat tertentu (misalnya, hash dengan sejumlah nol di awal).</p>
+  <p class="point">Proses teknis:</p>
+  <ul>
+    <li>• Penambang mengambil header blok (termasuk hash blok sebelumnya, timestamp, Merkle root, dan nonce).</li>
+    <li>• Header di-hash dua kali menggunakan SHA-256:
+      <p>
+Hash = SHA-256(SHA-256(Header))
+</p>
+    </li>
+    <li>• Jika hash di bawah target kesulitan (nilai yang ditentukan jaringan), blok diterima. Jika tidak, penambang mengubah nonce dan mencoba lagi.</li>
+  </ul>
+  <p class="point">Proses ini sangat intensif komputasi, memastikan keamanan jaringan melalui mekanisme <strong>proof-of-work</strong>.</p>
+
+  <p class="point">Integritas Transaksi:</p>
+  <p class="point">Setiap transaksi di-hash menggunakan SHA-256 untuk menghasilkan ID transaksi (TxID).</p>
+  <p class="point">TxID ini digunakan dalam <strong>Merkle Tree</strong>, struktur data yang merangkum semua transaksi dalam blok. Akar Merkle Tree (Merkle root) di-hash ke dalam header blok, memastikan bahwa transaksi tidak dapat diubah tanpa mengubah hash blok.</p>
+
+  <p class="point">Pembuatan Alamat Bitcoin:</p>
+  <p class="point">Kunci publik di-hash menggunakan SHA-256, kemudian di-hash lagi dengan RIPEMD-160 untuk menghasilkan alamat Bitcoin (lihat bagian RIPEMD-160 untuk detail).</p>
+
+  <p class="point">Rantai Blok:</p>
+  <p class="point">Setiap blok berisi hash SHA-256 dari blok sebelumnya, menciptakan rantai yang tidak dapat diubah. Mengubah satu blok akan memengaruhi semua hash berikutnya, membuat manipulasi blockchain sangat sulit.</p>
+
+  <p class="point">Keamanan:</p>
+  <ul>
+    <li>• SHA-256 dianggap aman karena tahan terhadap serangan kolisi dan preimage.</li>
+    <li>• Namun, komputer kuantum di masa depan mungkin melemahkan SHA-256, sehingga memerlukan algoritma hash tahan kuantum.</li>
+  </ul>
+
+  <p class="point"><strong>Peran di Bitcoin</strong></p>
+  <ul>
+    <li>• <strong>Keamanan Jaringan:</strong> Proof-of-work mencegah serangan seperti double-spending.</li>
+    <li>• <strong>Integritas:</strong> Hash memastikan data transaksi dan blockchain tidak diubah.</li>
+    <li>• <strong>Efisiensi:</strong> SHA-256 cepat dan dapat dihitung dengan perangkat keras khusus (ASIC).</li>
+  </ul>
+
+  <h3>3. RIPEMD-160</h3>
+  <p class="point"><strong>Apa itu RIPEMD-160?</strong></p>
+  <p class="point">RIPEMD-160 adalah fungsi hash kriptografis yang menghasilkan output 160-bit (20-byte). Bitcoin menggunakannya bersama SHA-256 untuk menghasilkan alamat Bitcoin yang lebih pendek dan efisien.</p>
+
+  <p class="point"><strong>Cara Kerja RIPEMD-160 di Bitcoin</strong></p>
+  <p class="point">Pembuatan Alamat Bitcoin:</p>
+  <p class="point">Proses pembuatan alamat Bitcoin dari kunci publik:</p>
+  <ul>
+    <li>• Ambil kunci publik (biasanya 65-byte dalam format tidak terkompresi).</li>
+    <li>• Hitung hash SHA-256 dari kunci publik:
+      <p>
+Hash1 = SHA-256(K<sub>pub</sub>)
+</p>
+    </li>
+    <li>• Hash hasilnya dengan RIPEMD-160:
+      <p>
+Hash2 = RIPEMD-160(Hash1)
+</p>
+    </li>
+    <li>• Tambahkan byte versi jaringan (misalnya, 0x00 untuk mainnet).</li>
+    <li>• Hitung checksum (hash SHA-256 ganda dari hasil sebelumnya, ambil 4 byte pertama).</li>
+    <li>• Encode hasilnya ke format <strong>Base58Check</strong> untuk menghasilkan alamat Bitcoin (misalnya, 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa).</li>
+  </ul>
+
+  <p class="point">Alasan Penggunaan:</p>
+  <ul>
+    <li>• RIPEMD-160 menghasilkan hash yang lebih pendek (160-bit) dibandingkan SHA-256 (256-bit), sehingga alamat Bitcoin lebih ringkas.</li>
+    <li>• Kombinasi SHA-256 dan RIPEMD-160 meningkatkan keamanan dengan mengurangi risiko kolisi.</li>
+  </ul>
+
+  <p class="point">Keamanan:</p>
+  <ul>
+    <li>• RIPEMD-160 dianggap aman untuk tujuan Bitcoin, meskipun panjang hash 160-bit lebih rentan terhadap serangan kolisi dibandingkan SHA-256.</li>
+    <li>• Penggunaan bersama SHA-256 mengurangi risiko ini.</li>
+  </ul>
+
+  <p class="point"><strong>Peran di Bitcoin</strong></p>
+  <ul>
+    <li>• <strong>Efisiensi:</strong> Membuat alamat Bitcoin lebih pendek dan mudah dibaca.</li>
+    <li>• <strong>Keamanan:</strong> Melindungi kunci publik dari paparan langsung.</li>
+  </ul>
+
+  <h3>4. Schnorr Signatures (Upgrade Taproot)</h3>
+  <p class="point"><strong>Apa itu Schnorr Signatures?</strong></p>
+  <p class="point">Schnorr Signatures adalah algoritma tanda tangan digital alternatif yang diperkenalkan di Bitcoin melalui soft fork <strong>Taproot</strong> (November 2021). Schnorr lebih efisien dan mendukung fitur privasi dibandingkan ECDSA.</p>
+
+  <p class="point"><strong>Cara Kerja Schnorr Signatures di Bitcoin</strong></p>
+  <p class="point">Tanda Tangan:</p>
+  <p class="point">Seperti ECDSA, Schnorr menggunakan kurva eliptik <strong>secp256k1</strong>. Tanda tangan Schnorr lebih sederhana, terdiri dari pasangan (\( R, s \)), di mana:</p>
+  <p>
+R = k · G
+</p>
+<p>
+s = k + Hash(R || K<sub>pub</sub> || m) · k<sub>priv</sub>
+</p>
+  <p class="point">Di mana ( m ) adalah pesan (hash transaksi), dan \( k \) adalah nonce.</p>
+  <p class="point">Tanda tangan lebih pendek dan linier secara matematis, memungkinkan agregasi tanda tangan.</p>
+
+  <p class="point">Verifikasi:</p>
+  <p class="point">Verifikasi memeriksa apakah:</p>
+  <p>
+s · G = R + Hash(R || K<sub>pub</sub> || m) · K<sub>pub</sub>
+</p>
+  <p class="point">Proses ini lebih cepat dibandingkan ECDSA.</p>
+
+  <p class="point">Fitur Tambahan:</p>
+  <ul>
+    <li>• <strong>Agregasi Tanda Tangan:</strong> Beberapa tanda tangan dari transaksi multisig dapat digabung menjadi satu, mengurangi ukuran data dan meningkatkan privasi.</li>
+    <li>• <strong>Privasi:</strong> Transaksi multisig menggunakan Schnorr terlihat seperti transaksi tunggal di blockchain.</li>
+    <li>• <strong>Taproot:</strong> Menggabungkan Schnorr dengan MAST (Merkleized Abstract Syntax Trees) untuk mendukung kontrak pintar yang lebih fleksibel dan privat.</li>
+  </ul>
+
+  <p class="point">Keamanan:</p>
+  <ul>
+    <li>• Schnorr lebih tahan terhadap beberapa serangan dibandingkan ECDSA, seperti serangan nonce yang buruk.</li>
+    <li>• Sifat liniernya memungkinkan skema kriptografi baru, seperti agregasi kunci.</li>
+  </ul>
+
+  <p class="point"><strong>Peran di Bitcoin</strong></p>
+  <ul>
+    <li>• <strong>Efisiensi:</strong> Mengurangi ukuran transaksi, menurunkan biaya.</li>
+    <li>• <strong>Privasi:</strong> Menyembunyikan kompleksitas transaksi multisig atau kontrak pintar.</li>
+    <li>• <strong>Skalabilitas:</strong> Mendukung pengembangan fitur baru seperti Lightning Network.</li>
+  </ul>
+</div>
+ 
+ 
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+  <script>
+    const clickSound = new Audio('sfx.mp3');
+
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.error("Error playing sound:", e));
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault();
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+          topBox.classList.add('scrolled');
+        } else {
+          topBox.classList.remove('scrolled');
+        }
+      });
+    });
+
+    document.querySelector('.profile-pic img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    document.querySelector('.back-button img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+
+</html>

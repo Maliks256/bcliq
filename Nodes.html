@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 70px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    .content-box {
+      padding: 20px;
+      max-width: 800px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .content-box h2 {
+      margin-bottom: 5px;
+    }
+
+    .content-box hr {
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .page-divider {
+      width: 90%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin: 60px auto 40px auto;
+      opacity: 0.7;
+    }
+
+    /* Styles for the new indentation */
+    .content-box p.point {
+      margin-left: 20px;
+      /* Indent for points */
+      margin-bottom: 5px;
+    }
+
+    .content-box ul li {
+      margin-left: 40px;
+      /* Indent for sub-points */
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+
+  </div>
+    <div class="page-divider"></div>
+  <div class="content-box">
+    <h2>Apa Itu Nodes dalam Konteks Bitcoin?</h2>
+    <hr>
+    <p class="point"><strong>Nodes</strong> adalah komputer atau perangkat yang menjalankan perangkat lunak Bitcoin (biasanya <strong>Bitcoin Core</strong> atau implementasi lainnya) dan berpartisipasi dalam jaringan Bitcoin.</p>
+    <p class="point"><strong>Nodes adalah tulang punggung jaringan Bitcoin</strong>, bertanggung jawab untuk <strong>memvalidasi, menyimpan, dan menyebarkan informasi transaksi</strong> serta memastikan aturan protokol Bitcoin diikuti.</p>
+    <p class="point">Bayangkan nodes sebagai <strong>"penjaga buku"</strong> yang memastikan semua data di jaringan Bitcoin tetap <strong>konsisten dan aman</strong>.</p>
+    <p class="point">Nodes bukan cuma komputer biasa; mereka punya peran spesifik yang membuat jaringan Bitcoin <strong>terdesentralisasi, aman, dan tahan terhadap manipulasi</strong>. <strong>Tanpa nodes, jaringan Bitcoin tidak akan berfungsi.</strong></p>
+  </div>
+  <div class="page-divider"></div>
+  <div class="content-box">
+    <h2>Jenis-Jenis Nodes dalam Bitcoin</h2>
+    <hr>
+    <p class="point">Ada beberapa jenis nodes dalam jaringan Bitcoin, masing-masing dengan peran dan karakteristik yang berbeda. Berikut adalah penjelasan lengkapnya:</p>
+    <p class="point">1. <strong>Full Nodes</strong></p>
+    <ul>
+      <li><strong>Definisi</strong>: Full nodes adalah nodes yang menyimpan salinan lengkap dari blockchain Bitcoin (yaitu, semua transaksi yang pernah terjadi sejak blok genesis). Mereka memvalidasi transaksi dan blok sesuai dengan aturan konsensus Bitcoin (seperti memastikan tidak ada double-spending).</li>
+      <li><strong>Fungsi Utama</strong>:
+        <ul>
+          <li>• Validasi Transaksi dan Blok: Full nodes memeriksa setiap transaksi dan blok baru untuk memastikan mereka mematuhi aturan Bitcoin, seperti batas ukuran blok atau validitas tanda tangan.</li>
+          <li>• Menyimpan Blockchain: Menyimpan seluruh riwayat transaksi (saat ini sekitar 600 GB atau lebih, tergantung waktu).</li>
+          <li>• Meneruskan Data: Mengirimkan transaksi dan blok yang valid ke nodes lain di jaringan.</li>
+          <li>• Menjaga Desentralisasi: Karena full nodes independen, mereka mencegah manipulasi jaringan oleh pihak tertentu.</li>
+        </ul>
+      </li>
+      <li><strong>Persyaratan</strong>:
+        <ul>
+          <li>• Perangkat keras: Komputer dengan kapasitas penyimpanan besar, RAM cukup (minimal 4 GB), dan koneksi internet stabil.</li>
+          <li>• Perangkat lunak: Biasanya menjalankan Bitcoin Core atau implementasi lain seperti Bitcoin Knots.</li>
+          <li>• Bandwidth: Full nodes mengunduh dan mengunggah banyak data (ratusan MB hingga GB per hari).</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Penggunaan</strong>: Pengguna yang menjalankan full node biasanya adalah pengembang, bisnis (seperti dompet atau exchange), atau individu yang ingin berkontribusi pada keamanan jaringan.</li>
+      <li><strong>Keunggulan</strong>: Tidak perlu mempercayai pihak ketiga (trustless). Memberikan kontrol penuh atas validasi transaksi.</li>
+      <li><strong>Kelemahan</strong>: Membutuhkan sumber daya besar (penyimpanan, bandwidth, listrik). Proses sinkronisasi awal blockchain bisa memakan waktu berhari-hari.</li>
+    </ul>
+    <p class="point">2. <strong>Light Nodes</strong></p>
+    <ul>
+      <li><strong>Definisi</strong>: Light nodes (atau SPV nodes, Simplified Payment Verification) adalah nodes yang tidak menyimpan seluruh blockchain, melainkan hanya header blok (sekitar 80 byte per blok) dan data transaksi yang relevan dengan dompet pengguna.</li>
+      <li><strong>Fungsi Utama</strong>:
+        <ul>
+          <li>• Verifikasi Transaksi: Menggunakan metode SPV untuk memverifikasi transaksi tanpa menyimpan seluruh blockchain, dengan mempercayai full nodes untuk sebagian besar data.</li>
+          <li>• Efisiensi: Cocok untuk perangkat dengan sumber daya terbatas, seperti ponsel atau laptop low-end.</li>
+          <li>• Koneksi ke Full Nodes: Light nodes bergantung pada full nodes untuk mendapatkan data transaksi.</li>
+        </ul>
+      </li>
+      <li><strong>Persyaratan</strong>:
+        <ul>
+          <li>• Penyimpanan minimal (hanya beberapa MB).</li>
+          <li>• Koneksi internet yang cukup.</li>
+          <li>• Perangkat lunak dompet seperti Electrum, Wasabi, atau aplikasi mobile seperti BlueWallet.</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Penggunaan</strong>: Pengguna individu yang hanya ingin mengelola dompet Bitcoin mereka tanpa menjalankan full node.</li>
+      <li><strong>Keunggulan</strong>: Ringan dan cepat dijalankan. Cocok untuk pengguna kasual atau perangkat mobile.</li>
+      <li><strong>Kelemahan</strong>: Kurang aman karena bergantung pada full nodes. Privasi lebih rendah karena light nodes sering kali mengungkapkan alamat dompet ke full nodes.</li>
+    </ul>
+
+    <p class="point">3. <strong>Archival Nodes</strong></p>
+    <ul>
+      <li><strong>Definisi</strong>: Subtipe dari full nodes yang menyimpan seluruh data blockchain, termasuk data historis yang tidak lagi relevan untuk validasi (misalnya, transaksi yang sudah di-spend).</li>
+      <li><strong>Fungsi Utama</strong>: Menyediakan data historis untuk analisis atau penelitian. Membantu light nodes atau aplikasi lain yang membutuhkan data blockchain lengkap.</li>
+      <li><strong>Persyaratan</strong>: Penyimpanan sangat besar (bisa lebih dari 1 TB jika menyimpan semua data, termasuk indeks).</li>
+      <li><strong>Contoh Penggunaan</strong>: Peneliti, pengembang blockchain, atau layanan seperti blockchain explorer.</li>
+    </ul>
+
+    <p class="point">4. <strong>Pruned Nodes</strong></p>
+    <ul>
+      <li><strong>Definisi</strong>: Subtipe dari full nodes yang menyimpan blockchain lengkap saat sinkronisasi, tetapi kemudian "memangkas" data lama untuk menghemat ruang, hanya menyimpan transaksi terbaru dan UTXO (Unspent Transaction Outputs).</li>
+      <li><strong>Fungsi Utama</strong>: Sama seperti full node, tetapi dengan penyimpanan lebih kecil (misalnya, hanya 2-10 GB). Tetap memvalidasi transaksi dan blok seperti full node.</li>
+      <li><strong>Persyaratan</strong>: Penyimpanan lebih kecil dibandingkan full node standar. Tetap membutuhkan sinkronisasi awal blockchain lengkap sebelum pemangkasan.</li>
+      <li><strong>Contoh Penggunaan</strong>: Pengguna yang ingin menjalankan full node tetapi memiliki keterbatasan penyimpanan.</li>
+    </ul>
+
+  </div>
+  <div class="page-divider"></div>
+  <div class="content-box">
+    <h2>Peran Nodes dalam Jaringan Bitcoin</h2>
+    <hr>
+<p class="point">1. <strong>Menjaga konsensus</strong></p>
+    <ul>
+        <ul>
+          <li>Nodes memastikan semua transaksi dan blok mematuhi aturan konsensus Bitcoin (misalnya, batas 21 juta BTC, aturan validasi tanda tangan, dll.).</li>
+          <li>Jika ada blok atau transaksi yang tidak valid, nodes akan menolaknya, mencegah penyebaran data yang salah.</li>
+        </ul>
+      </li>
+<p class="point">2. <strong>Menyimpan dan menyebarkan data</strong></p>
+        <ul>
+          <li>Full nodes menyimpan salinan blockchain dan membagikannya ke nodes lain.</li>
+          <li>Mereka meneruskan transaksi baru ke jaringan agar cepat diproses.</li>
+        </ul>
+      </li>
+      <p class="point">3. <strong>Meningkatkan keamanan</strong></p>
+        <ul>
+          <li>Semakin banyak full nodes, semakin sulit untuk memanipulasi jaringan, karena setiap node memvalidasi data secara independen.</li>
+          <li>Nodes melindungi dari serangan seperti double-spending atau blok tidak valid.</li>
+        </ul>
+      </li>
+<p class="point">4. <strong>Mendukung desentralisasi</strong></p>
+        <ul>
+          <li>Dengan nodes yang tersebar di seluruh dunia, tidak ada pihak tunggal yang mengendalikan Bitcoin.</li>
+          <li>Siapa pun bisa menjalankan node, membuat jaringan lebih demokratis.</li>
+        </ul>
+      </li>
+<p class="point">5. <strong>Mendukung pengguna light node</strong></p>
+        <ul>
+          <li>Full nodes menyediakan data untuk light nodes, memungkinkan pengguna dengan perangkat terbatas tetap berpartisipasi dalam ekosistem Bitcoin.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="page-divider"></div>
+<div class="content-box">
+  <h2>Cara Kerja Nodes dalam Jaringan Bitcoin</h2>
+  <hr>
+  <p class="point">Untuk memahami nodes secara mendalam, mari kita lihat bagaimana mereka beroperasi:</p>
+  <p class="point">1. <strong>Sinkronisasi Blockchain</strong></p>
+  <ul>
+    <li>Ketika node baru dijalankan, ia akan mengunduh dan memverifikasi seluruh blockchain dari nodes lain (proses ini disebut <strong>Initial Block Download</strong> atau IBD).</li>
+    <li>Full nodes memeriksa setiap blok dan transaksi sejak blok genesis untuk memastikan validitas.</li>
+  </ul>
+  <p class="point">2. <strong>Menerima dan Memvalidasi Transaksi</strong></p>
+  <ul>
+    <li>Ketika pengguna mengirim transaksi Bitcoin, transaksi tersebut pertama kali dikirim ke nodes terdekat.</li>
+    <li>Nodes memeriksa apakah transaksi valid (misalnya, apakah pengirim punya cukup dana, apakah tanda tangan benar).</li>
+    <li>Jika valid, transaksi dimasukkan ke <strong>mempool</strong> (kumpulan transaksi yang menunggu konfirmasi) dan diteruskan ke nodes lain.</li>
+  </ul>
+  <p class="point">3. <strong>Menerima dan Memvalidasi Blok</strong></p>
+  <ul>
+    <li>Ketika mining node membuat blok baru, blok tersebut dikirim ke jaringan.</li>
+    <li>Full nodes memeriksa apakah blok tersebut mematuhi aturan (misalnya, ukuran blok, hash valid, dll.).</li>
+    <li>Jika valid, blok ditambahkan ke blockchain lokal node, dan node meneruskannya ke nodes lain.</li>
+  </ul>
+  <p class="point">4. <strong>Koneksi Peer-to-Peer</strong></p>
+  <ul>
+    <li>Nodes terhubung satu sama lain dalam topologi <strong>peer-to-peer (P2P)</strong>. Setiap node biasanya terhubung ke 8-12 nodes lain.</li>
+    <li><strong>Listening nodes</strong> menerima koneksi masuk, sementara <strong>non-listening nodes</strong> hanya membuat koneksi keluar.</li>
+  </ul>
+  <p class="point">5. <strong>Mempool Management</strong></p>
+  <ul>
+    <li>Setiap node memiliki <strong>mempool</strong> untuk menyimpan transaksi yang belum dikonfirmasi.</li>
+    <li>Nodes bisa mengatur ukuran mempool atau memprioritaskan transaksi berdasarkan biaya (fee).</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Bagaimana Menjalankan Node Bitcoin?</h2>
+  <hr>
+  <p class="point">Jika kamu tertarik menjalankan node Bitcoin, berikut langkah-langkahnya:</p>
+  <p class="point">1. <strong>Persiapan Perangkat Keras</strong></p>
+  <ul>
+    <li>Komputer dengan minimal <strong>4 GB RAM</strong>, prosesor modern, dan penyimpanan <strong>SSD</strong> (minimal 600 GB untuk full node, 10 GB untuk pruned node).</li>
+    <li>Koneksi internet stabil dengan bandwidth besar (minimal <strong>50 kbps upload/download</strong>).</li>
+  </ul>
+  <p class="point">2. <strong>Unduh Perangkat Lunak</strong></p>
+  <ul>
+    <li>Unduh <strong>Bitcoin Core</strong> dari situs resmi (bitcoincore.org).</li>
+    <li>Alternatif: Gunakan implementasi lain seperti <strong>Bitcoin Knots</strong> atau <strong>BTCD</strong> (untuk pengembang).</li>
+  </ul>
+  <p class="point">3. <strong>Konfigurasi</strong></p>
+  <ul>
+    <li>Instal dan jalankan Bitcoin Core.</li>
+    <li>Pilih apakah ingin menjalankan <strong>full node</strong>, <strong>pruned node</strong>, atau hanya dompet.</li>
+    <li>(Opsional) Buka port <strong>8333</strong> di router untuk menjadi <strong>listening node</strong>.</li>
+  </ul>
+  <p class="point">4. <strong>Sinkronisasi</strong></p>
+  <ul>
+    <li>Node akan mengunduh blockchain lengkap (bisa memakan waktu <strong>1-7 hari</strong> tergantung kecepatan internet dan perangkat).</li>
+    <li>Untuk pruned node, atur ukuran penyimpanan di file konfigurasi (<strong>bitcoin.conf</strong>).</li>
+  </ul>
+  <p class="point">5. <strong>Maintenance</strong></p>
+  <ul>
+    <li>Pastikan node tetap online untuk membantu jaringan.</li>
+    <li>Perbarui perangkat lunak Bitcoin Core secara berkala untuk mendapatkan fitur dan perbaikan keamanan terbaru.</li>
+  </ul>
+  <p class="point">6. <strong>Alternatif untuk Pengguna Kasual</strong></p>
+  <ul>
+    <li>Jika tidak bisa menjalankan full node, gunakan <strong>light node</strong> seperti <strong>Electrum</strong> atau dompet mobile.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Tantangan Menjalankan Nodes</h2>
+  <hr>
+  <p class="point">1. <strong>Sumber Daya</strong></p>
+  <ul>
+    <li>Full nodes membutuhkan penyimpanan besar dan bandwidth tinggi.</li>
+    <li>Biaya listrik dan perangkat keras bisa signifikan, terutama di negara dengan tarif listrik tinggi.</li>
+  </ul>
+  <p class="point">2. <strong>Sinkronisasi Awal</strong></p>
+  <ul>
+    <li>Proses IBD bisa lambat, terutama untuk perangkat dengan spesifikasi rendah.</li>
+  </ul>
+  <p class="point">3. <strong>Privasi</strong></p>
+  <ul>
+    <li>Listening nodes dengan port terbuka bisa rentan terhadap pelacakan IP kecuali menggunakan VPN atau Tor.</li>
+  </ul>
+  <p class="point">4. <strong>Pengetahuan Teknis</strong></p>
+  <ul>
+    <li>Menjalankan node memerlukan pemahaman dasar tentang jaringan dan konfigurasi perangkat lunak.</li>
+  </ul>
+</div>
+
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Fakta Menarik tentang Nodes Bitcoin</h2>
+  <hr>
+  <p class="point">1. <strong>Jumlah Nodes</strong></p>
+  <ul>
+    <li>Menurut estimasi (misalnya, dari situs seperti bitnodes.io), ada lebih dari <strong>15.000 full nodes</strong> aktif di seluruh dunia (data per 2025 bisa bervariasi).</li>
+  </ul>
+  <p class="point">2. <strong>Distribusi Geografis</strong></p>
+  <ul>
+    <li>Nodes tersebar di berbagai negara, dengan konsentrasi tinggi di Amerika Utara, Eropa, dan Asia.</li>
+  </ul>
+  <p class="point">3. <strong>Nodes di Luar Angkasa</strong></p>
+  <ul>
+    <li>Beberapa nodes Bitcoin dijalankan melalui satelit (misalnya, proyek <strong>Blockstream Satellite</strong>) untuk memastikan akses di daerah tanpa internet.</li>
+  </ul>
+  <p class="point">4. <strong>Tor Nodes</strong></p>
+  <ul>
+    <li>Banyak nodes dijalankan melalui jaringan <strong>Tor</strong> untuk meningkatkan privasi.</li>
+  </ul>
+  <p class="point">5. <strong>Peran Komunitas</strong></p>
+  <ul>
+    <li>Siapa pun bisa menjalankan node, dari individu di rumah hingga perusahaan besar, menjadikan Bitcoin benar-benar terdesentralisasi.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Mengapa Nodes Penting untuk Bitcoin?</h2>
+  <hr>
+  <p class="point">1. <strong>Keamanan</strong></p>
+  <ul>
+    <li>Nodes memastikan tidak ada pihak yang bisa memalsukan transaksi atau memanipulasi blockchain tanpa sepengetahuan jaringan.</li>
+  </ul>
+  <p class="point">2. <strong>Desentralisasi</strong></p>
+  <ul>
+    <li>Dengan ribuan nodes di seluruh dunia (saat ini diperkirakan ada lebih dari <strong>15.000 full nodes</strong>), Bitcoin tidak bergantung pada satu entitas pusat.</li>
+  </ul>
+  <p class="point">3. <strong>Resistensi terhadap Sensor</strong></p>
+  <ul>
+    <li>Karena nodes independen, pemerintah atau pihak lain sulit untuk mematikan jaringan Bitcoin.</li>
+  </ul>
+  <p class="point">4. <strong>Privasi</strong></p>
+  <ul>
+    <li>Menjalankan full node sendiri memungkinkan pengguna memverifikasi transaksi tanpa mengungkapkan data ke pihak ketiga.</li>
+  </ul>
+  <p class="point">5. <strong>Kontrol Penuh</strong></p>
+  <ul>
+    <li>Pengguna full node tidak perlu mempercayai pihak lain untuk mengetahui saldo atau status transaksi mereka.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Kesimpulan</h2>
+  <hr>
+  <p class="point"><strong>Nodes adalah jantung jaringan Bitcoin</strong>. Tanpa nodes, tidak ada validasi transaksi, tidak ada desentralisasi, dan tidak ada Bitcoin.</p>
+  <p class="point"><strong>Full nodes</strong> adalah yang paling penting karena mereka menjaga integritas jaringan secara independen, sementara <strong>light nodes</strong> memungkinkan akses yang lebih mudah bagi pengguna kasual.</p>
+  <p class="point">Menjalankan node adalah cara untuk:
+    <ul>
+      <li>• Berkontribusi pada ekosistem Bitcoin</li>
+      <li>• Meningkatkan keamanan jaringan</li>
+      <li>• Mendukung visi desentralisasi</li>
+    </ul>
+  </p>
+</div>
+<div class="quote-box">
+  <p class="quote-text">
+    "All nodes are working with the same information. They know what the valid transactions are and which blocks are valid."
+  </p>
+  <p class="quote-source">
+    — Satoshi Nakamoto
+  </p>
+</div>
+
+<style>
+  .quote-box {
+    background: linear-gradient(270deg, #000000, #444444, #000000);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+    padding: 30px;
+    max-width: 700px;
+    margin: 15px auto;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .quote-text {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+  }
+
+  .quote-source {
+    font-size: 14px;
+    color: white;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    margin: 0;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+<div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+  <script>
+    const clickSound = new Audio('sfx.mp3');
+
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.error("Error playing sound:", e));
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault();
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+          topBox.classList.add('scrolled');
+        } else {
+          topBox.classList.remove('scrolled');
+        }
+      });
+    });
+
+    document.querySelector('.profile-pic img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    document.querySelector('.back-button img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+
+</html>

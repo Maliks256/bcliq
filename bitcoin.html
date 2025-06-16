@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff; /* Latar belakang putih polos */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 10vh; /* Menggunakan min-height agar bisa discroll */
+      overflow-x: hidden;
+      padding-top: 70px; /* Tambahkan padding agar konten tidak tertutup top-box */
+      opacity: 0; /* Awalnya sembunyikan body */
+      transition: opacity 0.5s ease-in-out; /* Tambahkan transisi untuk fade-in/out */
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan agar efek blur terlihat */
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out; /* Transisi untuk blur dan warna */
+      -webkit-backdrop-filter: blur(0px); /* Default tidak blur untuk Safari */
+      backdrop-filter: blur(0px); /* Default tidak blur */
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      background-color: rgba(255, 255, 255, 0.7); /* Lebih transparan saat blur */
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    /* Style tambahan untuk konten teks */
+    .content-info {
+      padding: 20px;
+      max-width: 800px; /* Atur lebar maksimum agar nyaman dibaca */
+      width: 100%; /* Agar bisa mengambil lebar penuh untuk alignment kiri */
+      margin-top: 20px; /* Beri jarak dari top-box */
+      margin-bottom: 30px; /* Beri jarak di bawah konten */
+    }
+
+    .content-info h2 {
+      font-size: 1.5em; 
+      margin-top: 25px; 
+      color: #333;
+      text-align: center; 
+      border-bottom: 1px solid #ddd; /* Garis bawah */
+      padding-bottom: 10px; /* Jarak teks ke garis */
+      margin-bottom: 20px; /* Jarak garis ke konten bawah */
+    }
+
+    .content-info h3 {
+      font-size: 1.3em; 
+      color: #444;
+      text-align: left;
+      margin-top: 20px; 
+      display: flex; 
+      align-items: center; 
+      border-bottom: 1px solid #ddd; /* Garis bawah */
+      padding-bottom: 8px; /* Jarak teks ke garis */
+      margin-bottom: 15px; /* Jarak garis ke konten bawah */
+    }
+
+    .content-info h4 {
+      font-size: 1.1em; 
+      color: #555;
+      text-align: left;
+      margin-top: 15px;
+      border-bottom: 1px solid #ddd; /* Garis bawah */
+      padding-bottom: 6px; /* Jarak teks ke garis */
+      margin-bottom: 12px; /* Jarak garis ke konten bawah */
+    }
+
+    .content-info h5 {
+      font-size: 1.05em; 
+      color: #666;
+      text-align: left;
+      margin-top: 12px;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd; /* Garis bawah */
+      padding-bottom: 4px; /* Jarak teks ke garis */
+      margin-bottom: 10px; /* Jarak garis ke konten bawah */
+    }
+
+    .content-info p {
+      font-size: 1em;
+      line-height: 1.6;
+      color: #555;
+      text-align: justify; 
+      margin-bottom: 15px; 
+    }
+
+    .content-info hr {
+      border: 0;
+      height: 2px;
+      background-color: #333; 
+      margin: 30px 0; 
+    }
+    .hr-thin { 
+      border: 0;
+      height: 1px; 
+      background-color: #555; 
+      margin: 30px 0;
+    }
+
+    .heading-left-align {
+      text-align: left !important; 
+      width: 100%; 
+    }
+    /* Memastikan h2.heading-left-align dan h3.heading-left-align juga punya garis bawah */
+    .content-info h2.heading-left-align {
+        display: block; 
+        text-align: left !important;
+        /* border-bottom, padding-bottom, margin-bottom sudah dicover oleh aturan .content-info h2 umum */
+    }
+     .content-info h3.heading-left-align {
+        display: block; /* Override flex jika h3 ini tidak pakai nomor */
+        /* text-align: left !important; sudah dari .heading-left-align */
+        /* border-bottom, padding-bottom, margin-bottom sudah dicover oleh aturan .content-info h3 umum */
+    }
+    
+    .content-info blockquote {
+      margin: 15px 0px; 
+      padding: 10px 15px;
+      border-left: 4px solid #007bff; 
+      background-color: #f8f9fa; 
+      font-style: italic;
+      color: #495057;
+    }
+
+    .content-info strong {
+      color: #000000 !important; 
+      font-weight: bold; 
+    }
+
+    .content-info ul {
+      list-style-type: disc; 
+      padding-left: 20px;    
+      margin-bottom: 15px;   
+      text-align: left;      
+    }
+
+    .content-info ul li {
+      text-align: justify;   
+      margin-bottom: 10px; 
+    }
+    .content-info ul li p,
+    .content-info ul li blockquote {
+        margin-bottom: 10px; 
+    }
+     .content-info ul li p:last-child,
+     .content-info ul li blockquote:last-child {
+        margin-bottom: 0; 
+     }
+
+    .content-info ul li::marker { 
+        color: #333; 
+    }
+
+    .numbered-heading-num {
+      display: inline-flex;      
+      justify-content: center;  
+      align-items: center;      
+      min-width: 1.6em;         
+      height: 1.6em;            
+      padding: 0.1em;           
+      border: 1px solid #777;   
+      border-radius: 50%;       
+      margin-right: 0.6em;      
+      font-weight: normal;      
+      font-size: 0.8em;         
+      color: #333;              
+      flex-shrink: 0;           
+      box-sizing: border-box;   
+    }
+
+    /* Styles for the table of contents overlay */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+        backdrop-filter: blur(8px); /* Blur effect for the background */
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 200; /* Higher than top-box */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .toc-box {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 90%;
+        max-height: 80%;
+        overflow-y: auto;
+        transform: scale(0.9);
+        opacity: 0;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .overlay.active .toc-box {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .toc-box h3 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        font-size: 1.8em;
+    }
+
+    .toc-box ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .toc-box ul li {
+        margin-bottom: 12px;
+    }
+
+    .toc-box ul li a {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1.1em;
+        padding: 8px 15px;
+        display: block;
+        border-radius: 5px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .toc-box ul li a:hover {
+        background-color: #e9f5ff;
+        color: #0056b3;
+    }
+
+    .toc-box ul li a:active {
+        background-color: #cce5ff;
+        transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable" id="profilePic">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+  </div>
+
+  <div class="content-info">
+  	
+    <h2 id="apa-itu-bitcoin">APA ITU BITCOIN?</h2>
+    <p>
+      Bitcoin adalah <strong>mata uang digital terdesentralisasi</strong> yang dibuat pada 2009 oleh entitas anonim bernama <strong>Satoshi Nakamoto</strong>. Beroperasi pada <strong>teknologi blockchain</strong>, Bitcoin memungkinkan <strong>transaksi peer-to-peer</strong> <strong>tanpa perantara seperti bank</strong>. Blockchain adalah <strong>buku besar publik</strong> yang mencatat semua transaksi secara <strong>aman, transparan, dan tidak dapat diubah</strong>. Bitcoin digunakan untuk pembayaran, investasi, atau penyimpan nilai, dengan <strong>pasokan terbatas (21 juta koin)</strong> yang dikendalikan oleh algoritma. Nilainya <strong>fluktuatif</strong>, dipengaruhi oleh permintaan pasar dan sentimen.
+    </p>
+       
+        
+    <hr>
+    <hr>
+    	    <hr>
+
+    <h2 class="heading-left-align" id="sejarah-perkembangan-bitcoin">Sejarah Perkembangan Bitcoin</h2>
+
+    <h3 class="heading-left-align" id="awal-mula-kelahiran-bitcoin-2008-2009">Awal Mula: Kelahiran Bitcoin (2008-2009)</h3>
+    <h4>2008 - Krisis Keuangan Global</h4>
+    <p>Dunia lagi kacau gara-gara krisis ekonomi. Bank-bank besar kolaps, kepercayaan ke sistem keuangan tradisional anjlok. Ini latar belakang kenapa Bitcoin muncul.</p>
+    <h4>31 Oktober 2008 - Whitepaper Bitcoin</h4>
+    <p>Seseorang (atau kelompok) pake nama samaran Satoshi Nakamoto ngerilis whitepaper berjudul "Bitcoin: A Peer-to-Peer Electronic Cash System" di mailing list kriptografi. Whitepaper ini ngejelasin ide sistem uang digital yang gak butuh bank atau pihak ketiga, pake teknologi blockchain—database terdesentralisasi yang catet semua transaksi.</p>
+    <h4>3 Januari 2009 - Genesis Block</h4>
+    <p>Satoshi "menambang" blok pertama Bitcoin, disebut Genesis Block. Di dalamnya, dia nyisipin pesan: "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks". Ini sindiran ke sistem keuangan yang rapuh. Bitcoin resmi lahir!</p>
+    <h4>Januari 2009 - Software Bitcoin Dirilis</h4>
+    <p>Satoshi rilis software open-source Bitcoin v0.1, dan orang-orang mulai bisa ikut nambang (mining) Bitcoin pake komputer biasa.</p>
+
+    <h3 class="heading-left-align" id="masa-awal-komunitas-kecil-eksperimen-2009-2010">Masa Awal: Komunitas Kecil & Eksperimen (2009-2010)</h3>
+    <h4>Komunitas Geek</h4>
+    <p>Awalnya, Bitcoin cuma dipake sama kriptografer, hacker, dan penggila teknologi di forum kayak Bitcointalk. Gak ada nilai tukar resmi, Bitcoin lebih kayak mainan buat eksperimen.</p>
+    <h4>Transaksi Pertama (2010)</h4>
+    <p>Tanggal 22 Mei 2010, programmer Laszlo Hanyecz beli dua pizza Papa John’s seharga 10.000 BTC (nilainya sekarang? Ratusan miliar rupiah!). Ini transaksi pertama di dunia nyata pake Bitcoin, sekarang dirayain sebagai Bitcoin Pizza Day.</p>
+    <h4>Pertumbuhan Jaringan</h4>
+    <p>Penambang (miners) mulai nambah, tapi hashrate (daya komputasi jaringan) masih kecil. Orang nambang pake CPU komputer rumahan.</p>
+
+    <h3 class="heading-left-align" id="perkembangan-pengakuan-2011-2013">Perkembangan & Pengakuan (2011-2013)</h3>
+    <h4>2011 - Harga Pertama & Dark Pool</h4>
+    <p>Bitcoin mulai punya nilai tukar. Awal 2011, 1 BTC = $1. Tapi, Bitcoin juga mulai dipake di pasar gelap seperti Silk Road (marketplace di dark web buat barang ilegal). Ini bikin Bitcoin dikenal, tapi juga kontroversial.</p>
+    <h4>Exchange Pertama</h4>
+    <p>Mt. Gox, bursa Bitcoin pertama, mulai dominasi. Orang bisa jual-beli Bitcoin dengan uang fiat (USD, dll.).</p>
+    <h4>2013 - Lonjakan Harga</h4>
+    <p>Harga Bitcoin naik gila-gilaan, dari $13 di awal tahun sampe $1.200 di akhir 2013. Media mulai heboh, orang awam mulai penasaran. Tapi, ini juga awal gelembung (bubble) pertama.</p>
+    <h4>Regulasi & Hack</h4>
+    <p>Pemerintah mulai perhatiin Bitcoin. China larang bank terlibat sama Bitcoin, dan Mt. Gox kena hack kecil-kecilan, bikin orang mulai was-was soal keamanan.</p>
+
+    <h3 class="heading-left-align" id="masa-sulit-crash-kontroversi-2014-2016">Masa Sulit: Crash & Kontroversi (2014-2016)</h3>
+    <h4>2014 - Kehancuran Mt. Gox</h4>
+    <p>Mt. Gox, yang ngelola 70% transaksi Bitcoin dunia, kena hack besar-besaran. 850.000 BTC (senilai miliaran dolar saat itu) hilang. Harga Bitcoin anjlok, kepercayaan publik goyang.</p>
+    <h4>Perkembangan Teknologi</h4>
+    <p>Meski krisis, komunitas Bitcoin tetep inovatif. Banyak developer bikin dompet (wallet) dan alat baru buat bikin Bitcoin lebih gampang dipake.</p>
+    <h4>2015-2016 - Pemulihan</h4>
+    <p>Harga Bitcoin stabil di kisaran $200-$400. Komunitas mulai fokus ke skalabilitas (biar transaksi lebih cepat) dan adopsi di bisnis legal. Perusahaan kayak BitPay dan Coinbase mulai muncul buat bantu orang pake Bitcoin.</p>
+
+    <h3 class="heading-left-align" id="kebangkitan-hype-2017-2018">Kebangkitan & Hype (2017-2018)</h3>
+    <h4>2017 - Bull Run Gila</h4>
+    <p>Harga Bitcoin meledak dari $1.000 di awal 2017 sampe hampir $20.000 di Desember. FOMO (fear of missing out) bikin orang biasa ikut-ikutan beli. ICO (Initial Coin Offering) juga muncul, bikin banyak altcoin (koin selain Bitcoin) bermunculan.</p>
+    <h4>Skalabilitas Jadi Masalah</h4>
+    <p>Jaringan Bitcoin kewalahan ngadepin lonjakan transaksi. Biaya transaksi (fee) naik, waktu konfirmasi lama. Komunitas terpecah soal solusi: SegWit (upgrade buat efisiensi) diterima, tapi beberapa pihak bikin fork kayak Bitcoin Cash.</p>
+    <h4>2018 - Crypto Winter</h4>
+    <p>Setelah puncak 2017, harga Bitcoin ambruk sampe $3.200 di akhir 2018. Banyak ICO scam ketahuan, bikin pasar crypto lesu.</p>
+
+    <h3 class="heading-left-align" id="maturasi-adopsi-massal-2019-2023">Maturasi & Adopsi Massal (2019-2023)</h3>
+    <h4>2019-2020 - Pemulihan Bertahap</h4>
+    <p>Bitcoin naik pelan-pelan, sampe $10.000 di 2020. Pandemi COVID-19 bikin orang cari aset alternatif, Bitcoin mulai diliat sebagai "digital gold" buat lindung nilai inflasi.</p>
+    <h4>2020 - Halving & Institusi Masuk</h4>
+    <p>Event halving (pemotongan reward mining setiap 4 tahun) bikin supply Bitcoin makin langka, dorong harga. Perusahaan besar kayak MicroStrategy dan Tesla mulai beli Bitcoin sebagai aset cadangan.</p>
+    <h4>2021 - Puncak Baru</h4>
+    <p>Harga Bitcoin nyentuh $69.000 di November 2021. El Salvador jadi negara pertama yang bikin Bitcoin sebagai alat bayar resmi. Tapi, akhir 2021 harga mulai turun lagi.</p>
+    <h4>2022 - Pasar Beruang</h4>
+    <p>Inflasi global, kenaikan suku bunga, dan kolaps proyek crypto kayak Terra-Luna dan FTX bikin harga Bitcoin jatuh ke $16.000. Banyak investor rugi, tapi jaringan Bitcoin tetep kuat.</p>
+    <h4>2023 - Stabilisasi</h4>
+    <p>Harga pulih ke kisaran $25.000-$30.000. ETF Bitcoin mulai diluncurin di beberapa negara, bikin akses ke Bitcoin lebih gampang buat investor tradisional.</p>
+
+    <h3 class="heading-left-align" id="sampai-sekarang-2024-2025">Sampai Sekarang (2024-2025)</h3>
+    <h4>2024 - ETF & Adopsi</h4>
+    <p>Januari 2024, SEC di AS setujuin Bitcoin Spot ETF, bikin institusi dan investor ritel makin gampang masuk pasar. Harga Bitcoin sempet nyentuh $100.000 di akhir 2024 (berdasarkan proyeksi dan tren).</p>
+    <h4>2025 - Sekarang</h4>
+    <p>Bitcoin terus matang sebagai aset. Banyak negara mulai atur crypto, meski regulasi masih beragam (ada yang dukung, ada yang larang). Jaringan Bitcoin juga makin kuat dengan upgrade seperti Lightning Network buat transaksi cepat dan murah.</p>
+
+    <h3 class="heading-left-align" id="satoshi-nakamoto-masih-misterius">Satoshi Nakamoto Masih Misterius</h3>
+    <p>Sampai sekarang, identitas Satoshi gak pernah ketahuan. Banyak spekulasi, dari Hal Finney, Dorian Nakamoto, sampe Elon Musk (meski gak ada bukti kuat). Dia (atau mereka) punya sekitar 1 juta BTC yang gak pernah disentuh.</p>
+
+    <hr>
+    	    <hr>
+    	    <hr>
+
+    <h2 class="heading-left-align" id="tujuan-bitcoin">TUJUAN BITCOIN :</h2>
+    <p>
+      Tujuan Bitcoin, sebagaimana diuraikan dalam white paper <strong>Satoshi Nakamoto</strong>, adalah menciptakan <strong>sistem uang elektronik peer-to-peer</strong> yang memungkinkan <strong>transaksi langsung tanpa perantara</strong>, mengatasi masalah <strong>pengeluaran ganda</strong> dengan <strong>blockchain dan proof-of-work</strong>, serta membangun <strong>jaringan terdesentralisasi yang aman, transparan, dan efisien</strong>, untuk memberi individu <strong>kendali penuh atas keuangan mereka</strong> <strong>tanpa bergantung pada institusi terpusat</strong>.
+    </p>
+
+    <h2 class="heading-left-align" id="konteks-dan-masalah-yang-ingin-diselesaikan">Konteks dan Masalah yang Ingin Diselesaikan</h2>
+    <p>
+      Sebelum masuk ke tujuan spesifik, penting buat ngerti konteks kenapa Satoshi bikin Bitcoin. Di white paper, Satoshi ngeliat bahwa <strong>sistem keuangan tradisional</strong> punya beberapa masalah besar, terutama dalam transaksi online:
+    </p>
+    <p>
+      <strong>Ketergantungan pada Perantara:</strong> Transaksi online pada masa itu (dan masih banyak sekarang) bergantung pada bank atau prosesor pembayaran (kayak PayPal atau Visa) sebagai pihak ketiga tepercaya. Ini bikin transaksi jadi mahal karena ada <strong>biaya (fees)</strong> yang dikenakan perantara.
+    </p>
+    <p>
+      <strong>Biaya Tinggi untuk Transaksi Kecil:</strong> Bayar sesuatu yang murah (misalnya, beli kopi atau langganan digital) lewat sistem tradisional sering gak efisien karena biaya transaksi bisa lebih besar dari nilai barangnya.
+    </p>
+    <p>
+      <strong>Risiko Penipuan dan Pembalikan Transaksi:</strong> Dalam sistem tradisional, transaksi bisa dibatalkan (<strong>chargeback</strong>), yang bikin merchant (penjual) rentan rugi. Selain itu, perantara juga bisa jadi titik lemah kalau sistem mereka diretas atau gagal.
+    </p>
+    <p>
+      <strong>Keterbatasan Akses Global:</strong> Banyak orang di dunia (terutama di negara berkembang) gak punya akses ke sistem perbankan, jadi sulit ikut dalam ekonomi digital global.
+    </p>
+    <p>
+      Satoshi pengen bikin solusi yang <strong>nge-bypass masalah-masalah ini</strong> dengan sistem yang benar-benar baru. Nah, sekarang kita masuk ke tujuan utama Bitcoin berdasarkan white paper, dengan penjelasan yang lebih mendalam.
+    </p>
+
+    <h2 class="heading-left-align" id="tujuan-utama-bitcoin-dari-white-paper">Tujuan Utama Bitcoin dari White Paper</h2>
+
+    <h3><span class="numbered-heading-num">1</span>. Menciptakan Sistem Uang Elektronik Peer-to-Peer</h3>
+    <ul>
+        <li>
+            <p><strong>Apa Artinya?</strong> Di bagian abstrak white paper, Satoshi nulis:</p>
+            <blockquote>"A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution."</blockquote>
+            <p>Intinya, Bitcoin dirancang biar orang bisa <strong>kirim uang langsung ke orang lain</strong>, kayak ngasih uang tunai di dunia nyata, tapi dalam bentuk digital. <strong>Gak perlu bank, gak perlu PayPal, gak perlu siapa pun di tengah-tengah.</strong></p>
+        </li>
+        <li>
+            <p><strong>Kenapa Penting?</strong> Dengan <strong>menghilangkan perantara</strong>, Bitcoin <strong>ngurangin biaya transaksi</strong> dan bikin proses <strong>lebih cepat</strong>, terutama buat transaksi lintas negara. Misalnya, kirim uang dari Indonesia ke Amerika biasanya butuh beberapa hari lewat bank, dengan biaya transfer dan konversi mata uang. Bitcoin bikin ini instan (atau setidaknya dalam hitungan menit) dengan biaya lebih murah.</p>
+        </li>
+        <li>
+            <p><strong>Konteks Lebih Luas:</strong> Ini juga soal <strong>kebebasan</strong>. Satoshi kayaknya pengen kasih <strong>kendali penuh ke individu</strong>, bukan ke institusi yang punya kuasa besar. Ini nyambung sama semangat <strong>cypherpunk</strong>, gerakan yang percaya pada privasi dan kebebasan digital.</p>
+        </li>
+    </ul>
+
+    <h3><span class="numbered-heading-num">2</span>. Mengatasi Masalah Pengeluaran Ganda (Double-Spending)</h3>
+    <ul>
+        <li>
+            <p><strong>Apa Itu Double-Spending?</strong> Ini masalah klasik di dunia uang digital: kalau kamu punya copy file digital (misalnya, PDF), kamu bisa kirim copy itu ke banyak orang tanpa kehilangan file aslinya. Kalau ini terjadi sama uang digital, seseorang bisa <strong>"ngeluarin" Bitcoin yang sama berkali-kali</strong>, yang bikin sistem ambruk.</p>
+        </li>
+        <li>
+            <p><strong>Solusi Satoshi:</strong> Di white paper, Satoshi nulis bahwa Bitcoin pake <strong>cryptographic proof</strong> dan <strong>network timestamping</strong> buat nyelesain masalah ini. Caranya? Semua transaksi dicatat di <strong>blockchain</strong>, sebuah buku besar publik yang diurus bareng-bareng sama jaringan node (komputer-komputer yang jalankan software Bitcoin). Setiap transaksi di-verifikasi lewat mekanisme <strong>proof-of-work (PoW)</strong>, di mana penambang (miners) bersaing buat nge-validasi transaksi dengan ngerjain soal matematika yang susah.</p>
+        </li>
+        <li>
+            <p><strong>Detail Teknis:</strong> Proof-of-work bikin blockchain susah diubah. Kalau seseorang coba nipu dengan ngubah transaksi lama (misalnya, buat ngeluarin Bitcoin yang sama dua kali), dia harus <strong>ngulang proof-of-work buat semua blok setelahnya</strong>, yang butuh daya komputasi super besar. Karena jaringan Bitcoin punya banyak node yang jujur, peluang nipu jadi kecil banget.</p>
+        </li>
+        <li>
+            <p><strong>Implikasinya:</strong> Dengan ngatasin double-spending tanpa perlu pihak tepercaya, Bitcoin bikin <strong>sistem yang adil dan transparan</strong>. Semua orang bisa lihat riwayat transaksi di blockchain, tapi gak ada yang bisa ngutak-atik tanpa izin jaringan.</p>
+        </li>
+    </ul>
+
+    <h3><span class="numbered-heading-num">3</span>. Membangun Sistem Terdesentralisasi</h3>
+    <ul>
+        <li>
+            <p><strong>Apa Maksudnya?</strong> Satoshi nulis:</p>
+            <blockquote>"We propose a solution to the double-spending problem using a peer-to-peer network. The network timestamps transactions by hashing them into an ongoing chain of hash-based proof-of-work, forming a record that cannot be changed without redoing the proof-of-work."</blockquote>
+            <p>Intinya, Bitcoin <strong>gak dikontrol sama satu pihak</strong> (kaya bank sentral atau pemerintah). Semua node di jaringan punya salinan blockchain dan setuju sama versi yang "benar" lewat <strong>konsensus</strong>.</p>
+        </li>
+        <li>
+            <p><strong>Kenapa Ini Penting?</strong> Desentralisasi bikin Bitcoin <strong>tahan terhadap sensor atau serangan</strong>. Misalnya, gak ada satu server pun yang bisa dimatiin buat ngehentin Bitcoin, karena ribuan node di seluruh dunia nyimpen datanya. Ini beda sama bank, yang kalau server-nya down atau diretas, sistemnya bisa lumpuh.</p>
+        </li>
+        <li>
+            <p><strong>Konteks Filosofis:</strong> Desentralisasi ini juga soal kebebasan dan ketahanan. Satoshi kayaknya terinspirasi sama <strong>krisis keuangan 2008</strong> (inget pesan di genesis block: "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"). Bitcoin dibikin buat ngasih <strong>alternatif dari sistem keuangan yang rapuh</strong> dan dikontrol pihak tertentu.</p>
+        </li>
+    </ul>
+
+    <h3><span class="numbered-heading-num">4</span>. Meningkatkan Efisiensi dan Mengurangi Biaya Transaksi</h3>
+    <ul>
+        <li>
+            <p><strong>Penjelasan di White Paper:</strong> Satoshi nyebutin bahwa perantara keuangan bikin transaksi jadi mahal, terutama buat pembayaran kecil. Bitcoin dirancang biar <strong>biaya transaksi lebih rendah</strong>, karena gak ada pihak ketiga yang ngambil jatah.</p>
+        </li>
+        <li>
+            <p><strong>Realitasnya:</strong> Di awal-awal Bitcoin, biaya transaksi emang super murah (bisa kurang dari $0,01). Tapi, seiring Bitcoin makin populer, biaya transaksi bisa naik pas jaringan sibuk, karena penambang milih transaksi dengan fee lebih tinggi. Solusi kayak <strong>Lightning Network</strong> (yang gak dibahas di white paper) kemudian dikembangin buat bikin transaksi kecil jadi murah lagi.</p>
+        </li>
+        <li>
+            <p><strong>Implikasi:</strong> Tujuan ini ngasih harapan buat bikin <strong>ekonomi digital lebih inklusif</strong>, terutama buat orang-orang yang gak punya akses ke bank atau kartu kredit.</p>
+        </li>
+    </ul>
+
+    <h3><span class="numbered-heading-num">5</span>. Menciptakan Sistem yang Aman dan Transparan</h3>
+    <ul>
+        <li>
+            <p><strong>Cara Kerjanya:</strong> Bitcoin pake <strong>kriptografi</strong> (teknik matematika buat ngamanin data) buat ngejaga keamanan dompet dan transaksi. Setiap pengguna punya <strong>private key</strong> (semacam kata sandi rahasia) dan <strong>public key</strong> (alamat dompet). Blockchain sendiri <strong>transparan</strong>, artinya siapa pun bisa lihat semua transaksi yang pernah terjadi, tapi identitas pengguna tetap <strong>pseudo-anonim</strong> (cuma alamat dompet yang kelihatan, bukan nama asli).</p>
+        </li>
+        <li>
+            <p><strong>Di White Paper:</strong> Satoshi ngejelasin bahwa proof-of-work bikin blockchain susah diubah, karena ngubah satu blok berarti harus ngubah semua blok setelahnya, yang butuh kekuatan komputasi yang gila. Ini bikin sistem <strong>tahan terhadap serangan</strong>, selama mayoritas node di jaringan jujur.</p>
+        </li>
+        <li>
+            <p><strong>Kenapa Penting?</strong> Keamanan dan transparansi ini bikin Bitcoin <strong>bisa dipercaya tanpa perlu pihak tepercaya</strong>. Misalnya, kamu gak perlu percaya sama bank bahwa mereka gak bakal ngambil duitmu; blockchain udah buktiin sendiri lewat matematika.</p>
+        </li>
+    </ul>
+    
+    <hr> 
+    	    <hr>
+    	    <hr>
+    <h2 class="heading-left-align" id="bedah-white-paper-bitcoin">Bedah White Paper Bitcoin</h2>
+    <p>
+      White paper Bitcoin terdiri dari beberapa bagian: <strong>Abstrak, Pendahuluan (tanpa judul eksplisit), dan 12 subbab teknis, ditutup dengan kesimpulan dan referensi</strong>. Satoshi nulis dengan <strong>gaya yang lugas, langsung ke inti, tanpa basa-basi</strong>. Dokumen ini gak cuma nerangin ide Bitcoin, tapi juga kasih <strong>blueprint teknis</strong> buat bikin sistemnya jalan. Berikut breakdown lengkapnya, dengan fokus ke detail yang belum kita sentuh sebelumnya:
+    </p>
+
+    <h3 id="abstrak-white-paper">Abstrak</h3>
+    <p style="padding-left: 20px;">•&nbsp;Di bagian abstrak, Satoshi ngenalin <strong>konsep inti Bitcoin: sistem kas elektronik peer-to-peer yang gak butuh pihak ketiga tepercaya</strong>. Dia nyebutin bahwa <strong>cryptographic proof dipake buat ngatasin masalah double-spending</strong>, dan <strong>jaringan peer-to-peer bakal ngatur transaksi pake timestamping sama proof-of-work (PoW)</strong>. Karena ini udah kita bahas sebagai tujuan, aku skip detailnya, tapi intinya, abstrak ini kayak <strong>"teaser trailer" yang ngasih gambaran singkat tentang visi dan teknologi Bitcoin</strong>.
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Catatan Baru:</strong> Abstrak ini pendek (cuma 4 kalimat), tapi udah nge-set nada bahwa Bitcoin adalah <strong>solusi praktis buat masalah nyata di dunia keuangan digital</strong>. Satoshi sengaja bikin ini <strong>sederhana biar gampang dipahami</strong>, tapi tetap <strong>menarik buat para kriptografer dan programmer</strong>.
+    </p>
+
+    <h3 id="pendahuluan-tanpa-judul">Pendahuluan (Tanpa Judul)</h3>
+    <p style="padding-left: 20px;">•&nbsp;Di bagian awal (yang gak dikasih judul “Introduction” tapi berfungsi sebagai pendahuluan), Satoshi ngejelasin <strong>masalah sistem keuangan saat itu: transaksi online butuh perantara (kaya bank) yang bikin biaya tinggi dan rentan penipuan</strong>. Dia bilang, <strong>kelemahan utama adalah ketergantungan pada “trusted third parties”</strong> yang gak selalu bisa dipercaya, apalagi buat <strong>transaksi kecil yang biayanya sering gak masuk akal</strong>. Ini udah kita singgung di tujuan, jadi aku gak ulang, tapi ada poin baru:
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Detail Baru:</strong> Satoshi nyorotin bahwa sistem berbasis kepercayaan ini bikin transaksi bisa dibalikin (<strong>reversible</strong>), yang nambah risiko buat pedagang. Misalnya, kalau lo beli barang online pake kartu kredit, pembeli bisa minta <strong>chargeback</strong>, dan pedagang yang rugi. Bitcoin pengen bikin transaksi <strong>“final” kayak kas di dunia nyata</strong>, di mana sekali dibayar, selesai. Ini penting buat <strong>ngejamin kepastian transaksi</strong>, terutama di dunia online yang penuh ketidakpastian.
+    </p>
+
+    <h3 id="bagian-teknis-white-paper">Bagian Teknis White Paper</h3>
+    <p>
+        Sekarang kita masuk ke <strong>dagingnya</strong>: <strong>12 subbab teknis</strong> yang nerangin cara kerja Bitcoin. Aku ( grok ai ) bakal jelasin satu per satu, fokus ke <strong>aspek yang belum dibahas</strong>, kayak <strong>mekanisme teknis, matematika, dan implikasi yang lebih dalam</strong>.
+    </p>
+
+    <h4 id="transactions">Transactions</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi mulai dengan ngejelasin bahwa Bitcoin nyimpen transaksi dalam <strong>format yang di-hash</strong> dan <strong>di-verifikasi pake kriptografi</strong>. Setiap transaksi punya <strong>input (dari mana Bitcoin datang)</strong> dan <strong>output (ke mana Bitcoin dikirim)</strong>. Ini gak dibahas detail di white paper, tapi intinya, transaksi adalah <strong>unit dasar yang dicatat di blockchain</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong> Satoshi ngenalin konsep bahwa <strong>transaksi harus diumumin ke seluruh jaringan biar semua node tahu</strong>. Ini penting buat <strong>transparansi dan konsensus</strong>. Kalau lo kirim 1 BTC ke temen, transaksi itu <strong>dibroadcast ke semua node</strong>, yang kemudian ngecek apakah transaksi itu valid (misalnya, lo beneran punya 1 BTC dan belum dipake di tempat lain).</p>
+
+    <h4 id="timestamp-server">Timestamp Server</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi ngejelasin ide <strong>“timestamp server”</strong> buat ngasih <strong>cap waktu pada transaksi</strong>. Setiap blok transaksi dikasih <strong>timestamp</strong>, yang bikin <strong>urutan transaksi jelas dan gak bisa diubah</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong> Timestamp ini bukan cuma soal waktu, tapi juga soal <strong>urutan</strong>. Tanpa timestamp, gak ada cara buat tahu transaksi mana yang duluan, yang bisa bikin <strong>double-spending gampang terjadi</strong>. Satoshi pake <strong>hash</strong> (fungsi kriptografi yang ngubah data jadi kode unik) buat <strong>nyambungin setiap blok ke blok sebelumnya</strong>, bikin <strong>rantai yang kronologis dan aman</strong>.</p>
+
+    <h4 id="proof-of-work">Proof-of-Work</h4>
+    <p style="padding-left: 40px;">•&nbsp;Ini bagian <strong>inti dari keamanan Bitcoin</strong>. <strong>Proof-of-Work (PoW)</strong> adalah mekanisme di mana <strong>penambang (miners)</strong> harus ngerjain <strong>“puzzle” matematika</strong> buat nge-validasi blok transaksi. Puzzle ini <strong>susah diselesain tapi gampang diverifikasi</strong>. Satoshi nyebutin contoh PoW yang mirip sama <strong>Hashcash</strong>, sistem yang dibikin Adam Back buat ngelawan spam email.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Cara Kerja PoW:</strong> Penambang ngumpulin transaksi ke dalam blok, lalu nyoba nemuin nilai <strong>“nonce” (angka acak)</strong> yang, kalau digabung sama data blok, hasilkan <strong>hash dengan pola tertentu</strong> (misalnya, mulai dengan beberapa angka nol). Ini butuh <strong>trial-and-error dan daya komputasi besar</strong>, makanya disebut <strong>“kerja” (work)</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Kesulitan Dinamis:</strong> Satoshi ngejelasin bahwa <strong>tingkat kesulitan PoW diatur ulang setiap 2016 blok</strong> (kira-kira dua minggu) biar <strong>waktu pembuatan blok tetep sekitar 10 menit</strong>, meskipun daya komputasi jaringan bertambah. Ini bikin <strong>jaringan stabil dan gak kebanjiran blok</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Implikasi:</strong> PoW bikin <strong>penyerang susah ngubah blockchain</strong>, karena mereka harus <strong>ngulang kerja untuk semua blok setelahnya</strong>. Satoshi bilang, selama <strong>mayoritas daya komputasi dikontrol node jujur, jaringan aman</strong>.</p>
+
+    <h4 id="network">Network</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi ngejelasin langkah-langkah operasi jaringan Bitcoin:</p>
+    <ul style="padding-left: 40px;"> <li>Transaksi baru di-broadcast ke semua node.</li>
+        <li>Setiap node ngumpulin transaksi ke dalam blok.</li>
+        <li>Node ngerjain PoW buat blok itu.</li>
+        <li>Ketika PoW selesai, blok di-broadcast ke jaringan.</li>
+        <li>Node lain nerima blok cuma kalau semua transaksi di dalamnya valid dan belum dibelanjain.</li>
+        <li>Node nyatakan penerimaan dengan ngerjain blok berikutnya, pake hash blok sebelumnya.</li>
+    </ul>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Konsensus:</strong> Jaringan Bitcoin pake aturan <strong>“rantai terpanjang” (longest chain)</strong>. Kalau ada dua versi blockchain, node bakal pilih yang punya PoW paling banyak (artinya, rantai yang paling panjang). Ini bikin jaringan bisa <strong>nyanyi bareng meskipun ada konflik sementara (kaya fork)</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Desentralisasi Ekstrem:</strong> <strong>Gak ada server pusat</strong>. Setiap node punya <strong>salinan penuh blockchain</strong>, jadi meskipun sebagian node mati, sistem tetep jalan. Ini bikin Bitcoin <strong>tahan bencana, baik alamiah maupun serangan siber</strong>.</p>
+
+    <h4 id="incentive">Incentive</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi ngenalin sistem insentif buat penambang: mereka dapet hadiah berupa <strong>Bitcoin baru (block reward)</strong> plus <strong>biaya transaksi</strong> dari setiap transaksi yang mereka validasi. Ini bikin orang mau nyumbang daya komputasi.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Block Reward:</strong> White paper gak nyebutin jumlah pasti (50 BTC di awal), tapi ini adalah cara Bitcoin <strong>“mencetak” uang baru</strong>. Hadiah ini juga yang bikin <strong>pasokan Bitcoin terbatas</strong>, karena reward bakal berkurang seiring waktu (<strong>halving</strong>, meskipun gak disebut eksplisit di white paper).</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Keberlanjutan:</strong> Satoshi bilang insentif ini penting biar <strong>jaringan tetep hidup</strong>. Tanpa reward, gak ada yang mau nambang, dan keamanan jaringan bakal lemah. Ini juga bikin <strong>penambang punya kepentingan buat jaga jaringan tetap jujur</strong>.</p>
+
+    <h4 id="reclaiming-disk-space">Reclaiming Disk Space</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi ngomongin soal <strong>efisiensi penyimpanan</strong>. Blockchain bisa membesar seiring waktu, jadi dia usulin <strong>“pruning” (pemangkasan) data lama yang gak relevan</strong>. Misalnya, transaksi yang udah “habis” (fully spent) bisa dihapus dari node, asal hash-nya tetep disimpen di blockchain.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Merkle Tree:</strong> Satoshi pake struktur data bernama <strong>Merkle Tree</strong> buat ngatur transaksi dalam blok. Ini bikin <strong>verifikasi transaksi lebih efisien</strong>, karena node cuma perlu nyimpen <strong>root hash</strong>, bukan semua detail transaksi.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>SPV (Simplified Payment Verification):</strong> Meskipun gak disebut eksplisit, ide ini ngebuka jalan buat <strong>dompet ringan (light wallets)</strong> yang gak nyimpen seluruh blockchain, tapi tetap bisa verifikasi transaksi. Ini penting buat <strong>skalabilitas</strong>, biar pengguna biasa gak perlu download ratusan gigabyte data.</p>
+
+    <h4 id="simplified-payment-verification">Simplified Payment Verification</h4>
+    <p style="padding-left: 40px;">•&nbsp;Bagian ini nerangin cara <strong>node ringan (light nodes)</strong> bisa verifikasi transaksi <strong>tanpa nyimpen seluruh blockchain</strong>. Dengan pake Merkle Tree, node cuma perlu <strong>header blok</strong> dan sebagian kecil data buat ngecek transaksi.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Praktis buat Pengguna:</strong> SPV bikin Bitcoin bisa dipake di <strong>perangkat sederhana (kaya ponsel)</strong> tanpa perlu komputer canggih. Ini nunjukin visi Satoshi bahwa Bitcoin harus <strong>gampang diakses semua orang</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Trade-off:</strong> Node ringan <strong>kurang aman dibandingkan full node</strong>, karena mereka bergantung pada node lain buat data. Tapi, selama mayoritas node jujur, sistem tetep aman.</p>
+
+    <h4 id="combining-and-splitting-value">Combining and Splitting Value</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi bilang Bitcoin bisa ngatur <strong>transaksi kompleks</strong>, kayak <strong>ngabungin beberapa pembayaran kecil jadi satu besar</strong>, atau <strong>ngebagi pembayaran besar jadi banyak kecil</strong>. Ini bikin sistem <strong>fleksibel</strong> buat berbagai jenis transaksi.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Fleksibilitas:</strong> Ini kayak ngasih lo kemampuan buat <strong>“ngumpulin receh” dari beberapa dompet</strong> atau <strong>ngebagi “uang besar” ke banyak penerima</strong>. Struktur transaksi Bitcoin bikin ini gampang tanpa ngubah prinsip keamanan.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Contoh Dunia Nyata:</strong> Misalnya, lo bisa ngabungin 0,1 BTC dari satu dompet dan 0,2 BTC dari dompet lain buat bayar 0,3 BTC, atau ngebagi 1 BTC jadi 10 pembayaran masing-masing 0,1 BTC.</p>
+
+    <h4 id="privacy">Privacy</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi ngebahas privasi: meskipun <strong>blockchain transparan</strong> (semua transaksi bisa dilihat publik), <strong>identitas pengguna gak langsung ketauan</strong>, karena transaksi cuma pake <strong>public key (alamat dompet)</strong>. Kalau public key gak dikaitin sama identitas asli, privasi terjaga.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Pseudo-Anonimitas:</strong> Bitcoin <strong>bukan anonim total, tapi pseudo-anonim</strong>. Kalau lo ceroboh (misalnya, pake alamat dompet yang terkait sama nama lo), privasi bisa bocor. Satoshi nyaranin buat <strong>pake alamat baru tiap transaksi</strong> buat nambah privasi.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Bandingan dengan Bank:</strong> Di bank, transaksi lo bisa dilacak pemerintah atau pihak lain. Bitcoin kasih <strong>privasi lebih</strong>, tapi butuh <strong>usaha ekstra buat jaga anonimitas penuh</strong> (misalnya, pake mixer atau wallet anonim).</p>
+
+    <h4 id="calculations">Calculations</h4>
+    <p style="padding-left: 40px;">•&nbsp;Bagian ini adalah yang <strong>paling teknis</strong>. Satoshi ngasih <strong>analisis matematis tentang keamanan Bitcoin</strong>, terutama <strong>peluang penyerang ngelakuin serangan double-spending</strong>. Dia pake <strong>probabilitas</strong> buat nunjukin bahwa selama <strong>mayoritas daya komputasi (hash rate) dikontrol node jujur</strong>, penyerang bakal susah banget menang.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Model Probabilitas:</strong> Satoshi pake model <strong>Poisson distribution</strong> buat ngitung peluang penyerang bikin rantai alternatif yang lebih panjang dari rantai jujur. Kalau penyerang punya <strong>kurang dari 50% hash rate</strong>, peluangnya kecil banget, dan makin kecil kalau blok udah dikonfirmasi beberapa kali (biasanya <strong>6 konfirmasi dianggap aman</strong>).</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Contoh Kasus:</strong> Misalnya, kalau penyerang punya <strong>10% hash rate</strong>, peluang dia ngelupain rantai jujur setelah 6 blok cuma <strong>0,1%</strong>. Ini nunjukin betapa kuatnya PoW buat jaga integritas blockchain.</p>
+
+    <h4 id="conclusion">Conclusion</h4>
+    <p style="padding-left: 40px;">•&nbsp;Di penutup, Satoshi bilang bahwa sistem Bitcoin menggabungkan <strong>PoW, timestamping, dan jaringan peer-to-peer</strong> buat bikin <strong>buku besar transaksi yang aman dan gak bisa diubah</strong> tanpa daya komputasi besar. Dia nge-claim ini adalah <strong>solusi praktis buat transaksi online tanpa perantara</strong>.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong></p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Visi Praktis:</strong> Satoshi gak cuma ngomong teori, tapi nunjukin bahwa <strong>Bitcoin bisa diimplementasi</strong>. White paper ini kayak <strong>“resep” yang langsung bisa dicoba programmer</strong>, dan terbukti dengan peluncuran Bitcoin pada Januari 2009.</p>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Nada Optimis:</strong> Satoshi yakin sistemnya bakal jalan selama ada <strong>cukup node jujur</strong>. Ini nunjukin kepercayaannya pada <strong>komunitas open-source</strong> buat ngejalanin jaringan.</p>
+
+    <h4 id="references">References</h4>
+    <p style="padding-left: 40px;">•&nbsp;Satoshi nyantumin beberapa referensi, kayak:</p>
+    <ul style="padding-left: 40px;"> <li><strong>Hashcash karya Adam Back (2002)</strong>, yang jadi inspirasi PoW.</li>
+        <li>Paper tentang <strong>timestamping kriptografi karya Haber dan Stornetta (1991)</strong>, yang ngasih ide buat blockchain.</li>
+        <li>Paper lain tentang <strong>keamanan jaringan peer-to-peer</strong>.</li>
+    </ul>
+    <p style="padding-left: 40px;">•&nbsp;<strong>Poin Baru:</strong> Referensi ini nunjukin bahwa <strong>Bitcoin bukan ide dari nol</strong>. Satoshi <strong>berdiri di pundak raksasa</strong>, ngambil ide dari <strong>komunitas kriptografi dan cypherpunk</strong>, lalu nyatuin jadi <strong>sistem yang koheren</strong>.</p>
+
+    <h3 id="konteks-dan-hal-baru-yang-belum-dibahas">Konteks dan Hal Baru yang Belum Dibahas</h3>
+    <p style="padding-left: 20px;">•&nbsp;Selain poin-poin di atas, ada beberapa <strong>aspek white paper yang layak disorot</strong> karena gak masuk di tujuan sebelumnya:
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Skalabilitas dan Batasan:</strong> White paper gak terlalu ngebahas <strong>batasan Bitcoin</strong>, kayak <strong>ukuran blockchain yang bisa membesar</strong> atau <strong>waktu konfirmasi 10 menit</strong> yang mungkin lambat buat transaksi instan. Tapi, ide <strong>SPV dan pruning</strong> nunjukin Satoshi udah mikirin <strong>skalabilitas</strong>, meskipun solusi kayak <strong>Lightning Network</strong> datang belakangan.
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Ukuran Blok:</strong> Satoshi gak nyebutin <strong>batas ukuran blok (1 MB di awal)</strong>, tapi ini jadi <strong>isu besar di komunitas Bitcoin</strong> (misalnya, <strong>perang scaling antara Bitcoin vs. Bitcoin Cash</strong>). White paper lebih fokus ke <strong>prinsip dasar, bukan detail implementasi</strong>.
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Filosofi Ekonomi:</strong> Meskipun gak eksplisit, white paper nyiratkan <strong>pandangan ekonomi yang anti-inflasi</strong>. Dengan PoW dan insentif block reward, Bitcoin dirancang buat punya <strong>pasokan terbatas</strong> (meskipun batas <strong>21 juta koin gak disebut di white paper</strong>, tapi ada di kode). Ini beda sama <strong>uang fiat yang bisa dicetak tak terbatas</strong> sama bank sentral. Pesan di <strong>genesis block (soal bailout bank)</strong> nunjukin <strong>kritik Satoshi terhadap sistem keuangan tradisional</strong>, meskipun white paper sendiri gak terlalu ideologis.
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Keberlanjutan Jaringan:</strong> Satoshi ngejelasin bahwa selama <strong>mayoritas hash rate dikontrol node jujur, jaringan aman</strong>. Tapi, dia juga ngaku kalau penyerang dengan <strong>hash rate lebih dari 50% bisa bikin masalah (serangan 51%)</strong>. Ini nunjukin dia sadar <strong>sistemnya gak sempurna</strong>, tapi <strong>cukup kuat buat skenario realistis</strong>.
+    </p>
+    <p style="padding-left: 20px;">•&nbsp;<strong>Desain Minimalis:</strong> White paper sengaja <strong>simpel</strong>, gak masuk ke detail kayak <strong>jumlah maksimum Bitcoin, jadwal halving, atau aturan konsensus spesifik</strong> (misalnya, ukuran blok). Ini bikin Bitcoin <strong>fleksibel buat dikembangin komunitas</strong>, tapi juga bikin <strong>debat panjang soal “visi asli” Satoshi</strong>.
+    </p>
+
+    <hr> 
+    	    <hr>
+    	    <hr>
+    <h2 id="cara-membunuh-bitcoin">Cara "Membunuh" Bitcoin</h2>
+    <p>
+    “Membunuh” Bitcoin, sistem uang elektronik terdesentralisasi berbasis blockchain, adalah tantangan besar karena desainnya yang tangguh dan jaringan global yang tersebar. Serangan teknis seperti 51% attack, yang membutuhkan penguasaan lebih dari separuh daya komputasi untuk memanipulasi transaksi, sangat mahal dan hanya menyebabkan kerusakan sementara seperti double-spending. Upaya menghancurkan semua node tidak realistis karena ribuan node tersebar di seluruh dunia, dengan redundansi yang memungkinkan pemulihan dari satu node saja. Serangan lain seperti Eclipse, Finney, atau Sybil attack hanya mengganggu secara lokal tanpa meruntuhkan jaringan. Faktor non-teknis seperti pelarangan hukum atau manipulasi pasar dapat melemahkan kepercayaan, tetapi adopsi global, komunitas militan, dan infrastruktur seperti satelit membuat Bitcoin sulit dihentikan sepenuhnya, mempertahankan ketahanannya seperti dijelaskan dalam diskusi teknis sebelumnya.
+    </p>
+
+    <hr class="hr-thin"> 
+    	    <hr>
+
+    <h2 class="heading-left-align" id="apa-artinya-membunuh-bitcoin">Apa Artinya “Membunuh” Bitcoin?</h2>
+    <p>
+        “Membunuh” Bitcoin bisa punya beberapa makna: <strong>Ngerusak Kepercayaan</strong>: Bikin orang gak percaya lagi sama Bitcoin, sehingga nilai pasarnya ambruk atau orang berhenti pake. <strong>Ngehentin Jaringan</strong>: Bikin jaringan blockchain Bitcoin gak bisa berfungsi, misalnya dengan nge-stop validasi transaksi atau ngerusak blockchain. <strong>Manipulasi Sistem</strong>: Ngambil alih kontrol jaringan buat manipulasi transaksi, double-spending, atau ngebikin sistem gak adil. <strong>Pelarangan Hukum</strong>: Pemerintah atau otoritas bikin Bitcoin ilegal, sehingga penggunaannya mati.
+    </p>
+    <p>
+        Karena Bitcoin adalah sistem terdesentralisasi dengan ribuan node di seluruh dunia, “membunuh” dalam arti literal (ngehentin seluruh jaringan) itu <strong>nyaris mustahil</strong> tanpa koordinasi global yang ekstrem. Tapi, kita bakal bahas setiap kemungkinan serangan, termasuk yang lo sebutin (51% attack, killing all nodes), dan lainnya yang relevan.
+    </p>
+
+    <h3 id="51-attack-majority-attack"><span class="numbered-heading-num">1</span>. 51% Attack (Majority Attack)</h3>
+    <h4>Apa Itu 51% Attack?</h4>
+    <p>
+        Serangan 51% terjadi ketika satu entitas atau kelompok ngontrol <strong>lebih dari 50% daya komputasi (hash rate)</strong> jaringan Bitcoin, yang pake mekanisme konsensus <strong>Proof-of-Work (PoW)</strong>. Dengan mayoritas hash rate, penyerang bisa manipulasi blockchain, kayak ngelakuin <strong>double-spending</strong> atau <strong>nge-blok transaksi tertentu</strong>. Ini adalah ancaman klasik yang dibahas di white paper Satoshi (bagian Calculations), di mana dia ngitung probabilitas serangan ini pake model matematis.
+    </p>
+    <h4>Cara Kerjanya:</h4>
+    <ul>
+        <li>Penyerang ngumpulin daya komputasi (hash rate) <strong>lebih dari 50%</strong> total jaringan Bitcoin. Ini biasanya butuh jutaan perangkat penambang (ASIC miners).</li>
+        <li>Mereka bikin <strong>blockchain alternatif (fork)</strong> yang gak nyantumin transaksi tertentu atau ngelakuin double-spending (pake Bitcoin yang sama berkali-kali).</li>
+        <li>Karena jaringan Bitcoin ngikutin <strong>rantai terpanjang (longest chain rule)</strong>, blockchain penyerang bisa “menang” kalau hash rate-nya lebih besar, dan transaksi di rantai asli bisa dibatalkan.</li>
+    </ul>
+    <h4>Contoh:</h4>
+    <p>Penyerang kirim 100 BTC ke bursa, tuker ke USD, lalu cabut transaksi itu dari blockchain pake rantai alternatif, sehingga 100 BTC balik ke dompet mereka.</p>
+    <h4>Dampak:</h4>
+    <ul>
+        <li><strong>Double-Spending:</strong> Penyerang bisa ngeluarin Bitcoin yang sama berkali-kali, ngerusak kepercayaan ke sistem.</li>
+        <li><strong>Pemblokiran Transaksi:</strong> Penyerang bisa nolak transaksi tertentu, bikin jaringan gak reliable.</li>
+        <li><strong>Kehilangan Kepercayaan:</strong> Kalau serangan sukses, harga Bitcoin bisa ambruk karena investor kabur.</li>
+    </ul>
+    <h4>Kenapa Susah Dilakuin di Bitcoin?:</h4>
+    <ul>
+        <li><strong>Skala Jaringan:</strong> Bitcoin punya hash rate global yang <strong>super besar</strong> (ratusan exahash per detik pada 2025). Buat ngontrol 51%, penyerang butuh investasi <strong>miliaran dolar</strong> buat beli jutaan ASIC miners, plus listrik yang gila-gilaan.</li>
+        <li><strong>Biaya Ekonomi:</strong> Penyerang bakal <strong>rugi sendiri</strong>, karena serangan 51% bikin nilai Bitcoin jatuh, dan mereka gak dapet block reward yang biasa didapetin penambang jujur. Satoshi bilang di white paper bahwa insentif ekonomi (block reward dan biaya transaksi) bikin penambang lebih milih jujur.</li>
+        <li><strong>Desentralisasi:</strong> Hash rate Bitcoin tersebar di banyak mining pool (kaya AntPool, Foundry) dan penambang individu di seluruh dunia. Koordinasi buat ngontrol 51% itu <strong>susah banget</strong>, apalagi tanpa ketauan.</li>
+        <li><strong>Checkpoint:</strong> Bitcoin punya “checkpoint” di blockchain, di mana transaksi lama jadi permanen dan gak bisa diubah, bahkan dengan 51% attack.</li>
+    </ul>
+    <h4>Realitas di 2025:</h4>
+    <ul>
+        <li>Serangan 51% pernah terjadi di blockchain kecil kayak Bitcoin Gold (2018) atau Ethereum Classic, tapi Bitcoin sendiri <strong>belum pernah kena</strong> karena jaringannya terlalu besar.</li>
+        <li>Buat Bitcoin, serangan 51% butuh sumber daya yang <strong>hampir mustahil dikumpulin</strong>. Misalnya, pada 2025, hash rate Bitcoin diperkirakan di atas <strong>600 EH/s</strong>. Buat ngontrol 51%, penyerang butuh ratusan ribu ASIC miners, yang harganya bisa nyampe <strong>$10 miliar</strong>, belum termasuk biaya listrik dan koordinasi.</li>
+        <li>Meskipun gak bisa “membunuh” Bitcoin, serangan 51% bisa bikin <strong>kerusakan sementara</strong>, kayak double-spending dalam jumlah besar atau gangguin transaksi, yang bikin pasar panik.</li>
+    </ul>
+    <h4>Pencegahan:</h4>
+    <ul>
+        <li><strong>Desentralisasi Penambangan:</strong> Dorong lebih banyak penambang individu atau mining pool kecil biar hash rate gak terpusat.</li>
+        <li><strong>Pemantauan Jaringan:</strong> Komunitas Bitcoin bisa pantau lonjakan hash rate mendadak, yang bisa jadi tanda serangan.</li>
+        <li><strong>Peralihan Konsensus:</strong> Meskipun Bitcoin tetep pake PoW, blockchain lain udah coba Proof-of-Stake (PoS) yang kurang rentan terhadap serangan 51% karena gak bergantung pada hash rate.</li>
+    </ul>
+    <h5>Kesimpulan 51% Attack:</h5>
+    <p>Ini ancaman serius secara teori, tapi buat Bitcoin, peluangnya <strong>mendekati nol</strong> karena skala jaringan dan biaya yang gila. Blockchain kecil lebih rentan, tapi Bitcoin? <strong>Susah banget, bro</strong>.</p>
+
+    <h3 id="killing-all-nodes"><span class="numbered-heading-num">2</span>. Killing All Nodes</h3>
+    <h4>Apa Maksudnya?</h4>
+    <p>
+        Node adalah komputer yang nyimpen salinan blockchain Bitcoin dan ngejalanin software Bitcoin Core buat validasi transaksi. Kalau semua node bisa dimatiin atau dirusak, jaringan Bitcoin bakal <strong>lumpuh</strong> karena gak ada yang nyimpen atau ngeproses blockchain.
+    </p>
+    <h4>Cara Kerjanya:</h4>
+    <ul>
+        <li><strong>Serangan Fisik:</strong> Nyerang data center atau server yang nge-host node besar, misalnya dengan bom, bencana alam, atau sabotase listrik.</li>
+        <li><strong>Serangan Siber:</strong> Pake malware, DDoS (Distributed Denial-of-Service), atau exploit buat nge-crash software node.</li>
+        <li><strong>Kontrol Internet:</strong> Matikan koneksi internet di skala global atau sensor akses ke jaringan Bitcoin (misalnya, pake firewall kayak Great Firewall China).</li>
+        <li><strong>Peretasan Massal:</strong> Infeksi semua node dengan virus yang ngerusak data blockchain atau software Bitcoin Core.</li>
+    </ul>
+    <h4>Dampak:</h4>
+    <ul>
+        <li>Kalau semua node mati, gak ada yang bisa validasi transaksi atau nambang blok baru. Bitcoin bakal <strong>“mampet” total</strong>.</li>
+        <li>Blockchain gak bisa diakses, transaksi gak bisa diproses, dan Bitcoin jadi gak bisa dipake sebagai alat bayar atau aset.</li>
+    </ul>
+    <h4>Kenapa Susah Dilakuin?:</h4>
+    <ul>
+        <li><strong>Desentralisasi Ekstrem:</strong> Bitcoin punya <strong>puluhan ribu node</strong> di seluruh dunia (pada 2025, diperkirakan lebih dari <strong>50.000 node aktif</strong>). Mereka tersebar di berbagai negara, dari data center sampe laptop pribadi. Matin satu node gak ngaruh, karena yang lain tetep jalan.</li>
+        <li><strong>Redundansi:</strong> Setiap node punya salinan penuh blockchain. Bahkan kalau 90% node mati, selama ada satu node yang hidup, blockchain bisa dipulihin.</li>
+        <li><strong>Komunitas Open-Source:</strong> Kalau software Bitcoin Core kena hack, komunitas developer bisa rilis patch cepet. Bitcoin Core open-source, jadi siapa pun bisa bantu perbaiki.</li>
+        <li><strong>DDoS Sulit:</strong> Serangan DDoS butuh koordinasi besar buat nargetin ribuan node yang berbeda-beda IP dan lokasi. Bitcoin juga punya mekanisme buat nge-detect dan nge-block serangan kayak gini.</li>
+        <li><strong>Internet Shutdown:</strong> Matin internet global itu <strong>mustahil secara praktis</strong>. Bahkan kalau satu negara sensor Bitcoin (kaya China pernah coba), node di negara lain tetep jalan. Bitcoin juga bisa diakses lewat satelit atau jaringan mesh offline.</li>
+    </ul>
+    <h4>Realitas di 2025:</h4>
+    <ul>
+        <li><strong>Belum ada kasus</strong> di mana semua node Bitcoin kena serangan sukses. Serangan DDoS pernah coba targetin node atau bursa (kaya Mt. Gox di 2014), tapi gak bikin jaringan mati.</li>
+        <li>Node Bitcoin ringan (SPV nodes) dan full node <strong>terus bertambah</strong>, bikin jaringan makin tahan banting. Bahkan kalau data center besar kayak AWS atau Google Cloud kena serangan, banyak node di server pribadi atau perangkat individu tetep hidup.</li>
+        <li>Serangan fisik ke node <strong>hampir mustahil</strong>, karena lo harus ngebom atau sabotase ribuan lokasi di seluruh dunia, dari rumah sampe bunker bawah tanah.</li>
+    </ul>
+    <h4>Pencegahan:</h4>
+    <ul>
+        <li><strong>Diversifikasi Node:</strong> Komunitas Bitcoin dorong orang buat jalanin full node di rumah atau server kecil, biar gak terpusat di data center besar.</li>
+        <li><strong>Backup Blockchain:</strong> Banyak node nyimpen backup blockchain di tempat offline (cold storage), jadi bisa dipulihin kapan aja.</li>
+        <li><strong>Keamanan Software:</strong> Bitcoin Core rutin di-audit dan di-update buat nutup celah keamanan.</li>
+    </ul>
+    <h5>Kesimpulan Killing All Nodes:</h5>
+    <p>Matin semua node itu kayak coba matiin internet global—teoretis mungkin, tapi praktisnya <strong>mustahil</strong> karena desentralisasi dan redundansi Bitcoin. Serangan siber atau fisik cuma bisa ganggu sementara, gak bikin Bitcoin mati total.</p>
+
+    <h3 id="serangan-lain-ke-jaringan-bitcoin"><span class="numbered-heading-num">3</span>. Serangan Lain ke Jaringan Bitcoin</h3>
+    <p>Selain 51% attack dan nyerang node, ada beberapa serangan teknis lain yang bisa nyoba “membunuh” Bitcoin:</p>
+    <h4>a. Eclipse Attack</h4>
+        <h5>Apa Itu?</h5>
+        <p>Eclipse attack terjadi ketika penyerang <strong>ngisolasi node tertentu</strong> dari jaringan dengan ngontrol semua koneksi masuk dan keluar node itu. Node yang kena eclipse cuma nerima data dari penyerang, jadi bisa dimanipulasi.</p>
+        <h5>Cara Kerjanya:</h5>
+        <ul>
+            <li>Penyerang nyusup ke jaringan dan nyoba “nguasain” koneksi node tertentu, misalnya dengan ngirim IP palsu atau nge-flood node dengan koneksi jahat.</li>
+            <li>Node yang kena eclipse bisa diumpanin blockchain palsu atau dicegah nerima transaksi asli.</li>
+        </ul>
+        <h5>Dampak:</h5>
+        <ul>
+            <li>Bisa bikin node salah validasi transaksi, tapi <strong>cuma di level lokal</strong>. Gak bisa ngubah blockchain global karena node lain tetep sinkron.</li>
+            <li>Bisa dipake buat double-spending ke merchant yang pake node rentan, tapi dampaknya terbatas.</li>
+        </ul>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Bitcoin punya mekanisme buat <strong>nge-randomize koneksi node</strong>, jadi susah buat ngisolasi node sepenuhnya.</li>
+            <li>Full node yang dijalanin dengan setting aman (kaya firewall atau Tor) susah kena eclipse.</li>
+            <li>Serangan ini lebih efektif di blockchain kecil dengan sedikit node, bukan Bitcoin yang punya puluhan ribu node.</li>
+        </ul>
+
+    <h4>b. Finney Attack</h4>
+        <h5>Apa Itu?</h5>
+        <p>Finney attack adalah serangan di mana penambang jahat <strong>nambang blok secara diam-diam</strong>, masukin transaksi double-spending, lalu rilis blok itu ke merchant sebelum transaksi asli dikonfirmasi.</p>
+        <h5>Cara Kerjanya:</h5>
+        <ul>
+            <li>Penambang bikin transaksi (misalnya, beli barang pake 1 BTC), tapi gak broadcast transaksi itu.</li>
+            <li>Dia nambang blok yang nyantumin transaksi lain (misalnya, kirim 1 BTC ke dompet sendiri), lalu rilis blok itu setelah merchant nerima barang.</li>
+            <li>Merchant rugi karena transaksi asli dibatalkan.</li>
+        </ul>
+        <h5>Dampak:</h5>
+        <ul>
+            <li>Bisa nyakitin merchant yang nerima pembayaran <strong>tanpa nunggu konfirmasi (0-conf)</strong>. Tapi, kebanyakan merchant sekarang nunggu <strong>6 konfirmasi</strong>, bikin serangan ini gak efektif.</li>
+            <li>Gak bisa “membunuh” Bitcoin, cuma bikin kerugian kecil di level individu.</li>
+        </ul>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Butuh penambang dengan hash rate besar, dan peluang sukses kecil karena harus bersaing sama jaringan.</li>
+            <li>Merchant yang pake praktik aman (nunggu konfirmasi) gak terdampak.</li>
+        </ul>
+
+    <h4>c. Race Attack</h4>
+        <h5>Apa Itu?</h5>
+        <p>Race attack mirip Finney attack, tapi penyerang <strong>broadcast dua transaksi berbeda secara bersamaan</strong>: satu ke merchant, satu ke jaringan. Kalau transaksi ke jaringan menang, transaksi ke merchant batal.</p>
+        <h5>Dampak dan Kenapa Susah:</h5>
+        <ul>
+            <li>Dampaknya kecil, cuma nyakitin merchant yang ceroboh (gak nunggu konfirmasi).</li>
+            <li>Bitcoin punya mekanisme buat nge-detect transaksi konflik, dan node bakal nolak transaksi ganda.</li>
+            <li>Serangan ini gak bisa ngerusak jaringan secara keseluruhan, cuma ganggu transaksi spesifik.</li>
+        </ul>
+
+    <h4>d. Sybil Attack</h4>
+        <h5>Apa Itu?</h5>
+        <p>Penyerang bikin <strong>banyak node palsu (Sybil nodes)</strong> buat ngelabuin jaringan, misalnya ngasih data palsu atau nge-blok koneksi ke node jujur.</p>
+        <h5>Dampak dan Kenapa Susah:</h5>
+        <ul>
+            <li>Sybil attack bisa nyulitin komunikasi antar-node, tapi <strong>gak bisa ngubah blockchain</strong> karena validasi transaksi tetep bergantung pada PoW, bukan jumlah node.</li>
+            <li>Bitcoin punya mekanisme buat ngebatasin koneksi dari IP mencurigakan, dan full node bisa pake Tor buat nge-bypass serangan ini.</li>
+            <li>Gak efektif buat “membunuh” Bitcoin, cuma bikin gangguan sementara.</li>
+        </ul>
+
+    <h3 id="serangan-non-teknis"><span class="numbered-heading-num">4</span>. Serangan Non-Teknis</h3>
+    <p>Selain serangan teknis, ada cara lain yang bisa nyoba “membunuh” Bitcoin, terutama dengan ngerusak kepercayaan atau ngehalang penggunaan:</p>
+    <h4>a. Pelarangan Hukum oleh Pemerintah</h4>
+        <h5>Cara Kerjanya:</h5>
+        <p>Pemerintah di seluruh dunia bisa bikin undang-undang buat <strong>nge-ban Bitcoin</strong>, kayak larang bursa kripto, penambangan, atau transaksi. Contoh: China pernah larang penambangan Bitcoin pada 2021, meskipun gak bikin Bitcoin mati.</p>
+        <h5>Dampak:</h5>
+        <p>Bisa bikin harga Bitcoin jatuh karena investor panik, dan pengguna kesulitan akses bursa atau dompet. Tapi, Bitcoin tetep bisa dipake secara <strong>underground</strong> via jaringan peer-to-peer atau VPN.</p>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Bitcoin <strong>gak punya pusat kontrol</strong>, jadi gak bisa “dimatiin” sama satu negara. Node dan penambang bisa pindah ke negara lain.</li>
+            <li>Pada 2025, beberapa negara (kaya El Salvador) udah nerima Bitcoin sebagai alat bayar sah, dan AS punya cadangan Bitcoin strategis, bikin <strong>pelarangan global mustahil</strong>.</li>
+            <li>Komunitas Bitcoin udah terbiasa nge-bypass sensor, pake Tor, satelit, atau jaringan mesh.</li>
+        </ul>
+
+    <h4>b. Manipulasi Pasar</h4>
+        <h5>Cara Kerjanya:</h5>
+        <p>Entitas besar (kaya whale atau institusi) <strong>nge-dump Bitcoin</strong> dalam jumlah besar buat bikin harga jatuh, atau nyebar <strong>FUD (fear, uncertainty, doubt)</strong> buat panik pasar.</p>
+        <h5>Dampak:</h5>
+        <p>Harga Bitcoin bisa ambruk, bikin investor kabur dan kepercayaan turun. Tapi, ini <strong>gak ngehentin jaringan teknis</strong> Bitcoin.</p>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Pasar Bitcoin pada 2025 udah besar (kapitalisasi pasar <strong>~$1,9 triliun</strong> pada Desember 2024). Manipulasi pasar butuh dana gila-gilaan.</li>
+            <li>Komunitas Bitcoin (<strong>HODLers</strong>) terkenal keras kepala, dan banyak yang tetep pegang Bitcoin meskipun harga jatuh.</li>
+            <li>FUD sering gagal karena Bitcoin udah lalui banyak siklus bear market dan tetep bangkit.</li>
+        </ul>
+
+    <h4>c. Serangan Sosial (Social Engineering)</h4>
+        <h5>Cara Kerjanya:</h5>
+        <p>Penyerang coba <strong>ngebagi komunitas Bitcoin</strong>, misalnya dengan nge-provokasi fork (perpecahan blockchain) atau nyerang reputasi developer kunci.</p>
+        <h5>Dampak:</h5>
+        <p>Fork besar (kaya Bitcoin Cash pada 2017) bisa bikin komunitas terpecah dan kepercayaan turun. Tapi, Bitcoin Core tetep dominan.</p>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Komunitas Bitcoin punya proses konsensus yang kuat via <strong>BIP (Bitcoin Improvement Proposals)</strong>. Perubahan besar butuh persetujuan mayoritas.</li>
+            <li>Developer Bitcoin Core <strong>gak punya “bos” tunggal</strong>, jadi susah diserang secara personal.</li>
+        </ul>
+
+    <h4>d. Serangan Fisik ke Infrastruktur</h4>
+        <h5>Cara Kerjanya:</h5>
+        <p>Nyerang infrastruktur penambangan (mining farm) atau data center besar dengan <strong>sabotase fisik</strong>, kayak matiin listrik atau ngebom.</p>
+        <h5>Dampak:</h5>
+        <p>Bisa ngurangin hash rate sementara atau ngeganggu operasi node besar.</p>
+        <h5>Kenapa Susah?:</h5>
+        <ul>
+            <li>Penambangan Bitcoin <strong>tersebar di seluruh dunia</strong> (AS, Rusia, Kazakhstan, dll.). Matin satu mining farm cuma ngurangin hash rate sedikit.</li>
+            <li>Penambang bisa pindah lokasi atau pake sumber listrik alternatif (kaya tenaga surya atau geothermal).</li>
+            <li>Serangan fisik skala besar butuh koordinasi lintas negara yang <strong>gak realistis</strong>.</li>
+        </ul>
+
+    <h3 id="skenario-ekstrem-membunuh-bitcoin-total"><span class="numbered-heading-num">5</span>. Skenario Ekstrem: Membunuh Bitcoin Total</h3>
+    <p>
+        Buat bener-bener “membunuh” Bitcoin, penyerang butuh <strong>kombinasi serangan teknis, sosial, dan hukum</strong> yang terkoordinasi di skala global. Contoh skenario:
+    </p>
+    <ul>
+        <li><strong>Kontrol 51% Hash Rate:</strong> Penyerang (misalnya, negara besar) beli atau sita jutaan ASIC miners, kuasai hash rate, dan lakuin double-spending massal.</li>
+        <li><strong>Serang Node:</strong> Serentak lakuin DDoS atau malware ke puluhan ribu node, plus matiin internet di banyak negara.</li>
+        <li><strong>Larang Hukum:</strong> Semua negara besar sepakat nge-ban Bitcoin, sita aset bursa, dan penjarain pengguna.</li>
+        <li><strong>FUD Massal:</strong> Nyebar propaganda bahwa Bitcoin gak aman, bikin pasar ambruk.</li>
+    </ul>
+    <h4>Kenapa Ini Mustahil?:</h4>
+    <ul>
+        <li><strong>Biaya dan Skala:</strong> Serangan ini butuh <strong>triliunan dolar</strong> dan koordinasi global yang gak realistis. Bahkan negara besar kayak AS atau China gak punya cukup sumber daya buat ngontrol semua node dan penambang.</li>
+        <li><strong>Komunitas Bitcoin:</strong> Pengguna Bitcoin terkenal <strong>militan</strong>. Banyak yang bakal tetep jalanin node atau transaksi secara underground, pake teknologi kayak Tor atau satelit.</li>
+        <li><strong>Adopsi Global:</strong> Pada 2025, Bitcoin udah diadopsi institusi besar (kaya MicroStrategy) dan negara (El Salvador). Membunuhnya bakal ngerusak ekonomi global, yang gak masuk akal buat dilakukan.</li>
+        <li><strong>Fork dan Adaptasi:</strong> Kalau Bitcoin Core kena serangan fatal, komunitas bisa fork blockchain atau bikin versi baru. Bitcoin udah lalui krisis kayak Mt. Gox (2014) dan tetep hidup.</li>
+    </ul>
+    <h4>Poin Penting dari X:</h4>
+    <p>Ada sentimen di komunitas bahwa 51% attack gak bisa “membunuh” Bitcoin karena <strong>full node tetep punya kendali akhir</strong>, dan serangan cuma bikin kerugian sementara. Misalnya, satu post di X bilang 51% attack cuma bisa double-spend Bitcoin milik penyerang sendiri, yang bikin mereka rugi sendiri.</p>
+
+    <h3 id="kelemahan-bitcoin-yang-bisa-dieksploitasi"><span class="numbered-heading-num">6</span>. Kelemahan Bitcoin yang Bisa Dieksploitasi</h3>
+    <p>Meskipun susah, ada beberapa kelemahan yang bisa jadi celah:</p>
+    <ul>
+        <li><strong>Konsentrasi Mining Pool:</strong> Meskipun penambangan terdesentralisasi, beberapa mining pool besar (kaya AntPool dan Foundry) ngontrol porsi hash rate yang signifikan. Kalau mereka kolusi (atau dipaksa pemerintah), bisa bikin masalah.</li>
+        <li><strong>Kerentanan Node Ringan:</strong> Node SPV (Simplified Payment Verification) lebih rentan karena bergantung pada full node buat data. Serangan terkoordinasi ke full node bisa ganggu dompet ringan.</li>
+        <li><strong>Biaya Transaksi Tinggi:</strong> Kalau jaringan sibuk, biaya transaksi bisa melonjak, bikin Bitcoin gak praktis buat transaksi kecil. Ini bisa ngurangin adopsi, meskipun Lightning Network udah bantu atasi ini.</li>
+        <li><strong>Kuantum Computing (Masa Depan):</strong> Komputer kuantum teoretis bisa ngecrack kriptografi Bitcoin (ECDSA) di masa depan, tapi ini masih jauh (diperkirakan 10-20 tahun lagi). Bitcoin juga bisa upgrade ke algoritma post-kuantum.</li>
+    </ul>
+
+    <h3 id="pencegahan-dan-ketahanan-bitcoin"><span class="numbered-heading-num">7</span>. Pencegahan dan Ketahanan Bitcoin</h3>
+    <p>Bitcoin dirancang buat tahan banting, dan komunitas terus tingkatin keamanan:</p>
+    <ul>
+        <li><strong>Desentralisasi Lebih Lanjut:</strong> Dorong penambang kecil dan node individu biar gak ada titik pusat yang rentan.</li>
+        <li><strong>Upgrade Protokol:</strong> BIP (Bitcoin Improvement Proposals) kayak Taproot (2021) bikin jaringan lebih efisien dan aman.</li>
+        <li><strong>Komunitas Open-Source:</strong> Ribuan developer global bantu audit dan perbaiki Bitcoin Core. Celah keamanan biasanya ketauan cepet.</li>
+        <li><strong>Adopsi Teknologi Alternatif:</strong> Bitcoin bisa diakses via satelit atau jaringan mesh, bikin sensor internet gak efektif.</li>
+        <li><strong>Pemantauan Jaringan:</strong> Tools kayak blockchain explorer bantu deteksi aktivitas mencurigakan, kayak lonjakan hash rate.</li>
+    </ul>
+
+    <h3 class="heading-left-align">Kesimpulan</h3>
+    <p>
+        “Membunuh” Bitcoin itu kayak coba ngehentin lautan—teoretis mungkin, tapi praktisnya <strong>mustahil</strong> karena <strong>desentralisasi, skala jaringan, dan komunitas yang militan</strong>. 51% attack bisa bikin kerusakan sementara (double-spending, pemblokiran transaksi), tapi butuh biaya miliaran dolar dan gak bakal matiin jaringan permanen. Killing all nodes gak realistis karena ada puluhan ribu node yang tersebar global, dan blockchain bisa dipulihin dari satu node aja. Serangan lain kayak Eclipse, Finney, atau Race attack cuma bikin gangguan kecil, gak bisa “membunuh” Bitcoin. Faktor non-teknis (pelarangan hukum, FUD) bisa ngerusak kepercayaan, tapi Bitcoin udah buktiin ketahanannya selama 16 tahun, dari Mt. Gox sampe banned di China.
+    </p>
+    <p>
+        Pada 2025, Bitcoin punya hash rate raksasa, puluhan ribu node, dan dukungan institusi serta negara. Bahkan serangan terkoordinasi dari pemerintah atau hacker bakal susah ngehentin jaringan sepenuhnya.
+    </p>
+
+  </div>
+
+  <div class="overlay" id="tocOverlay">
+    <div class="toc-box">
+      <h3>Daftar Isi Materi Bitcoin</h3>
+      <ul id="tocList">
+        </ul>
+    </div>
+  </div>
+  
+
+
+<p style="margin:5px auto 40px auto;max-width:700px;padding:30px;background:#1a1a1a;color:#f0f0f0;font-family:Georgia,serif;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.6);font-size:20px;line-height:1.6;text-align:center;">“He will realize that following the rules will be more profitable.”<br><span style="display:block;text-align:right;font-style:italic;margin-top:20px;">– Satoshi Nakamoto</span></p>
+</h1>
+<div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+  <script>
+    const clickSound = new Audio('sfx.mp3'); // Pastikan path sfx.mp3 benar
+
+    function playClickSound() {
+      clickSound.currentTime = 0; // Mengatur ulang waktu ke awal agar bisa diputar ulang dengan cepat
+      clickSound.play().catch(e => console.error("Error playing sound:", e)); // Tambahkan error handling
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500); // Sesuaikan dengan durasi transisi CSS (0.5s)
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fade in the body when the page loads
+      document.body.classList.add('fade-in');
+
+      // Add click sound to all clickable elements
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      // Update the back button to use the new fadeOutAndRedirect function
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault(); // Prevent default link behavior
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      // Handle scroll for top-box blur effect
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) { // Jika halaman discroll ke bawah
+          topBox.classList.add('scrolled');
+        } else { // Jika kembali ke paling atas
+          topBox.classList.remove('scrolled');
+        }
+      });
+
+      // --- Fitur Daftar Isi (Table of Contents) ---
+      const profilePic = document.getElementById('profilePic');
+      const tocOverlay = document.getElementById('tocOverlay');
+      const tocList = document.getElementById('tocList');
+      let doubleClickTimer = null;
+      const doubleClickDelay = 300; // milliseconds
+
+      profilePic.addEventListener('click', (event) => {
+        if (doubleClickTimer === null) {
+          doubleClickTimer = setTimeout(() => {
+            doubleClickTimer = null;
+          }, doubleClickDelay);
+        } else {
+          clearTimeout(doubleClickTimer);
+          doubleClickTimer = null;
+          playClickSound(); // Play sound on double click
+          toggleTocOverlay();
+        }
+      });
+
+      tocOverlay.addEventListener('click', (event) => {
+        // Close overlay if clicked outside toc-box
+        if (event.target === tocOverlay) {
+          playClickSound();
+          toggleTocOverlay();
+        }
+      });
+
+      function toggleTocOverlay() {
+        if (tocOverlay.classList.contains('active')) {
+          tocOverlay.classList.remove('active');
+        } else {
+          generateToc();
+          tocOverlay.classList.add('active');
+        }
+      }
+
+      function generateToc() {
+        tocList.innerHTML = ''; // Clear previous list
+        const headings = document.querySelectorAll('.content-info h2, .content-info h3, .content-info h4');
+        let counter = 0;
+
+        headings.forEach(heading => {
+          const text = heading.textContent.replace(/^\s*\d+\.\s*/, '').trim(); // Remove numbering like "1." if present
+          let id = heading.id;
+
+          // Generate an ID if it doesn't exist
+          if (!id) {
+            id = text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+            heading.id = id;
+          }
+
+          if (heading.tagName === 'H2') {
+            counter = 0; // Reset counter for new H2 section
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = '#' + id;
+            link.textContent = text;
+            link.style.fontWeight = 'bold';
+            link.style.fontSize = '1.2em';
+            link.style.marginBottom = '15px';
+            link.onclick = (e) => {
+              e.preventDefault();
+              playClickSound();
+              scrollToSection(id);
+              toggleTocOverlay(); // Close overlay after clicking
+            };
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          } else if (heading.tagName === 'H3') {
+            counter++;
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = '#' + id;
+            link.textContent = `${counter}. ${text}`; // Add numbering
+            link.style.marginLeft = '20px';
+            link.style.fontSize = '1.1em';
+            link.onclick = (e) => {
+              e.preventDefault();
+              playClickSound();
+              scrollToSection(id);
+              toggleTocOverlay(); // Close overlay after clicking
+            };
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          } else if (heading.tagName === 'H4') {
+             // For H4, we might not number them directly in the TOC, or use a sub-numbering if desired
+             const listItem = document.createElement('li');
+             const link = document.createElement('a');
+             link.href = '#' + id;
+             link.textContent = `- ${text}`; // Use a dash for H4 for sub-indentation
+             link.style.marginLeft = '40px'; // Further indent
+             link.style.fontSize = '1em';
+             link.onclick = (e) => {
+               e.preventDefault();
+               playClickSound();
+               scrollToSection(id);
+               toggleTocOverlay(); // Close overlay after clicking
+             };
+             listItem.appendChild(link);
+             tocList.appendChild(listItem);
+          }
+        });
+      }
+
+      function scrollToSection(id) {
+        const element = document.getElementById(id);
+        if (element) {
+          // Adjust scroll position to account for fixed header
+          const headerOffset = 70; // Height of the top-box
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      }
+
+    });
+
+    // Fallback untuk gambar profil
+    document.querySelector('.profile-pic img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    // Fallback untuk tombol back
+    document.querySelector('.back-button img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+</html>

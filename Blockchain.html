@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 70px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    .content-box {
+      padding: 20px;
+      max-width: 800px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .content-box h2 {
+      margin-bottom: 5px;
+    }
+
+    .content-box hr {
+      margin-bottom: 20px;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .page-divider {
+      width: 90%;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin: 60px auto 40px auto;
+      opacity: 0.7;
+    }
+
+    /* Styles for the new indentation */
+    .content-box p.point {
+      margin-left: 20px;
+      /* Indent for points */
+      margin-bottom: 5px;
+    }
+
+    .content-box ul li {
+      margin-left: 40px;
+      /* Indent for sub-points */
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+
+  </div>
+ <div class="page-divider"></div>
+<div class="content-box">
+  <h2>Apa Itu Blockchain</h2>
+  <hr>
+  <p class="point"><strong>Blockchain</strong> dalam konteks Bitcoin adalah buku besar digital terdesentralisasi yang mencatat semua transaksi Bitcoin secara permanen, transparan, dan tidak dapat diubah. Blockchain bertindak seperti "catatan akuntansi" global yang disimpan di ribuan komputer di seluruh dunia, memastikan bahwa setiap transaksi Bitcoin dapat diverifikasi oleh siapa saja tanpa perlu pihak ketiga seperti bank. Blockchain Bitcoin adalah teknologi dasar yang membuat Bitcoin aman, terpercaya, dan tidak bergantung pada otoritas pusat.</p>
+  
+  <p class="point">Bayangkan blockchain seperti buku catatan raksasa yang mencatat setiap transaksi Bitcoin sejak pertama kali diciptakan pada <strong>2009</strong>. Buku ini tidak disimpan di satu tempat, melainkan dibagikan ke semua orang yang menjalankan perangkat lunak Bitcoin. Setiap halaman (blok) berisi daftar transaksi, dan halaman-halaman ini dihubungkan secara berurutan membentuk rantai (chain), sehingga tidak ada yang bisa mengubah catatan tanpa mengubah seluruh buku—sesuatu yang hampir tidak mungkin dilakukan.</p>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Definisi dan Konsep Dasar Blockchain</h2>
+  <hr>
+  <p class="point"><strong>Blockchain Bitcoin</strong> adalah sistem penyimpanan data yang:</p>
+  
+  <p class="point">1. <strong>Terdistribusi</strong></p>
+  <ul>
+    <li>Tidak ada server pusat. Semua komputer yang menjalankan perangkat lunak Bitcoin (disebut node) memiliki salinan blockchain yang identik.</li>
+  </ul>
+
+  <p class="point">2. <strong>Transparan</strong></p>
+  <ul>
+    <li>Semua transaksi dapat dilihat oleh siapa saja menggunakan <strong>block explorer</strong> (misalnya, Blockchain.com atau Mempool.space).</li>
+  </ul>
+
+  <p class="point">3. <strong>Tidak Dapat Diubah (Immutable)</strong></p>
+  <ul>
+    <li>Sekali transaksi dicatat dalam blockchain, hampir tidak mungkin diubah tanpa persetujuan mayoritas jaringan.</li>
+  </ul>
+
+  <p class="point">4. <strong>Berbasis Rantai</strong></p>
+  <ul>
+    <li>Setiap blok terhubung ke blok sebelumnya melalui kode kriptografi, membentuk rantai kronologis.</li>
+  </ul>
+
+  <p class="point"><strong>Analogi Sederhana:</strong></p>
+  <p class="point">Bayangkan blockchain sebagai buku diary bersama yang disimpan di ribuan rumah. Setiap kali seseorang mengirim Bitcoin, semua orang menulis transaksi itu di diary masing-masing. Jika seseorang mencoba mengubah catatan di satu diary, diary lain tidak akan cocok, dan perubahan itu ditolak. Setiap halaman diary (blok) diikat dengan segel khusus yang membuatnya sulit dibuka atau diubah.</p>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Struktur Blockchain</h2>
+  <hr>
+  <p class="point">Blockchain Bitcoin terdiri dari serangkaian blok yang dihubungkan secara berurutan. Setiap blok adalah kumpulan data yang mencatat transaksi dan metadata penting. Berikut adalah komponen utama struktur blockchain, dengan detail baru yang belum dibahas:</p>
+
+  <p class="point">a. <strong>Blok</strong></p>
+  <ul>
+    <li><strong>Definisi:</strong> Sebuah blok adalah "wadah" data yang berisi daftar transaksi dan informasi pendukung. Rata-rata satu blok berisi <strong>2.000-3.000 transaksi</strong> dan memiliki ukuran maksimal <strong>1 MB</strong> (dengan SegWit, bisa lebih besar secara efektif).</li>
+    <li><strong>Komponen Blok:</strong>
+      <ul>
+        <li><strong>Header Blok:</strong> Berisi metadata seperti:
+          <ul>
+            <li>- <strong>Version:</strong> Menunjukkan versi perangkat lunak Bitcoin (misalnya, versi 2 untuk mendukung SegWit).</li>
+            <li>- <strong>Previous Block Hash:</strong> Kode unik (hash) dari blok sebelumnya, menghubungkan blok dalam rantai.</li>
+            <li>- <strong>Merkle Root:</strong> Ringkasan kriptografis dari semua transaksi dalam blok, dihasilkan melalui struktur Merkle Tree.</li>
+            <li>- <strong>Timestamp:</strong> Waktu pembuatan blok (misalnya, "2025-06-15 11:30 WIB").</li>
+            <li>- <strong>Bits:</strong> Representasi target kesulitan dalam format ringkas (4 byte).</li>
+            <li>- <strong>Nonce:</strong> Angka acak yang digunakan untuk menghasilkan hash valid.</li>
+          </ul>
+        </li>
+        <li><strong>Daftar Transaksi:</strong> Kumpulan transaksi yang mencatat pengiriman Bitcoin antar alamat (misalnya, "Alice mengirim 0.1 BTC ke Bob").</li>
+        <li><strong>Coinbase Transaction:</strong> Transaksi khusus yang mencatat hadiah untuk pembuat blok (block reward + biaya transaksi).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">b. <strong>Merkle Tree</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Merkle Tree adalah struktur data berbentuk pohon biner yang merangkum semua transaksi dalam blok menjadi satu hash tunggal (Merkle Root).</li>
+    <li><strong>Cara Kerja:</strong>
+      <ul>
+        <li>• Setiap transaksi di-hash menggunakan SHA-256.</li>
+        <li>• Hash transaksi dipasangkan dan di-hash lagi hingga membentuk satu hash tunggal (Merkle Root).</li>
+        <li>• <strong>Contoh:</strong> Jika blok berisi 4 transaksi (T1, T2, T3, T4):
+          <ul>
+            <li>- Hash T1 dan T2 digabung → Hash A.</li>
+            <li>- Hash T3 dan T4 digabung → Hash B.</li>
+            <li>- Hash A dan B digabung → Merkle Root.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><strong>Manfaat:</strong>
+      <ul>
+        <li>• Menghemat ruang; hanya Merkle Root yang disimpan di header blok.</li>
+        <li>• Memungkinkan verifikasi cepat bahwa transaksi tertentu ada dalam blok tanpa perlu memeriksa semua transaksi.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh untuk Pemula:</strong> Bayangkan Merkle Tree seperti daftar isi buku. Alih-alih membaca seluruh buku, kamu cukup cek daftar isi untuk tahu bab mana yang ada di dalamnya.</li>
+  </ul>
+
+  <p class="point">c. <strong>Rantai Blok</strong></p>
+  <ul>
+    <li>Setiap blok terhubung ke blok sebelumnya melalui <strong>previous block hash</strong>, membentuk rantai linier dari blok pertama (<strong>genesis block</strong>) pada 3 Januari 2009 hingga blok terbaru.</li>
+    <li><strong>Contoh:</strong> Jika blok #800.000 memiliki hash <strong>0000000000000000000123abc...</strong>, blok #800.001 akan menyertakan hash ini di header-nya, memastikan urutan tidak bisa diubah.</li>
+    <li><strong>Manfaat:</strong> Jika seseorang mengubah transaksi di blok lama, hash blok tersebut berubah, memutus rantai dan membuat perubahan tidak valid.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Cara Kerja Blockchain</h2>
+  <hr>
+  <p class="point">Berikut adalah penjelasan bagaimana blockchain Bitcoin berfungsi sebagai sistem:</p>
+
+  <p class="point">a. <strong>Penyimpanan Data</strong></p>
+  <ul>
+    <li>Blockchain disimpan di setiap komputer yang menjalankan perangkat lunak Bitcoin (full node). Pada Juni 2025, ukuran blockchain Bitcoin diperkirakan <strong>~600 GB</strong>, terus bertambah <strong>~1 MB setiap 10 menit</strong>.</li>
+    <li><strong>Untuk Pemula:</strong> Bayangkan blockchain seperti file besar yang disimpan di banyak komputer. Setiap kali ada transaksi baru, file ini diperbarui di semua komputer.</li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Data blockchain disimpan dalam format <strong>BerkDB</strong> atau <strong>LevelDB</strong> di folder lokal (misalnya, ~/.bitcoin/blocks).</li>
+        <li>• Full node menyimpan seluruh blockchain, sementara light node (SPV) hanya menyimpan <strong>header blok</strong> (~80 byte per blok) untuk verifikasi ringan.</li>
+        <li>• <strong>Pruning:</strong> Beberapa node menghapus transaksi lama untuk menghemat ruang, tapi tetap menyimpan header blok.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">b. <strong>Verifikasi Transaksi</strong></p>
+  <ul>
+    <li>Setiap transaksi di blockchain harus memenuhi aturan konsensus Bitcoin, seperti:
+      <ul>
+        <li>- <strong>Validitas Input:</strong> Pengirim harus punya cukup Bitcoin (dicek via UTXO—Unspent Transaction Output).</li>
+        <li>- <strong>Tanda Tangan Kriptografi:</strong> Transaksi ditandatangani dengan private key untuk membuktikan kepemilikan.</li>
+        <li>- <strong>Tidak Ada Double-Spending:</strong> Blockchain memastikan Bitcoin tidak dihabiskan dua kali.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh untuk Pemula:</strong> Jika kamu kirim 0.1 BTC ke teman, blockchain memeriksa apakah kamu punya 0.1 BTC dan belum mengirimkannya ke orang lain. Ini seperti kasir memeriksa dompetmu sebelum kamu bayar.</li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• <strong>UTXO Model:</strong> Bitcoin menggunakan model Unspent Transaction Output, di mana setiap transaksi menghabiskan output lama (input) dan menciptakan output baru. Total input harus ≥ total output.</li>
+        <li>• <strong>Contoh:</strong> Kamu punya UTXO 0.5 BTC. Untuk kirim 0.3 BTC, transaksi akan gunakan 0.5 BTC sebagai input, kirim 0.3 BTC ke penerima, dan 0.2 BTC kembali ke alamat "kembalian"mu (dikurangi biaya transaksi).</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="point">c. <strong>Propagasi dan Sinkronisasi</strong></p>
+  <ul>
+    <li>Ketika blok baru dibuat, itu disebarkan ke seluruh jaringan melalui protokol peer-to-peer (P2P).</li>
+    <li><strong>Untuk Pemula:</strong> Bayangkan kamu menulis halaman baru di diary bersama, lalu mengirim fotokopi ke semua temanmu. Mereka memeriksa dan menambahkan ke diary mereka.</li>
+    <li><strong>Detail Teknis:</strong>
+      <ul>
+        <li>• Blok baru disebarkan via pesan <strong>inv</strong> (inventory) dan <strong>block</strong> dalam protokol Bitcoin.</li>
+        <li>• Jika dua blok ditemukan bersamaan (konflik), jaringan memilih rantai dengan <strong>total kerja terbanyak</strong> (cumulative difficulty).</li>
+        <li>• Sinkronisasi awal (Initial Block Download) bisa memakan waktu berhari-hari untuk mengunduh 600 GB blockchain.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Fitur Utama Blockchain</h2>
+  <hr>
+  <p class="point">Berikut adalah karakteristik unik blockchain Bitcoin yang membuatnya istimewa:</p>
+
+  <p class="point">a. <strong>Desentralisasi</strong></p>
+  <ul>
+    <li>Tidak ada pihak pusat yang mengontrol blockchain. Semua peserta jaringan (node) memiliki hak yang sama untuk memverifikasi dan menyimpan data.</li>
+    <li><strong>Contoh:</strong> Bank punya server pusat yang bisa diretas atau dimatikan. Blockchain Bitcoin tersebar di puluhan ribu komputer, sehingga sulit diserang.</li>
+  </ul>
+
+  <p class="point">b. <strong>Immutability (Tidak Dapat Diubah)</strong></p>
+  <ul>
+    <li>Sekali transaksi masuk blockchain, mengubahnya hampir tidak mungkin karena:
+      <ul>
+        <li>• Setiap blok terhubung ke blok sebelumnya via hash.</li>
+        <li>• Mengubah satu transaksi akan mengubah hash blok dan semua blok berikutnya, membutuhkan kekuatan komputasi besar.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh untuk Pemula:</strong> Jika kamu tulis di diary dengan tinta permanen dan kunci halaman dengan segel, mengubah catatan lama akan merusak segel dan terdeteksi.</li>
+  </ul>
+
+  <p class="point">c. <strong>Transparansi</strong></p>
+  <ul>
+    <li>Semua transaksi di blockchain Bitcoin bersifat publik dan dapat dilihat di block explorer.</li>
+    <li><strong>Contoh:</strong> Kamu bisa buka Blockchain.com, masukkan alamat Bitcoin (misalnya, 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa), dan lihat riwayat transaksinya.</li>
+    <li><strong>Catatan:</strong> Meski transparan, identitas pengguna bersifat pseudonim (hanya alamat publik yang terlihat, bukan nama asli).</li>
+  </ul>
+
+  <p class="point">d. <strong>Keamanan Kriptografi</strong></p>
+  <ul>
+    <li>Blockchain menggunakan kriptografi asimetris:
+      <ul>
+        <li>• <strong>Public Key:</strong> Alamat Bitcoin (misalnya, bc1q...) untuk menerima dana.</li>
+        <li>• <strong>Private Key:</strong> Rahasia untuk menandatangani transaksi.</li>
+        <li>• <strong>ECDSA:</strong> Algoritma Elliptic Curve Digital Signature Algorithm digunakan untuk memverifikasi kepemilikan dana.</li>
+      </ul>
+    </li>
+    <li><strong>Contoh Teknis:</strong> Transaksi ditandatangani dengan private key untuk membuktikan kamu punya hak atas UTXO. Tanpa private key, dana tidak bisa diakses.</li>
+  </ul>
+
+  <p class="point">e. <strong>Konsensus Tanpa Kepercayaan</strong></p>
+  <ul>
+    <li>Blockchain Bitcoin memungkinkan peserta yang tidak saling kenal untuk setuju pada keadaan buku besar tanpa perlu mempercayai pihak tertentu.</li>
+    <li><strong>Contoh:</strong> Kamu di Indonesia dan seseorang di Brazil bisa bertransaksi tanpa bank, karena blockchain memastikan keabsahan transaksi.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Keamanan Blockchain</h2>
+  <hr>
+  <p class="point">Blockchain Bitcoin sangat aman karena kombinasi teknologi dan insentif ekonomi. Berikut aspek keamanan yang belum dibahas:</p>
+
+  <p class="point">a. <strong>Serangan 51%</strong></p>
+  <ul>
+    <li><strong>Apa itu?</strong> Jika satu entitas menguasai >50% hash rate jaringan, mereka bisa mencoba mengubah transaksi atau melakukan double-spending.</li>
+    <li><strong>Kenapa Sulit?</strong> Pada 2025, hash rate jaringan ~500 EH/s. Untuk menguasai 51%, pelaku perlu ribuan miliar dolar untuk hardware dan listrik, plus koordinasi besar.</li>
+    <li><strong>Contoh:</strong> Serangan 51% pernah terjadi di blockchain kecil (misalnya, Ethereum Classic), tapi sangat tidak praktis di Bitcoin.</li>
+  </ul>
+
+  <p class="point">b. <strong>Fork dan Konsistensi</strong></p>
+  <ul>
+    <li><strong>Soft Fork:</strong> Perubahan aturan yang kompatibel ke belakang (misalnya, SegWit pada 2017 untuk meningkatkan kapasitas blok).</li>
+    <li><strong>Hard Fork:</strong> Perubahan aturan yang tidak kompatibel, menciptakan blockchain baru (misalnya, Bitcoin Cash pada 2017).</li>
+    <li><strong>Contoh untuk Pemula:</strong> Bayangkan diary bersama punya aturan baru. Soft fork seperti menambahkan kolom baru yang masih bisa dibaca semua orang. Hard fork seperti membuat buku baru dengan format berbeda.</li>
+  </ul>
+
+  <p class="point">c. <strong>Konfirmasi Transaksi</strong></p>
+  <ul>
+    <li>Transaksi dianggap aman setelah beberapa blok ditambahkan di atasnya (biasanya 6 konfirmasi, ~1 jam).</li>
+    <li><strong>Kenapa?</strong> Semakin banyak blok di atas transaksi, semakin sulit mengubahnya karena harus mengubah semua blok berikutnya.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Manfaat Blockchain</h2>
+  <hr>
+
+  <p class="point">a. <strong>Transaksi Peer-to-Peer</strong></p>
+  <ul>
+    <li>Blockchain memungkinkan pengiriman Bitcoin langsung antar pengguna tanpa perantara.</li>
+    <li><strong>Contoh:</strong> Kamu kirim 0.01 BTC ke teman di Jepang dalam 10-60 menit, dengan biaya ~$1, jauh lebih murah dibandingkan transfer bank internasional.</li>
+  </ul>
+
+  <p class="point">b. <strong>Penyimpanan Nilai</strong></p>
+  <ul>
+    <li>Bitcoin sering disebut "emas digital" karena pasokannya terbatas (21 juta BTC) dan blockchain memastikan keabsahan kepemilikan.</li>
+    <li><strong>Contoh:</strong> Investor menyimpan BTC di wallet dingin (cold wallet) untuk jangka panjang, percaya blockchain akan menjaga keamanan aset.</li>
+  </ul>
+
+  <p class="point">c. <strong>Transparansi untuk Audit</strong></p>
+  <ul>
+    <li>Perusahaan atau individu bisa menggunakan blockchain untuk membuktikan transaksi (misalnya, donasi amal).</li>
+    <li><strong>Contoh:</strong> Organisasi amal menerima 1 BTC dan menunjukkan alamat publiknya di blockchain untuk transparansi.</li>
+  </ul>
+
+  <p class="point">d. <strong>Inspirasi untuk Blockchain Lain</strong></p>
+  <ul>
+    <li>Blockchain Bitcoin menginspirasi teknologi seperti Ethereum, yang mendukung smart contract, atau blockchain privat untuk bisnis.</li>
+    <li><strong>Catatan:</strong> Blockchain Bitcoin fokus pada keamanan dan desentralisasi, bukan fleksibilitas seperti Ethereum.</li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Contoh Nyata Blockchain</h2>
+  <hr>
+
+  <p class="point"><strong>Untuk Pemula:</strong></p>
+  <ul>
+    <li>Kamu membeli kopi seharga 0.0001 BTC di kafe yang menerima Bitcoin.</li>
+    <li>Transaksi ini masuk ke mempool, lalu dicatat dalam blok (misalnya, blok #800.123).</li>
+    <li>Kamu bisa cek di Blockchain.com bahwa transaksi benar-benar terjadi.</li>
+  </ul>
+
+  <p class="point"><strong>Teknis:</strong></p>
+  <ul>
+    <li>Transaksi kamu (txid: <strong>abc123...</strong>) memiliki:
+      <ul>
+        <li>• Input: UTXO 0.0002 BTC dari alamatmu</li>
+        <li>• Output: 0.0001 BTC ke kafe, 0.00009 BTC ke alamat kembalianmu</li>
+        <li>• Biaya: 0.00001 BTC</li>
+      </ul>
+    </li>
+    <li>Transaksi di-hash ke Merkle Tree blok #800.123, dengan Merkle Root <strong>def456...</strong></li>
+    <li>Blok ini dihubungkan ke blok #800.122 via <strong>previous block hash</strong></li>
+  </ul>
+</div>
+<div class="page-divider"></div>
+<div class="content-box">
+  <h2>Kesimpulan tentang Blockchain </h2>
+  <hr>
+  <p class="point">Blockchain Bitcoin adalah sistem buku besar digital terdesentralisasi yang:</p>
+  <ul>
+    <li>• Mencatat semua transaksi Bitcoin secara <strong>kronologis, transparan, dan tidak dapat diubah</strong></li>
+    <li>• Menggunakan struktur <strong>rantai blok</strong> yang dihubungkan melalui hash kriptografis</li>
+    <li>• Memanfaatkan algoritma <strong>SHA-256</strong> dan <strong>ECDSA</strong> untuk keamanan</li>
+    <li>• Menggunakan model <strong>UTXO</strong> untuk verifikasi transaksi</li>
+    <li>• Memungkinkan transfer <strong>peer-to-peer tanpa perantara</strong> dengan keandalan tinggi</li>
+    <li>• Menghadapi tantangan <strong>skalabilitas</strong> dan <strong>konsumsi energi</strong></li>
+    <li>• Memiliki ukuran blockchain sekitar <strong>600 GB pada Juni 2025</strong> yang terus bertambah</li>
+  </ul>
+</div>
+<div class="quote-box">
+  <p class="quote-text">
+   "Once a transaction is buried under enough blocks, the attacker would have to redo all the proof-of-work to change it."
+  </p>
+  <p class="quote-source">
+    — Satoshi Nakamoto
+  </p>
+</div>
+
+<style>
+  .quote-box {
+    background: linear-gradient(270deg, #000000, #444444, #000000);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+    padding: 30px;
+    max-width: 700px;
+    margin: 15px auto;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .quote-text {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+  }
+
+  .quote-source {
+    font-size: 14px;
+    color: white;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    margin: 0;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+<div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+
+
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+  <script>
+    const clickSound = new Audio('sfx.mp3');
+
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.error("Error playing sound:", e));
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault();
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+          topBox.classList.add('scrolled');
+        } else {
+          topBox.classList.remove('scrolled');
+        }
+      });
+    });
+
+    document.querySelector('.profile-pic img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    document.querySelector('.back-button img').addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+
+</html>

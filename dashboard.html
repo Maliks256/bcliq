@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Content Page</title>
+  <style>
+    /* Basic Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh; /* Keep 100vh to ensure it occupies full screen */
+      overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* justify-content: space-between; REMOVED - to avoid stretching elements */
+      /* gap: 20px; REMOVED - to control spacing manually for specific layout */
+    }
+
+    /* Fade Animations */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.4s ease-out forwards !important;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
+    }
+
+    /* Top Box Styles */
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 100;
+      height: 70px;
+      flex-shrink: 0;
+      transition: background-color 0.3s ease-out, backdrop-filter 0.3s ease-out;
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+    }
+
+    /* Class for scrolled blur effect */
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Profile Container */
+    .profile-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    /* SFX Notification */
+    .sfx-notification {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+      position: absolute;
+      right: 70px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .sfx-notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .sfx-notification.off {
+      background-color: #f44336;
+    }
+
+    /* Hamburger Menu */
+    .hamburger-menu {
+      position: relative;
+    }
+
+    .menu-btn {
+      width: 30px;
+      height: 24px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-btn span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background: #333;
+      border-radius: 2px;
+      margin: 5px 0;
+      transition: 0.4s ease;
+    }
+
+    .menu-btn.open span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-btn.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-btn.open span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 35px;
+      background-color: #fff;
+      width: max-content;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      z-index: 1;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .menu-content ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .menu-content li {
+      padding: 10px 15px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .menu-content li img {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+      position: relative;
+    }
+
+    .menu-content li span.menu-text {
+      transition: transform 0.4s ease-in-out;
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .menu-content li .go-button {
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      padding: 0 5px;
+      margin-left: 10px;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+      pointer-events: none;
+      position: absolute;
+      right: 15px;
+    }
+
+    .menu-content li.clicked img {
+      transform: translateX(-40px);
+      opacity: 0;
+    }
+
+    .menu-content li.clicked span.menu-text {
+      transform: translateX(-30px);
+    }
+
+    .menu-content li.clicked .go-button {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .menu-content li:last-child {
+      border-bottom: none;
+    }
+
+    .menu-content li:hover {
+      background-color: #f5f5f5;
+    }
+
+    .menu-content.show {
+      display: block;
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 10px 0; /* Adjusted padding */
+      width: 100%;
+      max-width: 800px;
+      flex-grow: 0; /* Keep flex-grow: 0 to not stretch */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 5px; /* Add margin to create space below top-box */
+    }
+    
+    /* Video Styles */
+    .video-container {
+      width: 100%;
+      height: auto; /* Let content define height */
+      position: relative;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
+      max-height: 500px; /* Revert to fixed max-height like original */
+    }
+    
+    .video-container.collapsed {
+      max-height: 0;
+    }
+    
+    .video-container video {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+    }
+    
+    /* Nav and Toggle buttons container */
+    .video-controls-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+    
+    /* Common button styles */
+    .nav-btn, .toggle-video-btn {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      cursor: pointer;
+      text-align: center;
+      line-height: 40px;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+    
+    .nav-btn:hover, .toggle-video-btn:hover {
+      background: #f5f5f5;
+    }
+    
+    .nav-btn:active, .toggle-video-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Special Thanks Section */
+    .special-thanks {
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      flex-shrink: 0;
+      margin-top: auto; /* Pushes this element to the bottom */
+    }
+
+    .special-thanks h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .thanks-bubbles {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .bubble {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .bubble img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* Bubble animations */
+    .bubble:nth-child(1) {
+      animation: floatBubble 6s ease-in-out infinite;
+    }
+    .bubble:nth-child(2) {
+      animation: floatBubble 5s ease-in-out infinite 1s;
+    }
+    .bubble:nth-child(3) {
+      animation: floatBubble 7s ease-in-out infinite 0.5s;
+    }
+    .bubble:nth-child(4) {
+      animation: floatBubble 6.5s ease-in-out infinite 1.5s;
+    }
+
+    @keyframes floatBubble {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-10px) rotate(2deg);
+      }
+      50% {
+        transform: translateY(0) rotate(-1deg);
+      }
+      75% {
+        transform: translateY(-5px) rotate(1deg);
+      }
+    }
+
+    /* Animation delays for sequential appearance */
+    .top-box, .content-area, .video-container,
+    .video-controls-container, .special-thanks, .bubble {
+      animation: fadeIn 0.5s ease-in forwards;
+    }
+
+    /* --- NEW STYLES FOR POPUP --- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-box {
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      margin: 20px;
+      max-width: 80%;
+      text-align: center;
+      transform: scale(0.8) translateY(20px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease;
+      position: relative;
+    }
+
+    .overlay.show .popup-box {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .popup-box h3 {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .popup-box p {
+      font-size: 1.1em;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .popup-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.8em;
+      color: #aaa;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 5px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .popup-close-btn:hover {
+      color: #666;
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="top-box fade-in">
+    <div class="profile-container">
+      <div class="profile-pic clickable">
+        <img src="profile.jpg" alt="Profile Picture">
+      </div>
+      <div class="sfx-notification" id="sfxNotification"></div>
+    </div>
+
+    <div class="hamburger-menu">
+      <div class="menu-btn clickable" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="menu-content" id="menuContent">
+        <ul>
+          <li class="clickable" data-url="cryptography.html">
+            <img src="cryptography.png" alt="Cryptography Icon">
+            <span class="menu-text">Cryptography</span>
+            <button class="go-button">></button>
+          </li>
+          <li class="clickable" data-url="bitcoin.html">
+            <img src="what_about_bitcoin.jpg" alt="Bitcoin Icon">
+            <span class="menu-text">What about bitcoin</span>
+            <button class="go-button">></button>
+          </li>
+          <li class="clickable" data-url="Blockchain.html">
+            <img src="what_about_nodes.jpg" alt="Nodes Icon">
+            <span class="menu-text">How blockchain works</span>
+            <button class="go-button">></button>
+          </li>
+          <li class="clickable" data-url="Wallet.html">
+            <img src="how_wallet_works.jpg" alt="Wallet Icon">
+            <span class="menu-text">How wallet works</span>
+            <button class="go-button">></button>
+          </li>
+          <li class="clickable" data-url="Nodes.html">
+            <img src="how_mining_works.jpg" alt="Mining Icon">
+            <span class="menu-text">How Nodes works</span>
+            <button class="go-button">></button>
+          </li>
+          <li class="clickable" data-url="mining.html">
+            <img src="mining.jpg" alt="About Me Icon">
+            <span class="menu-text">How mining works</span>
+            <button class="go-button">></button>
+          <li class="clickable" data-url="about_me.html">
+            <img src="about_me.jpg" alt="About Me Icon">
+            <span class="menu-text">About me</span>
+            <button class="go-button">></button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area fade-in">
+    <div class="video-container fade-in" id="videoContainer">
+      <video id="mainVideo" autoplay muted playsinline>
+        <source src="1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="video-controls-container fade-in">
+      <button class="nav-btn clickable" id="prevBtn"><</button>
+      <button class="toggle-video-btn clickable" id="toggleVideoBtn">^</button>
+      <button class="nav-btn clickable" id="nextBtn">></button>
+    </div>
+  </div>
+
+  <div class="special-thanks fade-in">
+    <h2>Special Thanks</h2>
+    <div class="thanks-bubbles">
+      <div class="bubble clickable" data-source="Deepseek"
+           data-title="Special Thanks to Deepseek!"
+           data-content="Deepseek, nih ai enak juga buat coding, curhat ( ga seenak chatgpt si ) dan juga dia max tokennya gedee jadi buat coding yg baris nya ratusan dia sanggup. :3">
+        <img src="deepseek.jpg" alt="Deepseek" onerror="this.src='https://via.placeholder.com/60/CCCCCC/000000?text=Deepseek'">
+      </div>
+      <div class="bubble clickable" data-source="ChatGPT"
+           data-title="Special Thanks to  ChatGPT!"
+           data-content=" ChatGPT, nih ai gatau kenapa beda dari yang lain, buat curhat enak bgt, jarang halu, dah gitu fitur save memory nya membantu bgt lagi :D">
+        <img src="chatgpt.jpg" alt="ChatGPT" onerror="this.src='https://via.placeholder.com/60/CCCCCC/000000?text=ChatGPT'">
+      </div>
+      <div class="bubble clickable" data-source="Grok"
+           data-title="Special Thanks to  Grok "
+           data-content="Grok, ai paling detail, lengkap, dan up to date menurut ku. informasi di web ini 100% dari grokAI. Tapi free limit nya cepet bgt, ya wajar juga si wkwkwk :3">
+        <img src="grok.jpg" alt="Grok" onerror="this.src='https://via.placeholder.com/60/CCCCCC/000000?text=Grok'">
+      </div>
+      <div class="bubble clickable" data-source="Gemini"
+           data-title="Special Thanks to Gemini!"
+           data-content="Gemini, enak buat coding panjang-panjang, tapi ntah kenapa sering stress ( halu ) mungkin karna max token nya abis kali yak. yah intinya dia enak bgt walaupun versi free.">
+        <img src="gemini.jpg" alt="Gemini" onerror="this.src='https://via.placeholder.com/60/CCCCCC/000000?text=Gemini'">
+      </div>
+    </div>
+  </div>
+
+  <audio id="clickSound" src="sfx.mp3" preload="auto"></audio>
+
+  <div class="overlay" id="popupOverlay">
+    <div class="popup-box">
+      <button class="popup-close-btn">&times;</button>
+      <h3 id="popupTitle"></h3>
+      <p id="popupContent"></p>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("menuToggle");
+    const menu = document.getElementById("menuContent");
+    const menuItems = document.querySelectorAll("#menuContent ul li");
+    const video = document.getElementById("mainVideo");
+    const videoContainer = document.getElementById("videoContainer");
+    const toggleVideoBtn = document.getElementById("toggleVideoBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const clickSound = document.getElementById("clickSound");
+    const clickableElements = document.querySelectorAll(".clickable");
+    const animateElements = document.querySelectorAll(".fade-in");
+    const profilePic = document.querySelector(".profile-pic");
+    const sfxNotification = document.getElementById("sfxNotification");
+
+    // NEW POPUP ELEMENTS
+    const popupOverlay = document.getElementById("popupOverlay");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupContent = document.getElementById("popupContent");
+    const popupCloseBtn = document.querySelector(".popup-close-btn");
+    const thanksBubbles = document.querySelectorAll(".bubble");
+
+    // Current video index (1.mp4 is index 0, 2.mp4 is index 1, etc.)
+    let currentVideoIndex = 0;
+    const totalVideos = 10; // From 1.mp4 to 10.mp4
+    let soundEnabled = true; // Sound is enabled by default
+    let lastClickTime = 0; // For double click detection
+
+    // Function to fade out elements sequentially
+    function fadeOutPage() {
+      const elements = [
+        document.querySelector('.top-box'),
+        document.querySelector('.content-area'),
+        document.querySelector('.video-container'),
+        document.querySelector('.video-controls-container'),
+        document.querySelector('.special-thanks'),
+        ...document.querySelectorAll('.bubble')
+      ];
+      
+      // Add slight delays between each element's fade out
+      elements.forEach((el, index) => {
+        if (el) {
+          setTimeout(() => {
+            el.classList.add('fade-out');
+          }, index * 80); // 80ms delay between each element
+        }
+      });
+      
+      // Wait for animations to complete before navigating
+      const totalDuration = elements.length * 80 + 400; // 400ms for the animation itself
+      return new Promise(resolve => setTimeout(resolve, totalDuration));
+    }
+
+    // Play click sound function
+    function playClickSound() {
+      if (clickSound && soundEnabled) {
+        clickSound.currentTime = 0; // Rewind to start
+        clickSound.play().catch(e => console.log("Sound play failed:", e));
+      }
+    }
+
+    // Toggle sound effects
+    function toggleSoundEffects() {
+      soundEnabled = !soundEnabled;
+      
+      // Show notification
+      sfxNotification.textContent = soundEnabled ? "SFX ON" : "SFX OFF";
+      sfxNotification.classList.toggle("off", !soundEnabled);
+      sfxNotification.classList.add("show");
+      
+      // Hide notification after 2 seconds
+      setTimeout(() => {
+        sfxNotification.classList.remove("show");
+      }, 2000);
+      
+      // Play feedback sound (even if sound is being turned off)
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.log("Sound play failed:", e));
+    }
+
+    // Add click sound to all clickable elements
+    clickableElements.forEach(element => {
+      element.addEventListener('click', function(e) {
+        // Prevent sound from playing if clicking go-button, as it's handled by specific logic
+        if (!e.target.classList.contains('go-button')) {
+          playClickSound();
+        }
+      });
+    });
+
+    // Double click on profile picture to toggle sound
+    profilePic.addEventListener('click', function(e) {
+      const currentTime = new Date().getTime();
+      const timeSinceLastClick = currentTime - lastClickTime;
+      
+      if (timeSinceLastClick < 300) { // 300ms threshold for double click
+        toggleSoundEffects();
+      }
+      
+      lastClickTime = currentTime;
+    });
+
+    // --- Hamburger Menu Logic ---
+    toggleBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      this.classList.toggle("open");
+      menu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function () {
+      toggleBtn.classList.remove("open");
+      menu.classList.remove("show");
+      menuItems.forEach(item => {
+        item.classList.remove("clicked");
+      });
+    });
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        if (e.target.classList.contains('go-button')) {
+          e.stopPropagation();
+          const url = this.dataset.url;
+          if (url) {
+            fadeOutPage().then(() => {
+              window.location.href = url;
+            });
+          }
+          toggleBtn.classList.remove("open");
+          menu.classList.remove("show");
+          menuItems.forEach(i => i.classList.remove("clicked"));
+        } else {
+          e.stopPropagation();
+          if (this.classList.contains("clicked")) {
+            this.classList.remove("clicked");
+          } else {
+            menuItems.forEach(i => i.classList.remove("clicked"));
+            this.classList.add("clicked");
+          }
+        }
+      });
+    });
+
+    // Fallback untuk gambar profil
+    document.querySelector('.profile-pic img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    // Fallback untuk gambar ikon menu
+    document.querySelectorAll('.menu-content li img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.src = 'https://via.placeholder.com/28/CCCCCC/000000?text=X';
+            this.style.borderRadius = '50%';
+            this.style.objectFit = 'cover';
+        });
+    });
+
+    // Video control logic
+    if (video) {
+      video.addEventListener('loadedmetadata', function() {
+        const pauseTime = video.duration - 2;
+        
+        video.addEventListener('timeupdate', function() {
+          if (this.currentTime >= pauseTime && !this.paused) {
+            this.pause();
+          }
+        });
+      });
+      
+      video.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      
+      video.addEventListener('play', function() {
+        this.muted = true;
+      });
+    }
+
+    // Toggle video visibility
+    toggleVideoBtn.addEventListener('click', function() {
+      videoContainer.classList.toggle('collapsed');
+      
+      if (videoContainer.classList.contains('collapsed')) {
+        this.textContent = '⌄'; // Down arrow
+        video.pause();
+      } else {
+        this.textContent = '^'; // Up arrow
+        video.play();
+      }
+    });
+
+    // Change video source
+    function changeVideo(index) {
+      if (index >= 0 && index < totalVideos) {
+        currentVideoIndex = index;
+        const videoNumber = currentVideoIndex + 1;
+        video.src = `${videoNumber}.mp4`;
+        video.load();
+        video.play();
+        
+        // Update button states
+        prevBtn.disabled = currentVideoIndex === 0;
+        nextBtn.disabled = currentVideoIndex === totalVideos - 1;
+      }
+    }
+
+    // Navigation button handlers
+    prevBtn.addEventListener('click', function() {
+      if (currentVideoIndex > 0) {
+        changeVideo(currentVideoIndex - 1);
+      }
+    });
+
+    nextBtn.addEventListener('click', function() {
+      if (currentVideoIndex < totalVideos - 1) {
+        changeVideo(currentVideoIndex + 1);
+      }
+    });
+
+    // Initialize button states when the page loads
+    prevBtn.disabled = true; 
+    nextBtn.disabled = totalVideos === 1;
+
+    // Animate elements in sequentially when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set initial opacity to 0 for all animated elements
+      animateElements.forEach(el => {
+        el.style.opacity = 0;
+      });
+
+      // Then apply fade-in with delays
+      animateElements.forEach((el, index) => {
+        setTimeout(() => {
+          el.style.opacity = 1; // Make it visible
+          el.classList.add('fade-in'); // Trigger the fade-in animation
+        }, index * 100);
+      });
+    });
+
+
+    // --- NEW POPUP LOGIC ---
+    thanksBubbles.forEach(bubble => {
+      bubble.addEventListener('click', function() {
+        playClickSound(); // Play sound on bubble click
+        // Ambil judul dan konten langsung dari atribut data- baru
+        const customTitle = this.dataset.title;
+        const customContent = this.dataset.content;
+
+        popupTitle.textContent = customTitle;
+        popupContent.textContent = customContent;
+        
+        popupOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
+      });
+    });
+
+    popupCloseBtn.addEventListener('click', () => {
+      playClickSound(); // Play sound on close button click
+      popupOverlay.classList.remove('show');
+      document.body.style.overflow = ''; // Restore scrolling
+    });
+
+    // Close popup if clicking outside the box
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        playClickSound(); // Play sound on clicking outside to close
+        popupOverlay.classList.remove('show');
+        document.body.style.overflow = ''; // Restore scrolling
+      }
+    });
+  </script>
+</body>
+</html>
