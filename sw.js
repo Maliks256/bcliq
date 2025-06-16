@@ -5,7 +5,9 @@ const urlsToCache = [
   '/About-bitcoin/index.html',
   '/About-bitcoin/fakeload.html',
   '/About-bitcoin/Wallet.html',
-  'Wallet.html', // ✅ tambahin path relatif buat jaga-jaga
+  'Wallet.html',
+  './Wallet.html',
+  './wallet.html',
   '/About-bitcoin/manifest.json',
   '/About-bitcoin/icon-72x72.png',
   '/About-bitcoin/icon-192x192.png',
