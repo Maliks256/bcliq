@@ -1,8 +1,7 @@
 {
   "name": "bcapps",
   "short_name": "wbtc",
-  "description": "artikel tentang bitcoin",
-  "start_url": "/About-bitcoin/",
+  "description": "artikel tentang bitcoin", 
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4285f4",
