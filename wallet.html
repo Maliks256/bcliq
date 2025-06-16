@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Simplified Page - Bitcoin Wallet Info</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff; /* Latar belakang putih polos */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 70px; /* Tambahkan padding agar konten tidak tertutup top-box */
+      opacity: 0; /* Awalnya sembunyikan body */
+      transition: opacity 0.5s ease-in-out; /* Tambahkan transisi untuk fade-in/out */
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    .top-box {
+      background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan agar efek blur terlihat */
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      height: 70px;
+      transition: backdrop-filter 0.3s ease-out, background-color 0.3s ease-out; /* Transisi untuk blur dan warna */
+      -webkit-backdrop-filter: blur(0px); /* Default tidak blur untuk Safari */
+      backdrop-filter: blur(0px); /* Default tidak blur */
+    }
+
+    .top-box.scrolled {
+      -webkit-backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      backdrop-filter: blur(8px); /* Efek blur saat discroll */
+      background-color: rgba(255, 255, 255, 0.7); /* Lebih transparan saat blur */
+    }
+
+    .profile-pic img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic img:active {
+      transform: scale(0.85);
+    }
+
+    .back-button {
+      width: 45px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .back-button img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .back-button:active {
+      transform: scale(0.85);
+    }
+
+    .clickable:active {
+      transform: scale(0.96);
+    }
+
+    /* Gaya untuk konten Bitcoin Wallet */
+    .content-area {
+      width: 90%;
+      max-width: 800px;
+      padding: 25px 0;
+      margin-top: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .content-area h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.8em;
+      text-align: center; /* Tambahkan ini untuk menengahkan H2 */
+    }
+
+    .content-area h3 { /* Gaya untuk sub-judul seperti "Abstrak" */
+      color: #333;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+    }
+
+    /* Gaya untuk sub-judul langkah (h4) */
+    .content-area h4 {
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      position: relative;
+      padding-left: 35px; /* Ruang untuk lingkaran dan sedikit spasi */
+      display: flex;
+      align-items: center;
+    }
+
+    /* Lingkaran dengan nomor langkah (pseudo-elemen before) */
+    .content-area h4::before {
+        content: attr(data-step-number); /* Mengambil nomor dari atribut data */
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 25px; /* Ukuran lingkaran */
+        height: 25px; /* Ukuran lingkaran */
+        border: 1px solid #333; /* Outline hitam tipis */
+        border-radius: 50%; /* Membuat lingkaran */
+        background-color: transparent; /* Background transparan */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        color: #333; /* Warna nomor dalam lingkaran */
+        font-size: 0.9em;
+        line-height: 1; /* Menyesuaikan line-height agar angka di tengah vertikal */
+    }
+
+    /* Menyembunyikan teks angka asli di dalam h4 */
+    .content-area h4 span.step-text {
+        display: none; /* Menyembunyikan teks angka asli */
+    }
+
+    .content-area p {
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+
+    .content-area ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+      list-style-type: none; /* Hilangkan bullet default */
+    }
+
+    .content-area ul li {
+      margin-bottom: 5px; /* Tambahkan sedikit spasi antar item daftar */
+      position: relative;
+      padding-left: 20px; /* Ruang untuk bullet kustom */
+    }
+
+    .content-area ul li::before {
+      content: '•'; /* Bullet kustom */
+      position: absolute;
+      left: 0;
+      color: #333; /* Warna bullet */
+      font-weight: bold;
+      font-size: 1.2em;
+      line-height: 1;
+    }
+
+    .content-area ol {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .content-area ol li {
+      margin-bottom: 5px; /* Tambahkan sedikit spasi antar item daftar */
+    }
+
+    .content-area strong {
+      color: #000;
+    }
+
+    /* Gaya untuk garis tebal */
+    hr.thick-divider {
+        border: none;
+        border-top: 3px solid #333; /* Warna dan ketebalan garis */
+        margin: 40px 0; /* Spasi di atas dan bawah garis */
+    }
+
+    /* Gaya untuk flowchart */
+    .flowchart pre {
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'Courier New', Courier, monospace;
+        line-height: 1.4;
+        color: #333;
+    }
+
+    /* Gaya tambahan untuk teks di bagian bawah */
+    .footer-note {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        font-size: 1em;
+        color: #333;
+    }
+
+    /* Gaya untuk teks "Terimakasih" */
+    .thank-you-section {
+        margin-top: 60px; /* Spasi dari konten sebelumnya */
+        margin-bottom: 40px;
+        text-align: center;
+        position: relative;
+        padding: 50px 0; /* Padding lebih besar untuk ruang banner */
+        overflow: hidden; /* Sembunyikan teks yang keluar dari box */
+        background-color: #ffffff; /* Latar belakang putih polos */
+    }
+
+    .thank-you-section .thank-you-text {
+        font-size: 1.5em; /* Ukuran lebih besar */
+        font-weight: bold;
+        color: #333;
+        margin: 20px 0; /* Spasi atas bawah untuk teks utama */
+    }
+
+    /* Gaya untuk banner teks berjalan */
+    .scrolling-banner {
+        position: absolute;
+        width: 100%;
+        overflow: hidden; /* Sembunyikan teks yang keluar */
+        white-space: nowrap; /* Jangan biarkan teks wrap */
+        background-color: #ffffff; /* Latar belakang putih */
+        color: #333; /* Warna teks hitam */
+        padding: 8px 0;
+        font-size: 0.9em;
+        left: 0;
+    }
+
+    .scrolling-banner.top {
+        top: 0;
+    }
+
+    .scrolling-banner.bottom {
+        bottom: 0;
+    }
+
+    .scrolling-banner span {
+        display: inline-block;
+        padding-left: 100%; /* Mulai dari kanan */
+        /* Animasi: nama, durasi, timing-function, delay, iteration-count */
+        animation: scroll-left-to-right 35s linear 5s infinite; /* Durasi 35s, delay 5s */
+    }
+
+    /* Animasi Keyframes */
+    @keyframes scroll-left-to-right {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="top-box">
+    <div class="profile-pic clickable">
+      <img src="profile.jpg" alt="Profile Picture">
+    </div>
+
+    <div class="back-button clickable" onclick="playClickSound(); fadeOutAndRedirect('dashboard.html');">
+      <img src="back.png" alt="Back Button">
+    </div>
+  </div>
+
+  <div class="content-area">
+    <h2>Apa Itu Bitcoin Wallet?</h2>
+    <h3>Abstrak: Bitcoin Wallet</h3>
+    <p>Bitcoin wallet adalah alat esensial dalam ekosistem Bitcoin yang memungkinkan pengguna menyimpan, mengelola, dan bertransaksi dengan Bitcoin melalui pengelolaan kunci kriptografis, yaitu <strong>private key</strong> dan <strong>public key</strong>. Berbeda dari dompet fisik, wallet tidak menyimpan Bitcoin secara langsung, melainkan menyimpan kunci untuk mengakses dana di <strong>blockchain</strong>, buku besar digital terdesentralisasi. Wallet tersedia dalam berbagai jenis, termasuk <strong>hot wallet</strong> (terhubung internet, praktis untuk transaksi harian), <strong>cold wallet</strong> (offline, aman untuk penyimpanan jangka panjang), dan <strong>paper wallet</strong> (fisik, untuk keamanan maksimal). Fitur utama meliputi pembuatan alamat Bitcoin (seperti <strong>Bech32</strong> untuk <strong>SegWit</strong>), pengelolaan <strong>Unspent Transaction Outputs (UTXO)</strong>, dan penandatanganan transaksi dengan algoritma <strong>ECDSA</strong>. Wallet modern mendukung teknologi seperti <strong>Hierarchical Deterministic (HD) Wallet</strong>, <strong>Lightning Network</strong> untuk transaksi cepat, dan <strong>multi-signature</strong> untuk keamanan tambahan. Keamanan wallet bergantung pada perlindungan <strong>seed phrase</strong>, pencegahan <strong>phishing</strong>, dan penggunaan <strong>Hardware Security Module (HSM)</strong> pada cold wallet. Dengan perkembangan seperti <strong>SegWit</strong> dan <strong>Taproot</strong>, Bitcoin wallet terus berkembang untuk meningkatkan efisiensi, privasi, dan aksesibilitas, menjadikannya pintu gerbang utama untuk interaksi dengan Bitcoin secara desentralisasi.</p>
+
+    <hr class="thick-divider">
+
+    <h3>Jenis-Jenis Bitcoin Wallet</h3>
+    <p>Bitcoin wallet dapat diklasifikasikan berdasarkan cara penyimpanan kunci dan konektivitasnya ke internet. Berikut adalah jenis-jenis utama:</p>
+
+    <h4 data-step-number="1">Hot Wallet</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Wallet yang terhubung ke internet, seperti aplikasi mobile, desktop, atau berbasis web.</li>
+      <li><strong>Detail Teknis:</strong> Hot wallet menyimpan private key di perangkat online (misalnya, ponsel atau komputer) dengan enkripsi seperti <strong>AES-256</strong>. Contohnya termasuk Trust Wallet (mobile), Electrum (desktop), atau Blockchain.com (web).</li>
+      <li><strong>Kelebihan:</strong> Praktis untuk transaksi sehari-hari, cepat, dan mudah digunakan. Mendukung fitur seperti <strong>SPV (Simplified Payment Verification)</strong> untuk operasi ringan tanpa mengunduh blockchain penuh.</li>
+      <li><strong>Kekurangan:</strong> Rentan terhadap malware, phishing, atau serangan siber karena private key tersimpan di perangkat online.</li>
+      <li><strong>Contoh Praktis:</strong> Kamu menggunakan Trust Wallet di ponsel untuk mengirim 0,01 BTC ke teman. Transaksi dilakukan langsung dari aplikasi dengan biaya otomatis berdasarkan mempool.</li>
+    </ul>
+
+    <h4 data-step-number="2">Cold Wallet</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Wallet yang menyimpan private key secara offline, seperti hardware wallet (Ledger, Trezor) atau paper wallet.</li>
+      <li><strong>Detail Teknis:</strong> Cold wallet menggunakan <strong>Hardware Security Module (HSM)</strong>, seperti chip secure element, untuk menjaga private key tetap aman. Transaksi ditandatangani offline, mencegah paparan ke internet.</li>
+      <li><strong>Kelebihan:</strong> Sangat aman untuk penyimpanan jangka panjang, kebal terhadap serangan online.</li>
+      <li><strong>Kekurangan:</strong> Kurang praktis untuk transaksi harian karena memerlukan perangkat fisik atau langkah tambahan (misalnya, memindai QR code untuk paper wallet).</li>
+      <li><strong>Contoh Praktis:</strong> Kamu menyimpan 2 BTC di Ledger Nano X. Untuk mengirim dana, kamu menghubungkan Ledger ke komputer, memverifikasi transaksi di layar perangkat, dan menandatanganinya di secure element.</li>
+    </ul>
+
+    <h4 data-step-number="3">Custodial vs Non-Custodial Wallet</h4>
+    <ul>
+      <li><strong>Custodial Wallet:</strong> Private key disimpan oleh pihak ketiga (misalnya, exchange seperti Binance atau Coinbase). Pengguna tidak memiliki kontrol penuh atas dana.</li>
+      <li><strong>Kelebihan:</strong> Mudah digunakan, cocok untuk pemula, sering terintegrasi dengan platform perdagangan.</li>
+      <li><strong>Kekurangan:</strong> Risiko tinggi jika penyedia diretas atau bangkrut. Contoh: Wallet di exchange.</li>
+      <li><strong>Non-Custodial Wallet:</strong> Pengguna memiliki kendali penuh atas private key (misalnya, Electrum, Ledger).</li>
+      <li><strong>Kelebihan:</strong> Lebih aman dan sesuai dengan prinsip desentralisasi Bitcoin.</li>
+      <li><strong>Kekurangan:</strong> Tanggung jawab penuh ada pada pengguna untuk mengamankan private key dan seed phrase.</li>
+      <li><strong>Contoh Praktis:</strong> Kamu menggunakan Electrum (non-custodial) untuk mengelola Bitcoinmu sendiri, sedangkan temanmu menyimpan Bitcoin di wallet Binance (custodial).</li>
+    </ul>
+
+    <h4 data-step-number="4">Paper Wallet</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Bentuk cold wallet di mana private key dan alamat Bitcoin dicetak di kertas, sering kali dengan QR code.</li>
+      <li><strong>Detail Teknis:</strong> Dibuat offline menggunakan alat seperti bitaddress.org untuk menghindari risiko digital. Private key diimpor ke wallet digital saat ingin digunakan.</li>
+      <li><strong>Kelebihan:</strong> Sangat aman untuk penyimpanan jangka panjang jika disimpan di tempat fisik yang aman.</li>
+      <li><strong>Kekurangan:</strong> Rentan terhadap kerusakan fisik (kertas robek, tinta luntur) dan kurang praktis untuk transaksi.</li>
+      <li><strong>Contoh Praktis:</strong> Kamu membuat paper wallet untuk menyimpan 1 BTC di brankas. Saat ingin menjual, kamu mengimpor private key ke Electrum.</li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Fungsi Utama Bitcoin Wallet</h3>
+    <p>Bitcoin wallet memiliki beberapa fungsi inti yang memungkinkan pengguna berinteraksi dengan blockchain:</p>
+
+    <h4 data-step-number="1">Menyimpan Kunci Kriptografis</h4>
+    <ul>
+      <li>Wallet menyimpan <strong>private key</strong> dan <strong>public key</strong> dengan aman, baik di perangkat online (<strong>hot wallet</strong>) atau offline (<strong>cold wallet</strong>). <strong>HD Wallet</strong> menggunakan <strong>derivation path</strong> untuk menghasilkan banyak alamat dari satu <strong>seed phrase</strong>, meningkatkan efisiensi dan privasi.</li>
+    </ul>
+
+    <h4 data-step-number="2">Menerima Bitcoin</h4>
+    <ul>
+      <li>Wallet menghasilkan <strong>Bitcoin address</strong> untuk menerima dana. Alamat ini bisa dibagikan dalam bentuk teks atau <strong>QR code</strong>. Wallet modern mendukung format seperti <strong>Bech32</strong> untuk transaksi <strong>SegWit</strong> yang lebih murah.</li>
+      <li><strong>Contoh:</strong> Kamu membagikan alamat bc1q... ke teman untuk menerima 0,1 BTC. Walletmu otomatis mendeteksi transaksi masuk melalui <strong>blockchain explorer</strong> atau koneksi ke node.</li>
+    </ul>
+
+    <h4 data-step-number="3">Mengirim Bitcoin</h4>
+    <ul>
+      <li>Masukkan alamat penerima, jumlah, dan pilih <strong>transaction fee</strong>. Wallet akan memilih <strong>UTXO</strong>, menandatangani transaksi, dan menyiarkannya ke jaringan melalui node.</li>
+      <li><strong>Detail Teknis:</strong> Wallet menghitung biaya berdasarkan ukuran transaksi (byte) dan kondisi <strong>mempool</strong>. Fitur seperti <strong>RBF (Replace-by-Fee)</strong> memungkinkan penyesuaian biaya jika transaksi tertunda.</li>
+      <li><strong>Contoh:</strong> Kamu mengirim 0,2 BTC ke alamat teman. Wallet memilih UTXO 0,3 BTC, mengirim 0,2 BTC ke penerima, dan mengembalikan 0,099 BTC (setelah fee) ke <strong>change address</strong>.</li>
+    </ul>
+
+    <h4 data-step-number="4">Memantau Saldo dan Transaksi</h4>
+    <ul>
+      <li>Wallet menampilkan saldo dengan menjumlahkan <strong>UTXO</strong> yang terkait dengan alamatmu dan memantau status transaksi (pending atau confirmed) melalui <strong>SPV</strong> atau koneksi ke node.</li>
+      <li><strong>Contoh:</strong> Walletmu menunjukkan saldo 0,7 BTC dan status transaksi dengan <strong>TxID</strong> di blockchain explorer seperti <strong>mempool.space</strong>.</li>
+    </ul>
+
+    <h4 data-step-number="5">Backup dan Pemulihan</h4>
+    <ul>
+      <li>Wallet menyediakan <strong>seed phrase</strong> atau <strong>private key</strong> untuk backup, memungkinkan pemulihan dana di perangkat baru. <strong>Mnemonic phrase (seed phrase)</strong> adalah cara paling umum untuk <strong>HD wallet</strong>.</li>
+      <li><strong>Keamanan:</strong> <strong>Seed phrase</strong> harus disimpan offline untuk mencegah pencurian. Wallet sering memperingatkan pengguna untuk tidak menyimpan <strong>seed phrase</strong> secara digital.</li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Selalu Jaga Keamanan Bitcoin Wallet</h3>
+    <p>Keamanan adalah aspek kritis dari Bitcoin wallet karena Bitcoin bersifat <strong>irreversible</strong> (transaksi tidak bisa dibatalkan) dan <strong>desentralisasi</strong> (tidak ada pihak ketiga untuk membantu pemulihan). Berikut adalah poin-poin keamanan utama:</p>
+
+    <h4 data-step-number="1">Melindungi Private Key dan Seed Phrase</h4>
+    <ul>
+      <li><strong>Private key</strong> dan <strong>seed phrase</strong> adalah kunci akses ke dana. Simpan offline di tempat aman (misalnya, brankas atau pelat logam) dan hindari penyimpanan digital seperti screenshot atau cloud.</li>
+      <li><strong>Contoh Risiko:</strong> Malware seperti <strong>keylogger</strong> bisa mencuri seed phrase jika disimpan di ponsel.</li>
+    </ul>
+
+    <h4 data-step-number="2">Menghindari Phishing dan Malware</h4>
+    <ul>
+      <li>Gunakan wallet dari sumber tepercaya (misalnya, situs resmi Ledger atau Electrum). Verifikasi URL untuk menghindari situs <strong>phishing</strong>.</li>
+      <li><strong>Contoh:</strong> Situs palsu yang menyerupai blockchain.com bisa mencuri seed phrase jika kamu login.</li>
+    </ul>
+
+    <h4 data-step-number="3">Menggunakan Hardware Wallet untuk Penyimpanan Besar</h4>
+    <ul>
+      <li><strong>Hardware wallet</strong> (seperti Ledger, Trezor) menggunakan <strong>HSM (Hardware Security Module)</strong> untuk menjaga private key tetap offline, bahkan saat terhubung ke komputer yang terinfeksi.</li>
+      <li><strong>Contoh:</strong> Kamu menyimpan 5 BTC di Ledger untuk investasi jangka panjang, aman dari serangan online.</li>
+    </ul>
+
+    <h4 data-step-number="4">Mengelola Dust Attack</h4>
+    <ul>
+      <li>Penyerang bisa mengirim <strong>dust</strong> (jumlah kecil Bitcoin) untuk melacak alamat. Gunakan <strong>coin control</strong> untuk menghindari menggabungkan dust dengan <strong>UTXO</strong> lain.</li>
+      <li><strong>Contoh:</strong> Kamu menerima 200 satoshi dari sumber tidak dikenal dan menandainya sebagai “do not spend” di wallet.</li>
+    </ul>
+
+    <h4 data-step-number="5">Menghindari Address Reuse</h4>
+    <ul>
+      <li>Menggunakan alamat yang sama berulang kali memudahkan pelacakan. Wallet modern menghasilkan alamat baru untuk setiap transaksi.</li>
+      <li><strong>Contoh:</strong> Walletmu otomatis membuat alamat baru setelah menerima 0,1 BTC untuk transaksi berikutnya.</li>
+    </ul>
+
+    <h4 data-step-number="6">Memantau Konfirmasi</h4>
+    <ul>
+      <li>Tunggu 1-6 konfirmasi untuk memastikan transaksi aman, terutama untuk jumlah besar. Gunakan <strong>blockchain explorer</strong> untuk memeriksa <strong>TxID</strong>.</li>
+      <li><strong>Contoh:</strong> Kamu menunggu 3 konfirmasi (~30 menit) sebelum menganggap transaksi 1 BTC ke exchange aman.</li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Komponen Inti Bitcoin Wallet</h3>
+
+    <h4 data-step-number="1">Private Key</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Private key adalah kunci rahasia berupa angka 256-bit yang membuktikan kepemilikan Bitcoin dan digunakan untuk menandatangani transaksi, memungkinkan pengguna untuk "membelanjakan" dana di blockchain.</li>
+      <li><strong>Penjelasan Teknis:</strong>
+        <ul>
+          <li>Private key adalah bilangan acak yang dihasilkan menggunakan <strong>CSPRNG (Cryptographically Secure Pseudo-Random Number Generator)</strong> untuk memastikan keamanan kriptografis. Rentangnya berada antara 1 dan <strong>n-1</strong> (dengan <strong>n</strong> sebagai order kurva <strong>secp256k1</strong>, yaitu <strong>FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141</strong>).</li>
+          <li>Private key digunakan dalam algoritma <strong>ECDSA (Elliptic Curve Digital Signature Algorithm)</strong> untuk menghasilkan tanda tangan digital, yang memverifikasi bahwa transaksi dibuat oleh pemilik tanpa mengungkapkan kunci itu sendiri.</li>
+          <li>Dalam wallet, private key disimpan dalam format <strong>Wallet Import Format (WIF)</strong>, yang menambahkan <strong>version byte</strong> (<strong>0x80</strong> untuk mainnet) dan <strong>checksum</strong> (4 byte dari double SHA-256), lalu dienkode ke <strong>Base58Check</strong>. Contoh WIF: <code>5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn</code> (uncompressed) atau <code>Kz...</code> (compressed).</li>
+          <li>Dalam <strong>Hierarchical Deterministic (HD) Wallet</strong>, private key turunan dihasilkan dari <strong>master seed</strong> menggunakan <strong>derivation path</strong> (misalnya, <code>m/44'/0'/0'/0/0</code>), sesuai standar <strong>BIP-32</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Fungsi dalam Wallet:</strong>
+        <ul>
+          <li>Private key adalah inti keamanan wallet, memungkinkan pengguna untuk menandatangani transaksi, seperti mengirim Bitcoin ke alamat lain.</li>
+          <li>Wallet menyimpan private key dengan cara yang aman: di <strong>secure element</strong> (pada hardware wallet seperti Ledger) untuk <strong>cold wallet</strong>, atau dienkripsi (misalnya, dengan <strong>AES-256</strong>) pada <strong>hot wallet</strong> seperti Electrum atau Trust Wallet.</li>
+          <li>Wallet juga memungkinkan impor private key (via WIF) untuk mengakses dana dari wallet lama atau paper wallet.</li>
+        </ul>
+      </li>
+      <li><strong>Keamanan:</strong>
+        <ul>
+          <li>Private key adalah rahasia utama. Jika dicuri, penyerang dapat mengendalikan semua Bitcoin terkait. Jika hilang, dana tidak dapat diakses.</li>
+          <li><strong>Hot Wallet:</strong> Private key rentan terhadap <strong>malware</strong>, <strong>keylogger</strong>, atau <strong>phishing</strong> jika perangkat terhubung ke internet.</li>
+          <li><strong>Cold Wallet:</strong> Private key disimpan di <strong>Hardware Security Module (HSM)</strong> atau kertas (<strong>paper wallet</strong>), sehingga aman dari serangan online, tetapi rentan terhadap pencurian fisik atau kerusakan.</li>
+          <li><strong>Praktik terbaik:</strong> Simpan private key offline, gunakan PIN atau kata sandi untuk enkripsi, dan hindari berbagi dalam bentuk digital (misalnya, email atau screenshot).</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Praktis:</strong>
+        <ul>
+          <li>Kamu menggunakan Ledger Nano X untuk menandatangani transaksi 0,1 BTC. Private key disimpan di <strong>HSM</strong> dan tidak pernah keluar dari perangkat, bahkan saat terhubung ke komputer. Wallet menampilkan detail transaksi di layar perangkat untuk verifikasi manual.</li>
+          <li>Jika kamu memiliki <strong>paper wallet</strong>, kamu mengimpor private key dalam format <strong>WIF</strong> ke Electrum untuk membelanjakan dana, lalu membuat wallet baru untuk keamanan.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 data-step-number="2">Public Key dan Bitcoin Address</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Public key adalah kunci kriptografis yang dihasilkan dari private key, digunakan untuk membuat Bitcoin address, yaitu pengenal unik yang dibagikan untuk menerima Bitcoin. Bitcoin address adalah representasi yang lebih ringkas dari public key, dioptimalkan untuk penggunaan praktis.</li>
+      <li><strong>Penjelasan Teknis:</strong>
+        <ul>
+          <li>Public key dihasilkan melalui perkalian titik pada kurva eliptik <strong>secp256k1: Public Key = private_key × G</strong>, di mana <strong>G</strong> adalah titik generator tetap. Public key bisa dalam format <strong>uncompressed</strong> (65 byte, dimulai dengan 0x04) atau <strong>compressed</strong> (33 byte, dimulai dengan 0x02 atau 0x03 tergantung paritas y).</li>
+          <li>Bitcoin address dibuat dari public key melalui proses:
+            <ul>
+              <li>Hitung <strong>SHA-256</strong> dari public key.</li>
+              <li>Hitung <strong>RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit)</strong> dari hasil SHA-256 untuk mendapatkan <strong>public key hash</strong> (20 byte).</li>
+              <li>Tambahkan <strong>version byte</strong> (misalnya, <strong>0x00</strong> untuk P2PKH, <strong>0x05</strong> untuk P2SH).</li>
+              <li>Tambahkan <strong>checksum</strong> (4 byte dari double SHA-256).</li>
+              <li>Enkode ke <strong>Base58Check</strong> (untuk P2PKH/P2SH) atau <strong>Bech32</strong> (untuk SegWit).</li>
+            </ul>
+          </li>
+          <li><strong>Jenis alamat:</strong>
+            <ul>
+              <li><strong>P2PKH (Pay-to-Public-Key-Hash):</strong> Dimulai dengan “1”, contoh: <code>1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code>.</li>
+              <li><strong>P2SH (Pay-to-Script-Hash):</strong> Dimulai dengan “3”, sering untuk multisig, contoh: <code>3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy</code>.</li>
+              <li><strong>Bech32 (SegWit):</strong> Dimulai dengan “bc1”, contoh: <code>bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq</code>, lebih efisien dan mendukung SegWit.</li>
+            </ul>
+          </li>
+          <li>Dalam <strong>HD Wallet</strong>, wallet menghasilkan banyak alamat dari <strong>extended public key (xpub)</strong> menggunakan <strong>derivation path</strong>, meningkatkan privasi dengan mencegah <strong>address reuse</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Fungsi dalam Wallet:</strong>
+        <ul>
+          <li>Wallet menghasilkan <strong>Bitcoin address</strong> untuk menerima dana, biasanya dalam bentuk teks atau <strong>QR code</strong> untuk memudahkan berbagi.</li>
+          <li>Wallet otomatis membuat alamat baru untuk setiap transaksi (khususnya di <strong>HD wallet</strong>) untuk mencegah pelacakan melalui analisis rantai.</li>
+          <li>Wallet juga mengelola <strong>change address</strong>, yaitu alamat baru yang dibuat untuk menerima sisa dana (kembalian) setelah transaksi.</li>
+        </ul>
+      </li>
+      <li><strong>Keamanan:</strong>
+        <ul>
+          <li>Public key dan Bitcoin address aman untuk dibagikan karena tidak mengungkapkan private key. Namun, <strong>address reuse</strong> harus dihindari karena memudahkan pelacakan aktivitas.</li>
+          <li>Wallet harus memverifikasi alamat penerima untuk mencegah kesalahan pengetikan atau serangan <strong>man-in-the-middle</strong> (misalnya, malware yang mengganti alamat).</li>
+          <li>Alamat <strong>Bech32</strong> lebih tahan terhadap kesalahan input karena menggunakan <strong>checksum BCH</strong>, tetapi tidak semua platform mendukungnya.</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Praktis:</strong>
+        <ul>
+          <li>Kamu membuka Trust Wallet dan menghasilkan alamat <strong>Bech32</strong> (<code>bc1q...</code>) untuk menerima 0,2 BTC dari teman. Wallet menampilkan <strong>QR code</strong>, dan temanmu memindainya untuk mengirim dana.</li>
+          <li>Saat mengirim 0,1 BTC dari UTXO 0,15 BTC, wallet membuat <strong>change address</strong> baru untuk mengembalikan 0,049 BTC (setelah fee) ke walletmu.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 data-step-number="3">Seed Phrase (Mnemonic Phrase)</h4>
+    <ul>
+      <li><strong>Definisi:</strong> Seed phrase, atau mnemonic phrase, adalah daftar kata (12-24) yang bertindak sebagai cadangan (backup) untuk memulihkan semua private key dan alamat dalam HD Wallet, memungkinkan pemulihan dana jika perangkat hilang atau rusak.</li>
+      <li><strong>Penjelasan Teknis:</strong>
+        <ul>
+          <li>Seed phrase dihasilkan sesuai standar <strong>BIP-39</strong> dari entropi acak (128-256 bit) menggunakan <strong>CSPRNG</strong>. Entropi ini di-hash dengan <strong>SHA-256</strong> untuk membuat <strong>checksum</strong>, lalu dibagi menjadi 11-bit chunks yang dipetakan ke daftar 2048 kata <strong>BIP-39</strong>.</li>
+          <li>Contoh seed phrase (12 kata): <code>witch collapse practice feed shame open despair creek road again ice least</code>.</li>
+          <li>Seed phrase diolah dengan <strong>PBKDF2 (Password-Based Key Derivation Function 2)</strong> (dengan 2048 iterasi <strong>HMAC-SHA512</strong>) untuk menghasilkan <strong>master seed</strong> (512 bit), yang menjadi dasar pembuatan <strong>master private key</strong> dan <strong>chain code</strong> sesuai <strong>BIP-32</strong>.</li>
+          <li>Dari <strong>master seed</strong>, wallet menghasilkan private key turunan melalui <strong>derivation path</strong> (misalnya, <code>m/44'/0'/0'/0/0</code> untuk alamat Bitcoin pertama).</li>
+          <li>Seed phrase bersifat deterministik, artinya wallet yang sama selalu dihasilkan dari seed yang sama, memungkinkan pemulihan di wallet lain yang mendukung <strong>BIP-39/BIP-32</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Fungsi dalam Wallet:</strong>
+        <ul>
+          <li>Seed phrase adalah mekanisme utama untuk backup dan pemulihan wallet. Saat membuat wallet baru, pengguna diminta menuliskan seed phrase dan menyimpannya dengan aman.</li>
+          <li>Wallet seperti Trust Wallet, Electrum, atau Ledger menampilkan seed phrase saat inisialisasi dan memungkinkan impor seed phrase untuk memulihkan dana di perangkat baru.</li>
+          <li>Beberapa wallet mendukung <strong>passphrase tambahan (opsional)</strong> untuk keamanan ekstra, yang digabungkan dengan seed phrase untuk menghasilkan master seed berbeda.</li>
+        </ul>
+      </li>
+      <li><strong>Keamanan:</strong>
+        <ul>
+          <li>Seed phrase adalah titik kritis keamanan. Jika dicuri, penyerang dapat mengakses semua dana di wallet. Jika hilang, dana tidak dapat dipulihkan.</li>
+          <li><strong>Praktik terbaik:</strong> Simpan seed phrase offline (misalnya, di kertas, pelat logam, atau brankas), hindari penyimpanan digital (screenshot, cloud), dan jangan bagikan.</li>
+          <li><strong>Risiko:</strong> Malware, phishing, atau kamera pengintai bisa mencuri seed phrase. Wallet harus memperingatkan pengguna untuk tidak menyimpan seed phrase di perangkat online.</li>
+          <li><strong>Hardware wallet</strong> seperti Ledger menyimpan seed phrase di <strong>HSM</strong>, yang hanya ditampilkan sekali saat inisialisasi, mengurangi risiko paparan.</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Praktis:</strong>
+        <ul>
+          <li>Saat membuat wallet di Trust Wallet, kamu menuliskan seed phrase 12 kata di kertas dan menyimpannya di brankas. Jika ponselmu hilang, kamu memasukkan seed phrase ke wallet baru untuk memulihkan dana.</li>
+          <li>Kamu menambahkan <strong>passphrase</strong> tambahan di Ledger untuk membuat wallet “tersembunyi,” meningkatkan keamanan jika seed phrase utama bocor.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 data-step-number="4">Unspent Transaction Output (UTXO)</h4>
+    <ul>
+      <li><strong>Definisi:</strong> UTXO adalah jumlah Bitcoin yang tersedia untuk dibelanjakan di wallet, berasal dari transaksi sebelumnya yang belum digunakan sebagai input untuk transaksi baru.</li>
+      <li><strong>Penjelasan Teknis:</strong>
+        <ul>
+          <li>Bitcoin menggunakan model <strong>UTXO</strong>, bukan saldo bank. Setiap transaksi menghasilkan output (jumlah Bitcoin yang dikirim ke alamat tertentu), yang menjadi UTXO hingga digunakan sebagai input untuk transaksi berikutnya.</li>
+          <li>Setiap UTXO diidentifikasi oleh <strong>Transaction ID (TxID)</strong> (hash 64 karakter dari transaksi) dan <strong>output index (vout)</strong>. Contoh: UTXO dari TxID <code>f4184fc596403b9d...</code> dengan vout 0 bernilai 0,5 BTC.</li>
+          <li>Wallet melacak semua UTXO terkait alamatnya melalui koneksi ke node atau <strong>SPV (Simplified Payment Verification)</strong>, lalu menjumlahkannya untuk menampilkan saldo total.</li>
+          <li>Saat membuat transaksi, wallet memilih UTXO yang cukup untuk menutupi jumlah yang dikirim ditambah <strong>transaction fee</strong>. Sisa dana dikembalikan ke <strong>change address</strong> yang dibuat otomatis.</li>
+          <li><strong>Contoh:</strong> Kamu memiliki dua UTXO (0,3 BTC dan 0,2 BTC, total 0,5 BTC). Untuk mengirim 0,4 BTC, wallet menggunakan kedua UTXO, mengirim 0,4 BTC ke penerima, dan mengembalikan sisa (misalnya, 0,099 BTC setelah fee) ke <strong>change address</strong>.</li>
+          <li>Fitur <strong>coin control</strong> memungkinkan pengguna memilih UTXO secara manual untuk mengoptimalkan biaya atau privasi.</li>
+        </ul>
+      </li>
+      <li><strong>Fungsi dalam Wallet:</strong>
+        <ul>
+          <li>Wallet menghitung saldo dengan menjumlahkan nilai semua UTXO yang terkait dengan alamatnya.</li>
+          <li>Saat mengirim Bitcoin, wallet memilih UTXO secara otomatis (atau manual via <strong>coin control</strong>) dan membuat transaksi dengan input (UTXO yang digunakan), output (alamat penerima dan <strong>change address</strong>), dan fee.</li>
+          <li>Wallet menampilkan riwayat transaksi berdasarkan UTXO yang masuk dan keluar, sering kali terhubung ke <strong>blockchain explorer</strong> untuk memeriksa status konfirmasi.</li>
+        </ul>
+      </li>
+      <li><strong>Keamanan:</strong>
+        <ul>
+          <li>UTXO hanya bisa dibelanjakan oleh pemilik private key yang sesuai, memastikan keamanan dana. Wallet harus memverifikasi bahwa UTXO belum dibelanjakan ganda (<strong>double-spending</strong>) melalui koneksi ke node.</li>
+          <li><strong>Dust attack</strong> adalah risiko di mana penyerang mengirim UTXO kecil untuk melacak aktivitas. Wallet harus mendeteksi dan mengelola <strong>dust</strong> (UTXO <546 satoshi) dengan hati-hati, misalnya dengan fitur <strong>coin control</strong>.</li>
+          <li>Menggabungkan banyak UTXO dalam satu transaksi bisa mengurangi privasi jika menghubungkan alamat dari aktivitas berbeda. Wallet modern menghindari ini dengan manajemen alamat yang baik.</li>
+        </ul>
+      </li>
+      <li><strong>Contoh Praktis:</strong>
+        <ul>
+          <li>Walletmu menunjukkan saldo 0,7 BTC dari tiga UTXO: 0,4 BTC, 0,2 BTC, dan 0,1 BTC. Saat mengirim 0,5 BTC, wallet memilih UTXO 0,4 BTC dan 0,2 BTC, mengirim 0,5 BTC ke penerima, dan mengembalikan 0,099 BTC (setelah fee) ke <strong>change address</strong> baru.</li>
+          <li>Kamu menggunakan <strong>coin control</strong> di Electrum untuk menghindari UTXO kecil (<strong>dust</strong>) dari transaksi tidak dikenal, mencegah pelacakan.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Proses Teknis Cold Wallet untuk Transaksi Bitcoin</h3>
+    <p>Cold wallet, seperti hardware wallet (Ledger Nano X, Trezor Model T), dirancang untuk menjaga <strong>private key tetap offline dan aman di dalam chip khusus</strong> (biasanya secure element). Saat melakukan transaksi, cold wallet menangani <strong>penandatanganan transaksi secara offline</strong>, sehingga private key tidak pernah terekspos ke perangkat yang terhubung internet. Berikut adalah penjelasan teknis nya:</p>
+
+    <h4 data-step-number="1">Colok Cold Wallet ke Komputer via USB</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li><strong>Hardware wallet</strong> (misalnya Ledger Nano X) dihubungkan ke komputer melalui port USB atau, untuk beberapa model, via Bluetooth (tapi kita fokus ke USB untuk contoh ini).</li>
+      <li>Wallet berkomunikasi dengan komputer menggunakan <strong>protokol seperti USB HID (Human Interface Device)</strong> atau WebUSB untuk browser-based apps. Protokol ini memungkinkan pertukaran data yang aman antara hardware wallet dan software di komputer (misalnya, Ledger Live atau Electrum).</li>
+      <li>Hardware wallet memiliki <strong>secure element</strong> (chip khusus seperti STMicroelectronics ST33 pada Ledger) yang menyimpan private key. Chip ini dirancang tahan terhadap serangan fisik atau digital, seperti side-channel attacks.</li>
+      <li>Komputer mengenali wallet sebagai perangkat eksternal, tapi <strong>tidak bisa mengakses private key</strong>. Semua operasi sensitif (seperti penandatanganan) dilakukan di dalam chip.</li>
+      <li>Pengguna biasanya harus <strong>memasukkan PIN di hardware wallet</strong> untuk membuka kunci perangkat. PIN ini disimpan di secure element dan melindungi akses ke private key.</li>
+      <li>Jika wallet mendukung <strong>BIP-39 (Bitcoin Improvement Proposal 39)</strong>, private key dihasilkan dari <strong>seed phrase (12-24 kata)</strong> yang dibuat saat inisialisasi wallet. Seed ini disimpan di secure element dan tidak pernah keluar.</li>
+    </ul>
+
+    <h4 data-step-number="2">Di Komputer, Buat Transaksi Secara Online</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li>Kamu membuka <strong>software wallet di komputer</strong>, seperti Ledger Live, Electrum, atau aplikasi berbasis browser yang kompatibel dengan hardware wallet (misalnya, Metamask dengan ekstensi Ledger).</li>
+      <li>Software ini terhubung ke <strong>jaringan Bitcoin</strong> (via node atau API seperti Blockstream) untuk mengambil informasi blockchain, seperti:
+        <ul>
+          <li><strong>Unspent Transaction Outputs (UTXO)</strong>: Daftar Bitcoin yang tersedia di alamatmu untuk dibelanjakan.</li>
+          <li><strong>Biaya transaksi (fee)</strong>: Estimasi biaya jaringan berdasarkan kondisi mempool (antrean transaksi Bitcoin).</li>
+        </ul>
+      </li>
+      <li>Kamu memasukkan detail transaksi, seperti:
+        <ul>
+          <li><strong>Alamat penerima</strong> (contoh: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq).</li>
+          <li><strong>Jumlah Bitcoin</strong> yang akan dikirim (misalnya, 0,01 BTC).</li>
+          <li><strong>Biaya transaksi</strong> (misalnya, 10 satoshi/byte).</li>
+        </ul>
+      </li>
+      <li>Software wallet membuat <strong>transaksi mentah (raw transaction)</strong> dalam format data yang sesuai dengan protokol Bitcoin. Transaksi mentah ini berisi:
+        <ul>
+          <li><strong>Inputs</strong>: UTXO yang akan dibelanjakan (referensi ke transaksi sebelumnya).</li>
+          <li><strong>Outputs</strong>: Alamat penerima dan jumlah Bitcoin, serta alamat kembalian (jika ada).</li>
+          <li><strong>Fee</strong>: Selisih antara input dan output untuk membayar miner.</li>
+        </ul>
+      </li>
+    </ul>
+    <p>Contoh transaksi mentah (dalam hex): <code>0100000001abcdef...00000000</code></p>
+    <p><strong>Transaksi ini belum ditandatangani</strong>, jadi belum valid untuk dikirim ke jaringan Bitcoin.</p>
+
+    <h4 data-step-number="3">Data Transaksi Dikirim ke Cold Wallet via USB</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li>Software wallet mengirimkan <strong>transaksi mentah ke hardware wallet</strong> melalui koneksi USB menggunakan protokol seperti <strong>APDU (Application Protocol Data Unit)</strong>, yang standar untuk komunikasi dengan secure element.</li>
+      <li>Data yang dikirim berisi:
+        <ul>
+          <li><strong>Hash dari transaksi</strong> (untuk ditandatangani).</li>
+          <li><strong>Detail input dan output</strong> (untuk ditampilkan di layar wallet).</li>
+        </ul>
+      </li>
+      <li>Hardware wallet menampilkan <strong>detail transaksi di layar perangkat</strong> (misalnya, jumlah BTC dan alamat penerima) untuk verifikasi manual. Ini mencegah <strong>serangan man-in-the-middle</strong>, di mana malware di komputer memalsukan alamat penerima.</li>
+      <li>Pengguna memverifikasi detail di layar hardware wallet (misalnya, “Send 0,01 BTC to bc1q...”) dan menekan <strong>tombol fisik untuk menyetujui</strong>.</li>
+    </ul>
+
+    <h4 data-step-number="4">Cold Wallet Menandatangani Transaksi</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li>Setelah pengguna menyetujui, hardware wallet menggunakan <strong>private key (disimpan di secure element)</strong> untuk menandatangani transaksi menggunakan algoritma <strong>ECDSA (Elliptic Curve Digital Signature Algorithm)</strong> dengan kurva <strong>secp256k1</strong> (kurva eliptik standar yang digunakan Bitcoin).</li>
+    </ul>
+    <p><strong>Proses penandatanganan:</strong></p>
+    <ul>
+      <li>Hardware wallet menghitung <strong>hash dari transaksi mentah</strong> menggunakan SHA-256 (sesuai protokol Bitcoin, hash ini disebut <strong>Transaction ID atau TxID</strong>).</li>
+      <li>Private key digunakan untuk menghasilkan <strong>tanda tangan digital</strong> (digital signature), yang terdiri dari dua nilai: r dan s.</li>
+      <li>Tanda tangan ini memverifikasi bahwa transaksi dibuat oleh pemilik private key tanpa mengungkapkan private key itu sendiri.</li>
+    </ul>
+    <p>Contoh tanda tangan (dalam format DER): <code>3045022100a1b2c3...0220d4e5f6...</code></p>
+    <p><strong>Keamanan penting:</strong> <strong>Private key tidak pernah meninggalkan secure element.</strong> Semua operasi kriptografi dilakukan di dalam chip, sehingga komputer (meskipun terinfeksi malware) tidak bisa mengaksesnya.</p>
+    <p>Hardware wallet juga mendukung <strong>BIP-32 (Bitcoin Improvement Proposal 32) (HD wallet)</strong>, sehingga bisa menggunakan <strong>private key turunan (derived key)</strong> untuk setiap transaksi, meningkatkan privasi.</p>
+
+    <h4 data-step-number="5">Hasil Data + Tanda Tangan Dikirim ke Komputer via USB</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li>Hardware wallet mengirimkan <strong>transaksi yang sudah ditandatangani (signed transaction)</strong> kembali ke software wallet di komputer melalui USB.</li>
+      <li>Transaksi yang sudah ditandatangani berisi:
+        <ul>
+          <li>Transaksi mentah asli.</li>
+          <li><strong>Tanda tangan digital</strong> (r, s) untuk setiap input.</li>
+        </ul>
+      </li>
+      <li>Software wallet memverifikasi bahwa tanda tangan valid (opsional, untuk memastikan integritas).</li>
+    </ul>
+    <p>Contoh transaksi yang sudah ditandatangani (dalam hex): <code>0100000001abcdef...3045022100a1b2c3...00000000</code></p>
+
+    <h4 data-step-number="6">Transaksi Disiarkan ke Jaringan Bitcoin</h4>
+    <p><strong>Apa yang terjadi secara teknis:</strong></p>
+    <ul>
+      <li>Software wallet mengirim <strong>transaksi yang sudah ditandatangani</strong> ke jaringan Bitcoin melalui node (misalnya, node publik atau node pribadi jika kamu menjalankan Bitcoin Core).</li>
+      <li>Protokol Bitcoin menggunakan <strong>P2P (Peer-to-Peer) network</strong> untuk menyebarkan transaksi ke miner.</li>
+      <li>Miner memverifikasi transaksi:
+        <ul>
+          <li>Memastikan <strong>tanda tangan valid</strong> menggunakan public key (diambil dari alamat pengirim).</li>
+          <li>Memeriksa bahwa <strong>UTXO yang digunakan belum dibelanjakan (no double-spending)</strong>.</li>
+          <li>Memastikan <strong>fee cukup untuk diproses</strong>.</li>
+        </ul>
+      </li>
+      <li>Jika valid, transaksi masuk ke <strong>mempool</strong> (memory pool, kumpulan transaksi yang belum dikonfirmasi) dan menunggu konfirmasi (biasanya dimasukkan ke blok oleh miner dalam 10-60 menit, tergantung fee).</li>
+      <li>Setelah dikonfirmasi (biasanya <strong>1-6 konfirmasi</strong>), transaksi dianggap final, dan Bitcoin sampai ke penerima.</li>
+    </ul>
+    <h4 data-step-number="7">Transaksi Berhasil</h4>
+    <p>Pengguna bisa melihat transaksi di <strong>blockchain explorer</strong> (misalnya, mempool.space) menggunakan <strong>TxID (Transaction ID)</strong>.</p>
+    <p>Contoh TxID: <code>f4184fc596403b9d6b8e7f2e...</code></p>
+    <p>Hardware wallet kembali ke <strong>mode offline</strong> setelah transaksi selesai, menjaga <strong>private key tetap aman</strong>.</p>
+
+    <hr class="thick-divider">
+
+    <h3>Proses Teknis Hot Wallet untuk Transaksi Bitcoin</h3>
+    <p>Hot wallet menyimpan <strong>private key di perangkat yang terhubung internet</strong> (ponsel, komputer, atau server untuk custodial wallet). Prosesnya lebih sederhana dibanding cold wallet karena semuanya dilakukan di satu perangkat. Berikut alurnya:</p>
+
+    <h4 data-step-number="1">Buka Hot Wallet di Perangkat</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Kamu buka <strong>aplikasi hot wallet</strong> (misalnya Trust Wallet di ponsel atau Electrum di PC).</li>
+      <li>Wallet memuat <strong>private key dari penyimpanan lokal</strong> (file terenkripsi atau database aplikasi) setelah kamu masukkan kata sandi atau PIN.</li>
+      <li>Private key dihasilkan dari <strong>seed phrase (BIP-39)</strong> saat setup awal, disimpan di perangkat dengan <strong>enkripsi</strong> (misalnya <strong>AES-256 (Advanced Encryption Standard 256-bit)</strong>).</li>
+    </ul>
+
+    <h4 data-step-number="2">Buat Transaksi Secara Online</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Wallet terhubung ke <strong>node Bitcoin</strong> (via API atau node publik) untuk ambil data seperti <strong>UTXO (Unspent Transaction Outputs)</strong> (dana yang bisa dibelanjakan) dan estimasi <strong>fee</strong>.</li>
+      <li>Kamu masukkan:
+        <ul>
+          <li><strong>Alamat penerima</strong> (contoh: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq).</li>
+          <li><strong>Jumlah</strong> (misalnya 0,01 BTC).</li>
+          <li><strong>Fee</strong> (misalnya 10 satoshi/byte).</li>
+        </ul>
+      </li>
+      <li>Wallet membuat <strong>transaksi mentah (raw transaction)</strong> berisi inputs (UTXO), outputs (alamat tujuan + kembalian), dan fee.</li>
+    </ul>
+    <p>Contoh transaksi mentah (hex): <code>0100000001abcdef....</code></p>
+
+    <h4 data-step-number="3">Tanda Tangan Transaksi</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Wallet menggunakan <strong>private key</strong> di perangkat untuk menandatangani transaksi dengan algoritma <strong>ECDSA (Elliptic Curve Digital Signature Algorithm)</strong> (kurva <strong>secp256k1</strong>).</li>
+    </ul>
+    <p><strong>Proses:</strong></p>
+    <ul>
+      <li>Hitung <strong>hash transaksi</strong> (SHA-256).</li>
+      <li><strong>Tanda tangan (r, s)</strong> dihasilkan: s = k^(-1) * (z + r * dA) mod n, di mana z adalah hash transaksi, dA adalah private key.</li>
+      <li>Tanda tangan ditambahkan ke transaksi mentah.</li>
+    </ul>
+    <p>Contoh tanda tangan (DER): <code>3045022100a1b2c3....</code></p>
+    <p><strong>Catatan:</strong> Semua ini dilakukan di perangkat yang <strong>online</strong>, jadi rentan jika perangkat terinfeksi <strong>malware</strong>.</p>
+
+    <h4 data-step-number="4">Siaran ke Jaringan Bitcoin</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Wallet mengirim <strong>transaksi yang sudah ditandatangani</strong> ke jaringan Bitcoin via node.</li>
+      <li>Miner memverifikasi <strong>tanda tangan</strong> dan <strong>UTXO (Unspent Transaction Outputs)</strong>, lalu masukkan transaksi ke <strong>mempool</strong> (memory pool).</li>
+      <li>Setelah dikonfirmasi (<strong>1-6 blok</strong>), transaksi selesai. Kamu bisa cek <strong>TxID (Transaction ID)</strong> di explorer seperti <strong>mempool.space</strong>.</li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Perbedaan Utama Hot Wallet dengan Cold Wallet</h3>
+    <h4 data-step-number="1">Lokasi Penandatanganan</h4>
+    <ul>
+      <li><strong>Hot Wallet</strong>:
+        <ul>
+          <li>Proses penandatanganan dilakukan di perangkat <strong>online</strong>.</li>
+          <li>Rentan terhadap <strong>malware</strong> atau serangan siber.</li>
+        </ul>
+      </li>
+      <li><strong>Cold Wallet</strong>:
+        <ul>
+          <li>Penandatanganan terjadi di <strong>perangkat offline</strong> (secure element).</li>
+          <li>Private key <strong>tidak pernah terpapar</strong> ke internet.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 data-step-number="2">Tingkat Keamanan</h4>
+    <ul>
+      <li><strong>Hot Wallet</strong>:
+        <ul>
+          <li>Lebih berisiko terhadap <strong>hacking, phishing, keylogger</strong>.</li>
+          <li>Jika <strong>custodial</strong>, private key disimpan oleh pihak ketiga (exchange/wallet provider).</li>
+        </ul>
+      </li>
+      <li><strong>Cold Wallet</strong>:
+        <ul>
+          <li>Private key <strong>selalu offline</strong>.</li>
+          <li>Kebal terhadap serangan remote (kecuali physical theft + PIN diketahui).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 data-step-number="3">Kemudahan Penggunaan</h4>
+    <ul>
+      <li><strong>Hot Wallet</strong>:
+        <ul>
+          <li>Lebih <strong>cepat & praktis</strong>.</li>
+          <li>Semua proses (buat transaksi, tanda tangan, broadcast) dilakukan di <strong>satu perangkat</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Cold Wallet</strong>:
+        <ul>
+          <li>Membutuhkan <strong>perangkat tambahan</strong> (hardware wallet).</li>
+          <li>Proses transaksi lebih lama karena verifikasi manual.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr class="thick-divider">
+
+    <h3>Apa Itu Multi-Signature (Multisig)?</h3>
+    <p><strong>Multi-signature</strong> atau <strong>multisig</strong> adalah fitur keamanan di Bitcoin (dan kripto lain) yang membutuhkan lebih dari satu <strong>private key</strong> untuk menandatangani dan mengotorisasi transaksi. Berbeda dengan wallet biasa (single-signature) yang cuma butuh satu private key, multisig memungkinkan pengaturan seperti "M-of-N", di mana M tanda tangan dari N private key diperlukan untuk memvalidasi transaksi.</p>
+    <p><strong>Contoh:</strong> Dalam pengaturan 2-of-3, ada 3 private key, tapi transaksi hanya valid jika 2 di antaranya menandatangani.</p>
+    <p><strong>Analogi:</strong> Seperti brankas bank yang butuh dua kunci dari dua orang untuk dibuka.</p>
+    <p>Multisig meningkatkan <strong>keamanan</strong> dan <strong>fleksibilitas</strong>, cocok untuk skenario seperti dompet bersama, escrow, atau perusahaan yang ingin kontrol terdistribusi.</p>
+
+    <hr class="thick-divider">
+
+    <h3>Proses Pembuatan Bitcoin Wallet dari Nol (Private Key Only)</h3>
+    <p>Pembuatan wallet Bitcoin melibatkan kriptografi untuk menghasilkan private key, public key, dan Bitcoin address. Berikut langkah-langkah teknisnya:</p>
+
+    <h4 data-step-number="1">Menghasilkan Random Number (Entropi)</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Wallet dimulai dengan menghasilkan angka acak <strong>256-bit (32 byte)</strong> untuk menjadi private key.</li>
+      <li>Angka ini harus <strong>benar-benar acak</strong> dan <strong>aman secara kriptografi</strong>.</li>
+      <li>Digunakan <strong>CSPRNG (Cryptographically Secure Pseudo-Random Number Generator)</strong>, seperti:
+        <ul>
+          <li><code>/dev/urandom</code> di Linux</li>
+          <li><code>os.urandom</code> di Python</li>
+          <li>Fungsi <strong>TRNG (True Random Number Generator)</strong> di hardware wallet.</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>Keamanan kritis:</strong></p>
+    <ul>
+      <li>Jika random number lemah (misalnya pakai RNG biasa), private key bisa ditebak, dan Bitcoin hilang.</li>
+    </ul>
+    <p><strong>Contoh output:</strong></p>
+    <pre><code>Random number (hex): E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262</code></pre>
+
+    <h4 data-step-number="2">Membuat Private Key</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li>Random number <strong>256-bit</strong> langsung dijadikan <strong>private key</strong>.</li>
+      <li>Dalam Bitcoin, private key harus berada dalam rentang:
+        <ul>
+          <li><strong>1 ≤ private key ≤ n-1</strong></li>
+          <li>(di mana <strong>n = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141</strong>, order kurva secp256k1)</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>Format Penyimpanan (Wallet Import Format - WIF):</strong></p>
+    <ol>
+      <li>Tambahkan <strong>version byte</strong> (mainnet: <code>0x80</code>)</li>
+      <li>Hitung <strong>checksum</strong>:
+        <ul>
+          <li><code>checksum = 4 byte pertama dari SHA-256(SHA-256(private_key + version))</code></li>
+        </ul>
+      </li>
+      <li>Encode ke <strong>Base58Check</strong> (versi Base58 dengan checksum).</li>
+    </ol>
+    <p><strong>Contoh:</strong></p>
+    <ul>
+      <li>Raw private key (hex):
+        <pre><code>E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262</code></pre>
+      </li>
+      <li>WIF (Wallet Import Format):
+        <pre><code>5J3mBbAH58CpQ3Y5RNJpUKPE62SQ5tfcvU2JpbnkeyhfsYB1Jcn</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="3">Menghasilkan Public Key</h4>
+    <p><strong>Apa yang terjadi:</strong></p>
+    <ul>
+      <li><strong>Private key</strong> (<em>dA</em>) dikonversi menjadi <strong>public key</strong> menggunakan <strong>ECDSA (Elliptic Curve Digital Signature Algorithm)</strong> dengan kurva <strong>secp256k1</strong>.</li>
+    </ul>
+    <p><strong>Proses Matematis:</strong></p>
+    <ol>
+      <li><strong>Perkalian titik elliptic curve</strong>:
+        <pre><code>Public Key = dA × G</code></pre>
+        <ul>
+          <li><code>dA</code> = private key (bilangan integer)</li>
+          <li><code>G</code> = generator point (titik tetap pada kurva secp256k1)</li>
+        </ul>
+      </li>
+      <li>Hasilnya berupa <strong>koordinat (x, y)</strong> di kurva eliptik.</li>
+    </ol>
+    <p><strong>Format Public Key:</strong></p>
+    <ol>
+      <li><strong>Uncompressed (65 byte)</strong>:
+        <ul>
+          <li>Diawali <code>0x04</code> + koordinat <code>x</code> + koordinat <code>y</code></li>
+          <li>Contoh:
+            <pre><code>04x_coordinatey_coordinate...</code></pre>
+          </li>
+        </ul>
+      </li>
+      <li><strong>Compressed (33 byte)</strong>:
+        <ul>
+          <li>Hanya menyimpan <code>x</code> + <strong>parity byte</strong> (<code>0x02</code> jika <code>y</code> genap, <code>0x03</code> jika <code>y</code> ganjil)</li>
+          <li>Contoh:
+            <pre><code>02x_coordinate... (jika y genap)
+03x_coordinate... (jika y ganjil)</code></pre>
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <p><strong>Contoh Nyata:</strong></p>
+    <ul>
+      <li>Private key (hex):
+        <pre><code>E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262</code></pre>
+      </li>
+      <li>Public key (compressed, 33 byte):
+        <pre><code>02F8BDE4F3...</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="4">Membuat Bitcoin Address</h4>
+    <p>Dari <strong>public key</strong>, wallet menghasilkan <strong>Bitcoin address</strong> (format <strong>P2PKH (Pay-to-Public-Key-Hash)</strong>) melalui langkah-langkah berikut:</p>
+
+    <h5>Proses Pembuatan Address:</h5>
+    <ol>
+      <li><strong>Hitung <code>SHA-256 (Secure Hash Algorithm 256-bit)</code></strong> dari public key.</li>
+      <li><strong>Hitung <code>RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit)</code></strong> dari hasil SHA-256 → menghasilkan <strong>public key hash (20 byte)</strong>.</li>
+      <li><strong>Tambahkan version byte</strong>:
+        <ul>
+          <li><strong>Mainnet (P2PKH)</strong>: <code>0x00</code></li>
+        </ul>
+      </li>
+      <li><strong>Hitung checksum</strong>:
+        <ul>
+          <li><code>checksum = 4 byte pertama dari SHA-256(SHA-256(version + pubkey_hash))</code></li>
+        </ul>
+      </li>
+      <li><strong>Encode ke Base58Check</strong> (versi yang lebih pendek dari Base64, menghindari karakter ambigu).</li>
+    </ol>
+
+    <h5>Contoh Nyata:</h5>
+    <ul>
+      <li><strong>Public key (compressed, 33 byte):</strong>
+        <pre><code>02F8BDE4F3...</code></pre>
+      </li>
+      <li><strong>Public key hash (RIPEMD-160, 20 byte):</strong>
+        <pre><code>62E907B15CBF27...</code></pre>
+      </li>
+      <li><strong>Bitcoin address (Base58Check):</strong>
+        <pre><code>1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code></pre>
+      </li>
+    </ul>
+
+
+    <h3>Flowchart Kesimpulan</h3>
+    <p>Berikut alur pembuatan wallet dalam bentuk flowchart sederhana:</p>
+    <div class="flowchart">
+      <pre><code>[Start]
+   |
+   v
+[Generate Random Number]
+   | 256-bit using CSPRNG (Cryptographically Secure Pseudo-Random Number Generator)
+   | Contoh: E9873D79C6D87DC0...
+   v
+[Create Private Key]
+   | Format raw atau WIF (Wallet Import Format)
+   | Contoh WIF: 5J3mBbAH58CpQ3Y5RNJpUKPE...
+   v
+[Generate Public Key]
+   | ECDSA (Elliptic Curve Digital Signature Algorithm) secp256k1: Public Key = private_key * G
+   | Contoh: 02F8BDE4F3... (compressed)
+   v
+[Create Bitcoin Address]
+   | SHA-256 (Secure Hash Algorithm 256-bit) → RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit) → Add version byte → Base58Check
+   | Contoh: 1A1zP1eP5QGefi2DMPTf...
+   v
+[End: Wallet Ready]
+   - Simpan private key offline
+   - Gunakan address untuk terima Bitcoin</code></pre>
+    </div>
+
+    <hr class="thick-divider">
+
+    <h3>Proses Pembuatan Bitcoin Wallet dengan Seed Phrase</h3>
+
+    <h4 data-step-number="1">Generate Random Number (Entropi)</h4>
+    <p>Hasilkan entropi acak (<strong>128-256 bit</strong>) menggunakan <strong>CSPRNG (Cryptographically Secure Pseudo-Random Number Generator)</strong> (contoh: <code>os.urandom</code>).</p>
+    <ul>
+      <li>Contoh <strong>128-bit entropi</strong> (untuk 12 kata):
+        <pre><code>a1b2c3d4e5f6... (16 byte)</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="2">Create Seed Phrase (BIP-39)</h4>
+    <ul>
+      <li>Entropi di-hash dengan <strong>SHA-256 (Secure Hash Algorithm 256-bit)</strong> untuk menghasilkan <strong>checksum</strong> (beberapa bit terakhir).</li>
+      <li><strong>Entropi + checksum</strong> dibagi menjadi <strong>11-bit chunks</strong>, lalu dipetakan ke daftar kata <strong>BIP-39 (Bitcoin Improvement Proposal 39)</strong> (2048 kata).</li>
+      <li>Contoh <strong>12-kata seed phrase</strong>:
+        <pre><code>witch collapse practice feed shame open despair creek road again ice least</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="3">Generate Master Seed</h4>
+    <ul>
+      <li>Seed phrase + <strong>optional passphrase</strong> diolah menggunakan <strong>PBKDF2 (Password-Based Key Derivation Function 2)</strong> (HMAC-SHA512, <strong>2048 iterasi</strong>) untuk menghasilkan <strong>master seed (512 bit)</strong>.</li>
+      <li>Contoh <strong>master seed (hex)</strong>:
+        <pre><code>4e8c18...</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="4">Create Private Key (BIP-32)</h4>
+    <ul>
+      <li>Dari <strong>master seed</strong>, buat <strong>master private key</strong> dan <strong>chain code</strong> menggunakan <strong>HMAC-SHA512 (Hash-based Message Authentication Code - Secure Hash Algorithm 512-bit)</strong>.</li>
+      <li><strong>Derive private key turunan</strong> (child keys) menggunakan <strong>BIP-32 (Bitcoin Improvement Proposal 32) path</strong> (contoh: <code>m/44'/0'/0'/0/0</code> untuk Bitcoin).</li>
+      <li>Contoh <strong>private key turunan</strong>:
+        <pre><code>e8f32e723dec...</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="5">Generate Public Key</h4>
+    <ul>
+      <li>Gunakan <strong>ECDSA (Elliptic Curve Digital Signature Algorithm) secp256k1</strong>:
+        <pre><code>Public Key = private_key * G</code></pre>
+      </li>
+      <li>Contoh <strong>public key (compressed)</strong>:
+        <pre><code>02f8bde4...</code></pre>
+      </li>
+    </ul>
+
+    <h4 data-step-number="6">Create Bitcoin Address</h4>
+    <ul>
+      <li><strong>Public key</strong> → <strong>SHA-256 (Secure Hash Algorithm 256-bit)</strong> → <strong>RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit)</strong> → tambahkan <strong>version byte</strong> (<code>0x00</code> untuk P2PKH) → <strong>Base58Check</strong>.</li>
+      <li>Contoh <strong>Bitcoin address</strong>:
+        <pre><code>1A1zP1eP5QGefi2D...</code></pre>
+      </li>
+    </ul>
+
+    <h3>Flowchart Pembuatan Bitcoin Wallet dengan Seed Phrase</h3>
+    <div class="flowchart">
+      <pre><code>[Start]
+   |
+   v
+[Generate Entropi]
+   | 128-256 bit via CSPRNG (Cryptographically Secure Pseudo-Random Number Generator)
+   | Contoh: a1b2c3d4...
+   v
+[Create Seed Phrase]
+   | BIP-39 (Bitcoin Improvement Proposal 39): Entropi → checksum → 12-24 kata
+   | Contoh: witch collapse...
+   v
+[Generate Master Seed]
+   | PBKDF2 (Password-Based Key Derivation Function 2) (seed phrase → 512-bit seed)
+   | Contoh: 4e8c18...
+   v
+[Derive Private Key]
+   | BIP-32 (Bitcoin Improvement Proposal 32): Master seed → private key
+   | Contoh: e8f32e...
+   v
+[Generate Public Key]
+   | ECDSA (Elliptic Curve Digital Signature Algorithm): Public Key = private_key * G
+   | Contoh: 02f8bde4...
+   v
+[Create Bitcoin Address]
+   | SHA-256 (Secure Hash Algorithm 256-bit) → RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160-bit) → Base58Check
+   | Contoh: 1A1zP1eP5QGefi2D...
+   v
+[End: Wallet Ready]
+   - Simpan seed phrase offline
+   - Gunakan address untuk transaksi</code></pre>
+    </div>
+    <div class="quote-box">
+  <p class="quote-text">
+    "Lost coins only make everyone else’s coins worth slightly more. Think of it as a donation to everyone."
+  </p>
+  <p class="quote-source">
+    — Satoshi Nakamoto
+  </p>
+</div>
+
+<style>
+  .quote-box {
+    background: linear-gradient(270deg, #000000, #444444, #000000);
+    background-size: 600% 600%;
+    animation: gradientMove 15s ease infinite;
+    padding: 30px;
+    max-width: 700px;
+    margin: 15px auto;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .quote-text {
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+  }
+
+  .quote-source {
+    font-size: 14px;
+    color: white;
+    text-shadow: 0 0 5px #000, 0 0 10px #000;
+    position: absolute;
+    bottom: 1px;
+    left: 5px;
+    margin: 0;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+
+    <div style="margin-top: 40px; font-family: sans-serif;">
+  <div style="overflow: hidden; white-space: nowrap; background: black; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      100% informasi diatas dari grokAI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 18px; margin: 20px 0;">Terimakasih sudah membaca</p>
+
+  <div style="overflow: hidden; white-space: nowrap; background: #f00; color: white; font-size: 14px;">
+    <div style="display: inline-block; animation: scroll-left 15s linear infinite;">
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      informasi diatas gk 100% bener jadi crosscheck ya! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <style>
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</div>
+
+  <script>
+    const clickSound = new Audio('sfx.mp3'); // Pastikan path sfx.mp3 benar
+
+    function playClickSound() {
+      clickSound.currentTime = 0; // Mengatur ulang waktu ke awal agar bisa diputar ulang dengan cepat
+      clickSound.play().catch(e => console.error("Error playing sound:", e)); // Tambahkan error handling
+    }
+
+    function fadeOutAndRedirect(url) {
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500); // Sesuaikan dengan durasi transisi CSS (0.5s)
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fade in the body when the page loads
+      document.body.classList.add('fade-in');
+
+      // Add click sound to all clickable elements
+      document.querySelectorAll('.clickable').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+
+      // Update the back button to use the new fadeOutAndRedirect function
+      const backButton = document.querySelector('.back-button');
+      if (backButton) {
+        backButton.onclick = function(event) {
+          event.preventDefault(); // Prevent default link behavior
+          playClickSound();
+          fadeOutAndRedirect('dashboard.html');
+        };
+      }
+
+      // Handle scroll for top-box blur effect
+      const topBox = document.querySelector('.top-box');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) { // Jika halaman discroll ke bawah
+          topBox.classList.add('scrolled');
+        } else { // Jika kembali ke paling atas
+          topBox.classList.remove('scrolled');
+        }
+      });
+
+      // Duplicate text in scrolling banners for smoother looping
+      document.querySelectorAll('.scrolling-banner span').forEach(span => {
+          span.innerHTML += span.innerHTML; // Duplikasi konten agar loop lebih mulus
+      });
+
+    });
+
+    // Fallback untuk gambar profil
+    document.querySelector('.profile-pic img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50';
+    });
+
+    // Fallback untuk tombol back
+    document.querySelector('.back-button img').addEventListener('error', function () {
+      this.src = 'https://via.placeholder.com/50x50/CCCCCC/000000?text=←';
+    });
+  </script>
+</body>
+</html>
